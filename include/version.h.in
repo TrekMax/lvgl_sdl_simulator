@@ -1,0 +1,9 @@
+#ifndef __VERSION_H__
+#define __VERSION_H__
+
+#define COMMIT_COUNT "@COMMIT_COUNT@"
+#define COMMIT_AUTHOR "@COMMIT_AUTHOR@"
+#define AUTHOR_EMAIL "@AUTHOR_EMAIL@"
+#define COMMIT_HASH "@COMMIT_HASH@"
+
+#endif /* __VERSION_H__ */
