@@ -65,6 +65,9 @@ SET(SOURCES components/ui_comp_button.c
     images/ui_img_anim_printer_in_11_png.c
     fonts/ui_font_H1.c
     fonts/ui_font_Subtitle.c
-    fonts/ui_font_Title.c)
+    fonts/ui_font_Title.c
+    lv_demo_physics.c
+    img_lvgl_logo.c
+    )
 
 add_library(ui ${SOURCES})
