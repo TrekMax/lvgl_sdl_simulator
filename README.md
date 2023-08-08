@@ -72,3 +72,12 @@ ninja
 # cd buid dir
 ./lvgl_app
 ```
+
+
+## VSCODE Debug
+
+### Install VSCode Extensions
+
+- C/C++
+- CMake
+- CodeLLDB
