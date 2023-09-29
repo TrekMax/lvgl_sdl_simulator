@@ -26,6 +26,7 @@
   - On Windows see for example [this guide](https://www.caveofprogramming.com/c-for-complete-beginners/setting-up-sdl-windows.html)
   - On Linux `sudo apt-get install libsdl2-dev`
   - On MacOS install for example via Homebrew: `brew install sdl2` (To install Homebrew follow [the guide here](https://brew.sh/))
+    - `brew install sdl2 sdl2_gfx sdl2_image sdl2_mixer sdl2_ttf`
 - Download and Install Visual Studio Code from [https://code.visualstudio.com/download])
 
 ## Build && Run
@@ -53,17 +54,15 @@
 Use make
 
 ```shell
-mkdir build && cd build
-cmake ..
-make -j$(nproc)
+cmake -B build
+cmake --build build --config Release
 ```
 
 Or use ninja
 
 ```shell
-mkdir build && cd build
-cmake -G Ninja ..
-ninja
+cmake -G Ninja -B build
+cmake --build build --config Release
 ```
 
 ### Run
