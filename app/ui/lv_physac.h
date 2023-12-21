@@ -127,7 +127,7 @@
 
     // Boolean type
     #if !defined(_STDBOOL_H)
-        typedef enum { false, true } bool;
+        // typedef enum { false, true } bool;
         #define _STDBOOL_H
     #endif
 #endif

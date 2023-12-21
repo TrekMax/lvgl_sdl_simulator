@@ -95,8 +95,16 @@ void lv_demo_physics(void)
 
 static void physice_create(lv_obj_t * parent)
 {
-    static lv_point_t lv_point_line_floor1[]={{floor1_x1,floor1_y1},{floor1_x2,floor1_y2}};
-    static lv_point_t lv_point_line_floor2[]={{floor2_x1,floor2_y1},{floor2_x2,floor2_y2}};
+    static lv_point_t lv_point_line_floor1[2];
+    lv_point_line_floor1[0].x = floor1_x1;
+    lv_point_line_floor1[0].y = floor1_y1;
+    lv_point_line_floor1[1].x = floor1_x2;
+    lv_point_line_floor1[1].y = floor1_y2;
+    static lv_point_t lv_point_line_floor2[2];
+    lv_point_line_floor2[0].x = floor2_x1;
+    lv_point_line_floor2[0].y = floor2_y1;
+    lv_point_line_floor2[1].x = floor2_x2;
+    lv_point_line_floor2[1].y = floor2_y2;
     /*Create style*/
     static lv_style_t style_line;
     lv_style_init(&style_line);

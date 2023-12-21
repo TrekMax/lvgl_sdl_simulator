@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20.0)
+cmake_minimum_required(VERSION 3.20)
 
 project(utils LANGUAGES C CXX VERSION "1.0.0")
 

@@ -1,6 +1,10 @@
 #include "lvgl/lvgl.h"
 
-#define LV_USE_DEMO_WIDGETS 1
+#ifdef LV_USE_DEMO_WIDGETS
+  #undef LV_USE_DEMO_WIDGETS
+  #define LV_USE_DEMO_WIDGETS 1
+#endif
+
 #if LV_USE_DEMO_WIDGETS
 
 #ifndef LV_ATTRIBUTE_MEM_ALIGN
