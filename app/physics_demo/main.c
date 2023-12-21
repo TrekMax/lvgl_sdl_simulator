@@ -13,8 +13,8 @@
 #include <SDL2/SDL.h>
 #include "lvgl/lvgl.h"
 #include "lv_drivers/sdl/sdl.h"
-#include "app/ui/ui.h"
-#include "app/ui/lv_demo_physics.h"
+#include "ui/ui.h"
+#include "ui/lv_demo_physics.h"
 
 #include "version.h"
 #include "config.h"

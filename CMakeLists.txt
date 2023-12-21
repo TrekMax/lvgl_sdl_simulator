@@ -21,14 +21,13 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/components
     ${PROJECT_SOURCE_DIR}/include/
     ${PROJECT_SOURCE_DIR}/components/utils/include/
-    ${PROJECT_SOURCE_DIR}/app/ui/
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(components/lvgl)
 add_subdirectory(components/lv_drivers)
 add_subdirectory(components/utils)
-add_subdirectory(app/ui)
+add_subdirectory(app/physics_demo)
 
-add_executable(${PROJECT_NAME} src/main.c)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} lvgl lv_drivers ui -lm -lpthread -ldl)
+# add_executable(${PROJECT_NAME} src/main.c)
+# target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} lvgl lv_drivers ui -lm -lpthread -ldl)
