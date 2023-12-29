@@ -42,7 +42,7 @@ void ui_app_manager_init(void)
         },
         .event_handler = ui_app_run,
     };
-    ui_app_register(&app_music);
+    ui_app_register(app_music);
 
     app_t app_camera = {
         .name = "相机",
@@ -53,7 +53,7 @@ void ui_app_manager_init(void)
         },
         .event_handler = ui_app_run,
     };
-    ui_app_register(&app_camera);
+    ui_app_register(app_camera);
 
     app_t app_video = {
         .name = "显卡",
@@ -64,21 +64,21 @@ void ui_app_manager_init(void)
         },
         .event_handler = ui_app_run,
     };
-    ui_app_register(&app_video);
+    ui_app_register(app_video);
     
-    app_handle = ui_app_register(&app_music);
-    // 注销 App 测试
-    ui_app_unregister(app_handle);
+    // app_handle = ui_app_register(app_music);
+    // // 注销 App 测试
+    // ui_app_unregister(app_handle);
 
-    app_camera.name = "视频";
-    app_camera.icon.data = video_player_data;
-    app_camera.icon.size = video_player_size;
-    ui_app_register(&app_camera);
+    // app_camera.name = "视频";
+    // app_camera.icon.data = video_player_data;
+    // app_camera.icon.size = video_player_size;
+    // ui_app_register(app_camera);
 
-    app_music.name = "QQ 音乐";
-    app_music.icon.data = qq_music_data;
-    app_music.icon.size = qq_music_size;
-    ui_app_register(&app_music);
+    // app_music.name = "QQ 音乐";
+    // app_music.icon.data = qq_music_data;
+    // app_music.icon.size = qq_music_size;
+    // ui_app_register(app_music);
 
 }
 

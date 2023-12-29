@@ -93,7 +93,21 @@ uint8_t img_png_decoder_get_info(const uint8_t * src, size_t size, lv_img_header
     return 1;
 }
 
-// 图像数据延迟加载,不能作为局部变量
+void icon_event(lv_event_t *event)
+{
+    lv_event_code_t event_code = lv_event_get_code(event);
+    lv_obj_t * target = lv_event_get_target(event);
+    LV_UNUSED(target);
+    if(event_code == LV_EVENT_CLICKED) {
+        // printf("icon_event\n");
+        app_t *app = (app_t *)lv_event_get_user_data(event);
+        printf("app: %p\n", app);
+        // if (app) {
+        //     // app->event_handler();
+        //     printf("app[%d], %p, %s\n", app->id, app, app->name);
+        // }
+    }
+}
 
 void _ui_app_add(lv_obj_t *parent, app_t *app)
 {
@@ -131,8 +145,8 @@ void _ui_app_add(lv_obj_t *parent, app_t *app)
     } else {
         // lv_img_set_src(app_item, &ui_img_launcher_png);
     }
-
-    // lv_obj_add_event_cb(app->app_icon, app->event_handler, LV_EVENT_CLICKED, app);
+    printf("app[%d]: %p | %s\n", app->id, app, app->name);
+    lv_obj_add_event_cb(app->app_icon, icon_event, LV_EVENT_CLICKED, (void *)app);
 
     app_title = lv_label_create(app->app_item);
     lv_obj_set_pos(app_title, 0, 0);
@@ -152,14 +166,20 @@ void _ui_app_add(lv_obj_t *parent, app_t *app)
     lv_obj_set_size(launcherContainer, 120 * app_count + app_manager.bounds.right, 140);
 }
 
-app_t *ui_app_register(app_t *app) {
-    app_manager.apps = realloc(app_manager.apps, (app_manager.app_count + 1) * sizeof(app_t));
+app_t *ui_app_register(const app_t app) {
+    app_t *p_app_list = realloc(app_manager.apps, (app_manager.app_count + 1) * sizeof(app_t));
+    if (p_app_list == NULL) {
+        return NULL;
+    }
+    app_manager.apps = p_app_list;
     app_t *item = &app_manager.apps[app_manager.app_count];
     // printf("app_manager.app_count: %d\n", app_manager.app_count);
     memset(item, 0, sizeof(app_t));
-    memcpy(item, app, sizeof(app_t));
+    memcpy(item, &app, sizeof(app_t));
     item->id = app_manager.app_count;
     app_manager.app_count++;
+    item->handle = item;
+    printf("apps[%d], name: %s\n", item->id, item->name);
 
     _ui_app_add(launcherContainer, item);
     return item;

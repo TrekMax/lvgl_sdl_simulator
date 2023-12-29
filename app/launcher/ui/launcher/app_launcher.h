@@ -50,17 +50,19 @@ typedef void (*app_event_handler_t)(app_t *app_handler, lv_event_t * e);
 
 struct _app_t
 {
+    app_t *handle;
     char *name;
     char *version;
     int id;
+
     app_icon_t icon;
-    lv_img_dsc_t icon_dsc;
-    void (*init)(void);
-    app_event_handler_t event_handler;
     lv_obj_t *app_item;
     lv_obj_t *app_icon;
+    lv_img_dsc_t icon_dsc;
+    
+    void (*init)(void);
+    app_event_handler_t event_handler;
     app_margin_t margin;
-    app_t *app_handle;
 };
 
 typedef struct _app_manager_t
@@ -71,7 +73,7 @@ typedef struct _app_manager_t
 } app_manager_t;
 
 void ui_app_manager_init(void);
-app_t *ui_app_register(app_t *app);
+app_t *ui_app_register(const app_t app);
 void ui_app_unregister(app_t *app);
 
 LV_FONT_DECLARE(lv_font_chinese_18);
