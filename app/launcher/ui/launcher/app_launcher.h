@@ -16,6 +16,7 @@
 extern "C" {
 #endif
 
+#define APP_MAX_COUNT 10
 typedef enum _icon_type_t
 {
     APP_ICON_TYPE_NONE = 0,
@@ -61,20 +62,21 @@ struct _app_t
     lv_img_dsc_t icon_dsc;
     
     void (*init)(void);
-    app_event_handler_t event_handler;
+    app_event_handler_t run;
     app_margin_t margin;
 };
 
 typedef struct _app_manager_t
 {
     app_t *apps;
-    size_t app_count;
+    int app_count;
     app_bounds_t bounds;
 } app_manager_t;
 
 void ui_app_manager_init(void);
 app_t *ui_app_register(const app_t app);
 void ui_app_unregister(app_t *app);
+app_t *ui_app_get(int id);
 
 LV_FONT_DECLARE(lv_font_chinese_18);
 #ifdef __cplusplus

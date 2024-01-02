@@ -5,21 +5,24 @@
  * @version 0.1
  * @date 2023-12-18
  * 
- * @copyright Copyright (c) 2021 - 2023 shenzhen tisilicon co., ltd.
+ * @copyright Copyright (c) 2021 - 2023 shenzhen co., ltd.
  * 
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "../ui.h"
+
+#include "img_utils.h"
 #include "app_launcher.h"
 
 app_manager_t app_manager = {
     .apps = NULL,
     .app_count = 0,
     .bounds.left = 20,
+    .bounds.right = 30,
 };
-
 
 lv_obj_t *launcher;
 lv_obj_t *ui_launcher;
@@ -27,85 +30,14 @@ lv_obj_t *launcherContainer;
 lv_obj_t *ui_launcherContainer;
 static lv_style_t style;
 
-
-#pragma pack(push, 1)
-typedef struct {
-    uint32_t width;
-    uint32_t height;
-    uint8_t bit_depth;
-    uint8_t color_type;
-    uint8_t compression;
-    uint8_t filter;
-    uint8_t interlace;
-} IHDRChunk;
-#pragma pack(pop)
-
-#define SWAP_UINT32(x) (((x) >> 24) | \
-                       (((x) & 0x00FF0000) >> 8) | \
-                       (((x) & 0x0000FF00) << 8) | \
-                       ((x) << 24))
-
-/**
- * @brief 读取 PNG 图片信息,并判断 PNG 图片是否有效
- * 
- * @param src 
- * @param size 
- * @param header 
- * @return uint8_t 
- */
-uint8_t img_png_decoder_get_info(const uint8_t * src, size_t size, lv_img_header_t * header)
-{
-     if (size < 8) {
-        return 0;
-    }
-
-    const uint8_t png_signature[8] = { 0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A };
-    if (memcmp(src, png_signature, 8) != 0) {
-        return 0; // 签名不匹配
-    }
-
-    src += 8;
-    size -= 8;
-
-    // 检查 IHDR 块
-    if (size < 25) { // IHDR块的最小长度：4(长度) + 4(类型) + 13(IHDR数据) + 4(CRC)
-        return 0; // 剩余数据太短，不足以包含完整的 IHDR 块
-    }
-
-    // 读取块长度
-    uint32_t chunk_length = (src[0] << 24) | (src[1] << 16) | (src[2] << 8) | src[3];
-    if (chunk_length != 13) {
-        return 0; // IHDR块长度不正确
-    }
-
-    // 确认块类型是 "IHDR"
-    if (src[4] != 'I' || src[5] != 'H' || src[6] != 'D' || src[7] != 'R') {
-        return 0; // 块类型不是 IHDR
-    }
-    src += 8;
-    IHDRChunk *ihdr;
-    ihdr = (IHDRChunk *)src;
-    // 大小端转换
-    header->w = SWAP_UINT32(ihdr->width);
-    header->h = SWAP_UINT32(ihdr->height);
-    header->cf = LV_IMG_CF_RAW_ALPHA;
-    header->always_zero = 0;
-    return 1;
-}
-
 void icon_event(lv_event_t *event)
 {
-    lv_event_code_t event_code = lv_event_get_code(event);
-    lv_obj_t * target = lv_event_get_target(event);
-    LV_UNUSED(target);
-    if(event_code == LV_EVENT_CLICKED) {
-        // printf("icon_event\n");
-        app_t *app = (app_t *)lv_event_get_user_data(event);
-        printf("app: %p\n", app);
-        // if (app) {
-        //     // app->event_handler();
-        //     printf("app[%d], %p, %s\n", app->id, app, app->name);
-        // }
+    int *p_app_id = (int *)lv_event_get_user_data(event);
+    int app_id = *p_app_id;
+    app_t *app = ui_app_get(app_id);
+    if (app && app->run) {
+        printf("app[%d]: name: %s\n", app->id, app->name);
+        app->run(app, event);
     }
 }
 
@@ -140,13 +72,20 @@ void _ui_app_add(lv_obj_t *parent, app_t *app)
     } else if (app->icon.type == APP_ICON_TYPE_PNG) {
         app->icon_dsc.data_size = app->icon.size,
         app->icon_dsc.data = app->icon.data;
-        uint8_t png_valid = img_png_decoder_get_info(app->icon_dsc.data, app->icon_dsc.data_size, &app->icon_dsc.header);
-        lv_img_set_src(app->app_icon, &app->icon_dsc);
+        // uint8_t png_valid = img_png_decoder_get_info(app->icon_dsc.data, app->icon_dsc.data_size, &app->icon_dsc.header);
+        img_header_t header;
+        uint8_t png_valid = img_png_get_info(app->icon_dsc.data, app->icon_dsc.data_size, &header);
+        if (png_valid) {
+            app->icon_dsc.header.w = header.width;
+            app->icon_dsc.header.h = header.height;
+            app->icon_dsc.header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA;
+            // app->icon_dsc.header.always_zero = 0;
+            lv_img_set_src(app->app_icon, &app->icon_dsc);
+        }
     } else {
         // lv_img_set_src(app_item, &ui_img_launcher_png);
     }
-    printf("app[%d]: %p | %s\n", app->id, app, app->name);
-    lv_obj_add_event_cb(app->app_icon, icon_event, LV_EVENT_CLICKED, (void *)app);
+    lv_obj_add_event_cb(app->app_icon, icon_event, LV_EVENT_CLICKED, &app->id);
 
     app_title = lv_label_create(app->app_item);
     lv_obj_set_pos(app_title, 0, 0);
@@ -167,6 +106,10 @@ void _ui_app_add(lv_obj_t *parent, app_t *app)
 }
 
 app_t *ui_app_register(const app_t app) {
+    if (app_manager.app_count >= APP_MAX_COUNT) {
+        printf("app_manager.app_count >= APP_MAX_COUNT(%d)\n", APP_MAX_COUNT);
+        return NULL;
+    }
     app_t *p_app_list = realloc(app_manager.apps, (app_manager.app_count + 1) * sizeof(app_t));
     if (p_app_list == NULL) {
         return NULL;
@@ -179,8 +122,6 @@ app_t *ui_app_register(const app_t app) {
     item->id = app_manager.app_count;
     app_manager.app_count++;
     item->handle = item;
-    printf("apps[%d], name: %s\n", item->id, item->name);
-
     _ui_app_add(launcherContainer, item);
     return item;
 }
@@ -208,6 +149,18 @@ void ui_app_unregister(app_t *app) {
     uint8_t app_count = app_manager.app_count<3?3:app_manager.app_count;
     lv_obj_set_size(launcherContainer, 120 * app_count + app_manager.bounds.right, 140);
 }
+
+app_t *ui_app_get(int id) {
+    app_t *item = NULL;
+    for (int i = 0; i < app_manager.app_count; i++) {
+        if (app_manager.apps[i].id == id) {
+            item = &app_manager.apps[i];
+            break;
+        }
+    }
+    return item;
+}
+
 
 void ui_screens_launcher_init(void)
 {
@@ -256,12 +209,6 @@ void ui_screens_launcher_init(void)
     lv_obj_set_align(launcher_page_tips_box, LV_ALIGN_CENTER);
     lv_obj_set_style_bg_color(launcher_page_tips_box, lv_color_hex(0x393939), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(launcherContainer, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-
-    app_manager.apps = NULL;
-    app_manager.app_count = 0;
-    app_manager.bounds.left = 20;
-    app_manager.bounds.right = 30;
 
     lv_style_init(&style);
     lv_style_set_radius(&style, 12);

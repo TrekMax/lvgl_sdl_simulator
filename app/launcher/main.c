@@ -96,7 +96,6 @@ int main(int argc, char **argv)
     hal_init();
 
     ui_init();
-    // lv_demo_physics();
 
     while(1) {
         /* Periodically call the lv_task handler.
