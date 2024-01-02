@@ -1,7 +1,9 @@
 SET(SOURCES 
     ui.c
     launcher/app_launcher.c
+    assets/lv_font_chinese_14.c
     assets/lv_font_chinese_18.c
+    assets/lv_font_chinese_26.c
     utils/img_utils.c
     )
 include_directories(

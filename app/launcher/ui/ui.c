@@ -26,7 +26,7 @@ INCBIN(music_album, "assets/icons/music_album.png");
 void ui_app_run(app_t *app, lv_event_t * e)
 {
     printf("app %s\n", app->name);
-#if 1
+#if 0
     app_t music_album = {
         .name = "音乐专辑",
         .icon = {
@@ -91,6 +91,7 @@ void ui_app_manager_init(void)
     app_music.icon.size = qq_music_size;
     ui_app_register(app_music);
 
+
 }
 
 void ui_init( void )
@@ -99,10 +100,13 @@ void ui_init( void )
     lv_theme_t *theme = lv_theme_basic_init(dispp);
     lv_disp_set_theme(dispp, theme);
     ui_screens_launcher_init();
+    ui_screens_app_loading_init();
 
     extern lv_obj_t *ui_launcherContainer;
     lv_disp_load_scr( ui_launcherContainer);
+    // lv_disp_load_scr( screen_app_loading_page);
 
     ui_app_manager_init();
+
 }
 

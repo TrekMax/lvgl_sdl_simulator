@@ -73,12 +73,19 @@ typedef struct _app_manager_t
     app_bounds_t bounds;
 } app_manager_t;
 
-void ui_app_manager_init(void);
 app_t *ui_app_register(const app_t app);
 void ui_app_unregister(app_t *app);
 app_t *ui_app_get(int id);
 
+void ui_app_manager_init(void);
+void ui_screens_app_loading_init(void);
+int set_app_loading_progress(int progress);
+
+LV_FONT_DECLARE(lv_font_chinese_14);
 LV_FONT_DECLARE(lv_font_chinese_18);
+LV_FONT_DECLARE(lv_font_chinese_26);
+
+
 #ifdef __cplusplus
 }
 #endif

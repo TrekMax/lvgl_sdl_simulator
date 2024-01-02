@@ -18,12 +18,8 @@ extern "C" {
 
 #include "lvgl/lvgl.h"
 
-
-
 void ui_init(void);
-
 void ui_screens_launcher_init(void);
-
 
 #ifdef __cplusplus
 }
