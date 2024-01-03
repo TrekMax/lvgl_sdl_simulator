@@ -42,7 +42,7 @@ extern "C" {
 #endif
 
 
-#include "src/lv_100ask_demo/lv_100ask_demo.h"
+#include "lv_100ask_demo/lv_100ask_demo.h"
 
 /*********************
  *      DEFINES

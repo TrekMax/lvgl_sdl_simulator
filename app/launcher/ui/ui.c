@@ -91,7 +91,6 @@ void ui_app_manager_init(void)
     app_music.icon.size = qq_music_size;
     ui_app_register(app_music);
 
-
 }
 
 void ui_init( void )

@@ -9,7 +9,7 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-#include "../../lv_100ask.h"
+#include "../lv_100ask.h"
 
 
 /*********************
@@ -26,12 +26,12 @@ extern "C" {
  *      TYPEDEFS
  **********************/
 typedef struct _lv_100ask_about {
-	lv_obj_t  * bg_about;				// ±³¾°
-	lv_obj_t  * about_table;			// Õ¹Ê¾ÎÄ×Ö
-	lv_obj_t  * qr_official_website;	// ¶þÎ¬Âë¿ò(¹ÙÍø)
-	lv_obj_t  * qr_wechat;				// ¶þÎ¬Âë¿ò(Î¢ÐÅ¹«ÖÚºÅ)
-	lv_obj_t  * qr_100ask_lvgl;			// ¶þÎ¬Âë¿ò(lvglÖÐÎÄÕ¾µã)
-	lv_timer_t * task_handle; 			// ÈÎÎñ¾ä±ú(»ñÈ¡CPUÊ¹ÓÃÂÊ)
+	lv_obj_t  * bg_about;				// ï¿½ï¿½ï¿½ï¿½
+	lv_obj_t  * about_table;			// Õ¹Ê¾ï¿½ï¿½ï¿½ï¿½
+	lv_obj_t  * qr_official_website;	// ï¿½ï¿½Î¬ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)
+	lv_obj_t  * qr_wechat;				// ï¿½ï¿½Î¬ï¿½ï¿½ï¿½(Î¢ï¿½Å¹ï¿½ï¿½Úºï¿½)
+	lv_obj_t  * qr_100ask_lvgl;			// ï¿½ï¿½Î¬ï¿½ï¿½ï¿½(lvglï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½)
+	lv_timer_t * task_handle; 			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½È¡CPUÊ¹ï¿½ï¿½ï¿½ï¿½)
 } T_lv_100ask_about, *PT_lv_100ask_about;
 
 

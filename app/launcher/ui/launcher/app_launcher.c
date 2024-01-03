@@ -89,7 +89,7 @@ void _ui_app_add(lv_obj_t *parent, app_t *app)
     lv_obj_set_style_bg_opa(app_item, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     app_icon_bg = lv_btn_create(app_item);
-    lv_obj_set_size(app_icon_bg, 100, 100);
+    lv_obj_set_size(app_icon_bg, 80, 80);
     lv_obj_set_pos(app_icon_bg, 0, -10);
     lv_obj_set_align(app_icon_bg, LV_ALIGN_CENTER);
     lv_obj_set_style_bg_color(app_icon_bg, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
