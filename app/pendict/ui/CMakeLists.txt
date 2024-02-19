@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
 
-
 SET(SOURCES 
         ui.c
         ui_helpers.c
@@ -29,14 +28,12 @@ SET(SOURCES
         assets/ui_img__status_charging_4_png.c
         assets/ui_img__status_charging_5_png.c
 
-        # lv_font_chinese_20.c
-        # myFont_bin.c
-        )
-# zephyr_include_directories(./)
+        ./utils/img_utils.c
+        ./utils/lv_img_utils.c
 
-# zephyr_library_sources(
-        
-        # )
-        
+        lv_arcs_demo.c
+        img_arcs_demo_widgets_avatar.c
+        )
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_library(ui ${SOURCES})

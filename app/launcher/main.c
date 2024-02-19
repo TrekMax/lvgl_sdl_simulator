@@ -81,6 +81,7 @@ int show_info()
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
+#include "smart_home_ui.h"
 
 int main(int argc, char **argv)
 {
@@ -95,7 +96,8 @@ int main(int argc, char **argv)
     /*Initialize the HAL (display, input devices, tick) for LVGL*/
     hal_init();
 
-    ui_init();
+    // ui_init();
+    smart_home_ui_init();
 
     while(1) {
         /* Periodically call the lv_task handler.

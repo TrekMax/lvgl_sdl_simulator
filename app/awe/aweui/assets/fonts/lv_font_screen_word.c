@@ -1,0 +1,183 @@
+/*******************************************************************************
+ * Size: 18 px
+ * Bpp: 1
+ * Opts: 
+ ******************************************************************************/
+
+#ifdef __ZEPHYR__
+    #include <zephyr/kernel.h>
+    #include "lvgl.h"
+#else
+    #include "lvgl/lvgl.h"
+#endif
+
+#ifndef LV_FONT_SCREEN_WORD
+#define LV_FONT_SCREEN_WORD 1
+#endif
+
+#if LV_FONT_SCREEN_WORD
+
+/*-----------------
+ *    BITMAPS
+ *----------------*/
+
+/*Store the image of the glyphs*/
+static LV_ATTRIBUTE_LARGE_CONST const uint8_t glyph_bitmap[] = {
+    /* U+201C "“" */
+    0x6, 0xe5, 0xbd, 0x80,
+
+    /* U+201D "”" */
+    0xde, 0xd3, 0x20, 0x0,
+
+    /* U+4F7F "使" */
+    0x4, 0x10, 0x2, 0x4, 0x0, 0xbf, 0xfc, 0x40,
+    0x40, 0x10, 0x10, 0xc, 0xff, 0xe5, 0x21, 0xa,
+    0x48, 0x42, 0x12, 0x10, 0x84, 0xff, 0xe1, 0x1,
+    0x0, 0x48, 0x80, 0x11, 0x20, 0x4, 0x30, 0x1,
+    0xa, 0x0, 0x5c, 0x70, 0x0, 0x3, 0x0,
+
+    /* U+5524 "唤" */
+    0x0, 0x80, 0x0, 0xf8, 0xf1, 0x8, 0x92, 0x10,
+    0x97, 0xfc, 0x92, 0x24, 0x92, 0x24, 0x92, 0x24,
+    0x92, 0x44, 0x92, 0x44, 0x9f, 0xff, 0xf0, 0xa0,
+    0x80, 0x90, 0x81, 0x8, 0x2, 0x4, 0xc, 0x3,
+
+    /* U+5C0F "小" */
+    0x0, 0x80, 0x0, 0x40, 0x0, 0x20, 0x0, 0x10,
+    0x1, 0x8, 0x41, 0x4, 0x20, 0x82, 0x8, 0x41,
+    0x4, 0x40, 0x81, 0x20, 0x40, 0xa0, 0x20, 0x30,
+    0x10, 0x10, 0x8, 0x0, 0x4, 0x0, 0x2, 0x0,
+    0xf, 0x0,
+
+    /* U+6211 "我" */
+    0x3, 0x28, 0x3e, 0x12, 0x1, 0x8, 0x80, 0x84,
+    0x0, 0x42, 0x3, 0xff, 0xfc, 0x10, 0x80, 0x8,
+    0x24, 0x4, 0x14, 0x3, 0x8a, 0x1f, 0x6, 0x0,
+    0x82, 0x0, 0x42, 0x88, 0x22, 0x44, 0x16, 0x12,
+    0x78, 0x6,
+
+    /* U+7528 "用" */
+    0x1f, 0xff, 0x10, 0x41, 0x10, 0x41, 0x10, 0x41,
+    0x1f, 0xff, 0x10, 0x41, 0x10, 0x41, 0x10, 0x41,
+    0x10, 0x41, 0x1f, 0xff, 0x30, 0x41, 0x20, 0x41,
+    0x20, 0x41, 0x40, 0x41, 0x40, 0x4f,
+
+    /* U+8046 "聆" */
+    0x0, 0x10, 0x3f, 0xc6, 0x2, 0x42, 0x40, 0x91,
+    0x8, 0x3c, 0x41, 0x9, 0x24, 0x22, 0x50, 0x84,
+    0x90, 0x0, 0x3c, 0x7f, 0x9, 0x0, 0xc2, 0x40,
+    0x20, 0x90, 0x10, 0x3e, 0x8, 0x11, 0xe, 0x0,
+    0x40, 0x80, 0x10, 0x10,
+
+    /* U+8BF7 "请" */
+    0x0, 0x20, 0x40, 0x20, 0x23, 0xff, 0x10, 0x20,
+    0x8, 0x20, 0x3, 0xfe, 0x0, 0x20, 0xf7, 0xff,
+    0x10, 0x0, 0x11, 0xfe, 0x11, 0x2, 0x11, 0xfe,
+    0x11, 0x2, 0x11, 0x2, 0x19, 0xfe, 0x11, 0x2,
+    0x21, 0xe,
+
+    /* U+9192 "醒" */
+    0xff, 0xff, 0xa, 0x20, 0x85, 0x1f, 0xcf, 0xe8,
+    0x25, 0x54, 0x12, 0xab, 0xf9, 0x54, 0xa0, 0xaa,
+    0x90, 0x63, 0x7f, 0xa0, 0xc4, 0x1f, 0xc2, 0x8,
+    0x2f, 0xe4, 0x10, 0x83, 0xf8, 0x41, 0x7, 0xfe
+};
+
+
+/*---------------------
+ *  GLYPH DESCRIPTION
+ *--------------------*/
+
+static const lv_font_fmt_txt_glyph_dsc_t glyph_dsc[] = {
+    {.bitmap_index = 0, .adv_w = 0, .box_w = 0, .box_h = 0, .ofs_x = 0, .ofs_y = 0} /* id = 0 reserved */,
+    {.bitmap_index = 0, .adv_w = 288, .box_w = 5, .box_h = 5, .ofs_x = 12, .ofs_y = 11},
+    {.bitmap_index = 4, .adv_w = 288, .box_w = 5, .box_h = 5, .ofs_x = 1, .ofs_y = 10},
+    {.bitmap_index = 8, .adv_w = 288, .box_w = 18, .box_h = 17, .ofs_x = 0, .ofs_y = -2},
+    {.bitmap_index = 47, .adv_w = 288, .box_w = 16, .box_h = 16, .ofs_x = 1, .ofs_y = -1},
+    {.bitmap_index = 79, .adv_w = 288, .box_w = 17, .box_h = 16, .ofs_x = 1, .ofs_y = -1},
+    {.bitmap_index = 113, .adv_w = 288, .box_w = 17, .box_h = 16, .ofs_x = 0, .ofs_y = -1},
+    {.bitmap_index = 147, .adv_w = 288, .box_w = 16, .box_h = 15, .ofs_x = 0, .ofs_y = -1},
+    {.bitmap_index = 177, .adv_w = 288, .box_w = 18, .box_h = 16, .ofs_x = 0, .ofs_y = -1},
+    {.bitmap_index = 213, .adv_w = 288, .box_w = 16, .box_h = 17, .ofs_x = 1, .ofs_y = -1},
+    {.bitmap_index = 247, .adv_w = 288, .box_w = 17, .box_h = 15, .ofs_x = 0, .ofs_y = -1}
+};
+
+/*---------------------
+ *  CHARACTER MAPPING
+ *--------------------*/
+
+static const uint16_t unicode_list_0[] = {
+    0x0, 0x1, 0x2f63, 0x3508, 0x3bf3, 0x41f5, 0x550c, 0x602a,
+    0x6bdb, 0x7176
+};
+
+/*Collect the unicode lists and glyph_id offsets*/
+static const lv_font_fmt_txt_cmap_t cmaps[] =
+{
+    {
+        .range_start = 8220, .range_length = 29047, .glyph_id_start = 1,
+        .unicode_list = unicode_list_0, .glyph_id_ofs_list = NULL, .list_length = 10, .type = LV_FONT_FMT_TXT_CMAP_SPARSE_TINY
+    }
+};
+
+
+
+/*--------------------
+ *  ALL CUSTOM DATA
+ *--------------------*/
+
+#if LVGL_VERSION_MAJOR == 8
+/*Store all the custom data of the font*/
+static  lv_font_fmt_txt_glyph_cache_t cache;
+#endif
+
+#if LVGL_VERSION_MAJOR >= 8
+static const lv_font_fmt_txt_dsc_t font_dsc = {
+#else
+static lv_font_fmt_txt_dsc_t font_dsc = {
+#endif
+    .glyph_bitmap = glyph_bitmap,
+    .glyph_dsc = glyph_dsc,
+    .cmaps = cmaps,
+    .kern_dsc = NULL,
+    .kern_scale = 0,
+    .cmap_num = 1,
+    .bpp = 1,
+    .kern_classes = 0,
+    .bitmap_format = 0,
+#if LVGL_VERSION_MAJOR == 8
+    .cache = &cache
+#endif
+};
+
+
+/*-----------------
+ *  PUBLIC FONT
+ *----------------*/
+
+/*Initialize a public general font descriptor*/
+#if LVGL_VERSION_MAJOR >= 8
+const lv_font_t lv_font_screen_word = {
+#else
+lv_font_t lv_font_screen_word = {
+#endif
+    .get_glyph_dsc = lv_font_get_glyph_dsc_fmt_txt,    /*Function pointer to get glyph's data*/
+    .get_glyph_bitmap = lv_font_get_bitmap_fmt_txt,    /*Function pointer to get glyph's bitmap*/
+    .line_height = 18,          /*The maximum line height required by the font*/
+    .base_line = 2,             /*Baseline measured from the bottom of the line*/
+#if !(LVGL_VERSION_MAJOR == 6 && LVGL_VERSION_MINOR == 0)
+    .subpx = LV_FONT_SUBPX_NONE,
+#endif
+#if LV_VERSION_CHECK(7, 4, 0) || LVGL_VERSION_MAJOR >= 8
+    .underline_position = -2,
+    .underline_thickness = 1,
+#endif
+    .dsc = &font_dsc,          /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
+    .fallback = NULL,
+    .user_data = NULL
+};
+
+
+
+#endif /*#if LV_FONT_SCREEN_WORD*/
+
