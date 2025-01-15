@@ -54,15 +54,13 @@
 Use make
 
 ```shell
-cmake -B build
-cmake --build build --config Release
+cmake -B build && cmake --build build --config Release
 ```
 
 Or use ninja
 
 ```shell
-cmake -G Ninja -B build
-cmake --build build --config Release
+cmake -G Ninja -B build && cmake --build build --config Release
 ```
 
 ### Run

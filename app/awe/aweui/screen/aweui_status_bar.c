@@ -184,7 +184,8 @@ lv_obj_t *aweui_setting_tabview_create(lv_obj_t *parent)
     lv_obj_set_style_radius(tabview_home_btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_obj_set_style_pad_all(home_btn, 0, 0);
     lv_obj_add_event_cb(tabview_home_btn, aweui_event_home_btn_handler, LV_EVENT_ALL, NULL);
-    tabview_home_btn_img = lv_img_create(tabview_home_btn);
+    
+        tabview_home_btn_img = lv_img_create(tabview_home_btn);
     lv_img_png_src_init(&icon_nav_home, icon_nav_home_png_data, icon_nav_home_png_size);
     lv_img_set_src(tabview_home_btn_img, &icon_nav_home);
     lv_obj_set_style_bg_opa(tabview_home_btn_img, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -211,6 +212,7 @@ lv_obj_t *aweui_setting_tabview_create(lv_obj_t *parent)
     lv_obj_t *tab1 = lv_tabview_add_tab(status_bar_tabview, "唤醒");
     lv_obj_t *tab2 = lv_tabview_add_tab(status_bar_tabview, "网络");
     lv_obj_t *tab3 = lv_tabview_add_tab(status_bar_tabview, "QR");
+    lv_obj_remove_event_cb(status_bar_tabview, LV_EVENT_SCROLL_END);
 
     aweui_screen_setting_interactive_page_create(tab1);
     aweui_screen_setting_network_page_create(tab2);

@@ -13,12 +13,27 @@
 #include <SDL2/SDL.h>
 #include "lvgl/lvgl.h"
 #include "lv_drivers/sdl/sdl.h"
-#include "ui/ui.h"
+// #include "ui.h"
 
 #include "version.h"
 #include "config.h"
 #include "utils_log.h"
-#include <stdio.h>
+#include <stdio.h>\
+
+#include "ui/lv_port_file.h"
+
+// #include "ui/ui_page_manager.h"
+
+// #ifdef SDL_HOR_RES
+// #undef SDL_HOR_RES
+// #define SDL_HOR_RES 800
+// #endif
+
+// #ifdef SDL_VER_RES
+// #undef SDL_VER_RES
+// #define SDL_VER_RES 480
+// #endif
+
 
 /*********************
  *      DEFINES
@@ -81,7 +96,6 @@ int show_info()
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
-#include "smart_home_ui.h"
 
 int main(int argc, char **argv)
 {
@@ -95,9 +109,12 @@ int main(int argc, char **argv)
 
     /*Initialize the HAL (display, input devices, tick) for LVGL*/
     hal_init();
+    lv_port_fs_init();
 
     // ui_init();
-    smart_home_ui_init();
+    extern void lv_demo_widgets(void);
+    // lv_demo_physics();
+    lv_demo_widgets();
 
     while(1) {
         /* Periodically call the lv_task handler.
