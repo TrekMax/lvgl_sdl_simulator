@@ -36,6 +36,7 @@ SET(SOURCES
         ./app/app_setting.c
         # ./app/app_practice.c
         ./app/app_dictionary.c
+        ./app/app_audio_player.c
 )
 
 include_directories(
