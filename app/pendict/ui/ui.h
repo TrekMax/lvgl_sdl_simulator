@@ -45,8 +45,7 @@ int ui_app_get_current_appid(void);
 int ui_app_set_current_appid(const int app_id);
 
 
-struct ui_app_t {
-    const int id;
+struct app_icon_t {
     const char *name;
     const lv_img_dsc_t *icon;
     uint16_t zoom;
@@ -55,9 +54,27 @@ struct ui_app_t {
     uint16_t icon_height;
 };
 
+#define APP_ICON_ZOOM(x)    (x*256)
 #include "lv_drv_conf.h"
 #define SCREEN_WIDTH SDL_HOR_RES//320
 #define SCREEN_HEIGHT SDL_VER_RES//240
+
+struct lisaui_app_t {
+    int (*create)(lv_obj_t * parent);
+    int (*destroy)(void);
+    int (*enter)(void);
+    int (*exit)(void);
+
+    lv_obj_t * (*get_obj_handle)(void);
+
+    int app_id;
+    int app_uuid;
+    struct app_icon_t *icon;
+};
+
+int lisaui_app_register(struct lisaui_app_t *app);
+int lisaui_app_unregister(struct lisaui_app_t *app);
+void lisaui_app_enter(const int app_id);
 
 #ifdef __cplusplus
 } /*extern "C"*/

@@ -19,8 +19,7 @@
 extern "C" {
 #endif
 
-void app_ocr_create(lv_obj_t * parent);
-lv_obj_t * app_ocr_get_page(void);
+int app_ocr_scan_init(void);
 
 #ifdef __cplusplus
 }

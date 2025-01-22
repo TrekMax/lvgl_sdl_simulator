@@ -44,7 +44,7 @@ void ui_event_BtnTranslateAction(lv_event_t * e)
 }
 
 
-void app_ocr_create(lv_obj_t * parent)
+int app_ocr_create(lv_obj_t * parent)
 {
     uiApp_ScanOCR = lv_obj_create(NULL);
     lv_obj_clear_flag(uiApp_ScanOCR, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -109,6 +109,8 @@ void app_ocr_create(lv_obj_t * parent)
     lv_obj_center(ui_BtnTranslate);
 
     lv_obj_add_event_cb(uiApp_ScanOCR_BtnStart, ui_event_BtnTranslateAction, LV_EVENT_CLICKED, NULL);
+
+    return 0;
 }
 
 lv_obj_t * app_ocr_get_page(void)
@@ -137,4 +139,49 @@ int ui_set_ocr_result_text(const char *result)
 
     // lv_textarea_set_text(uiAppScanOCR_TextResult, result);
     return 0;
+}
+
+
+int app_ocr_scan_destroy(void)
+{
+    printk("[%d:%s] destroy\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_ocr_scan_enter(void)
+{
+    printk("[%d:%s] enter\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_ocr_scan_exit(void)
+{
+    printk("[%d:%s] exit\n", __LINE__, __func__);
+    return 0;
+}
+
+struct app_icon_t icon_ocr_scan = {
+    .name = "扫描",
+    .icon_width = LV_SIZE_CONTENT,
+    .icon_height = LV_SIZE_CONTENT,
+    .icon = &ui_img__launcher_scan_png,
+    .zoom = APP_ICON_ZOOM(0),
+};
+
+struct lisaui_app_t app_ocr_scan = {
+    .create = app_ocr_create,
+    .destroy = app_ocr_scan_destroy,
+    .enter = app_ocr_scan_enter,
+    .exit = app_ocr_scan_exit,
+
+    .get_obj_handle = app_ocr_get_page,
+    .app_id = UI_APP_ID_OCR,
+    .icon = &icon_ocr_scan,
+};
+
+int app_ocr_scan_init(void)
+{
+    app_ocr_scan.app_id = 0;
+    
+    return lisaui_app_register(&app_ocr_scan);
 }
