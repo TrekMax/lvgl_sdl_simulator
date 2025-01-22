@@ -1,20 +1,18 @@
 /**
  * @file ui.c
  * @author TianShuang Ke (dske@listenai.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2023-04-20
- * 
+ *
  * @copyright Copyright (c) 2021 - 2023  shenzhen listenai co., ltd.
- * 
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "ui.h"
 #include "ui_helpers.h"
-#include "lv_arcs_demo.h"
+#include "app/app_spelling.h"
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
 
 lv_obj_t * ui_ScreenHome;
 lv_obj_t * ui_ScreenHome_BodyBase;
@@ -42,12 +40,47 @@ typedef struct {
 
 #define APP_ICON_ZOOM(x)    (x*256)
 
-ui_app_t apps[] = {
-    {.id = APP_ICON_ID_OCR,          .name = "扫描", .icon_width = LV_SIZE_CONTENT, .icon_height = LV_SIZE_CONTENT, .icon = &ui_img__launcher_scan_png,        .zoom = APP_ICON_ZOOM(0),},
-    {.id = APP_ICON_ID_AUDIO_PLAYER, .name = "播音", .icon_width = LV_SIZE_CONTENT, .icon_height = LV_SIZE_CONTENT, .icon = &ui_img__launcher_composition_png, .zoom = APP_ICON_ZOOM(0),},
-    {.id = APP_ICON_ID_DICTIONARY,   .name = "词典", .icon_width = LV_SIZE_CONTENT, .icon_height = LV_SIZE_CONTENT, .icon = &ui_img__launcher_fav_png,         .zoom = APP_ICON_ZOOM(0),},
-    {.id = APP_ICON_ID_SPELLING,     .name = "拼读", .icon_width = LV_SIZE_CONTENT, .icon_height = LV_SIZE_CONTENT, .icon = &ui_img__launcher_practice_png,    .zoom = APP_ICON_ZOOM(0),},
-    {.id = APP_ICON_ID_SETTING,      .name = "设置", .icon_width = LV_SIZE_CONTENT, .icon_height = LV_SIZE_CONTENT, .icon = &ui_img__launcher_setting_png,     .zoom = APP_ICON_ZOOM(0),},
+ui_app_t apps_list[] = {
+    {
+        .id = APP_ICON_ID_OCR,
+        .name = "扫描",
+        .icon_width = LV_SIZE_CONTENT,
+        .icon_height = LV_SIZE_CONTENT,
+        .icon = &ui_img__launcher_scan_png,
+        .zoom = APP_ICON_ZOOM(0),
+    },
+    {
+        .id = APP_ICON_ID_AUDIO_PLAYER,
+        .name = "播音",
+        .icon_width = LV_SIZE_CONTENT,
+        .icon_height = LV_SIZE_CONTENT,
+        .icon = &ui_img__launcher_composition_png,
+        .zoom = APP_ICON_ZOOM(0),
+    },
+    {
+        .id = APP_ICON_ID_DICTIONARY,
+        .name = "词典",
+        .icon_width = LV_SIZE_CONTENT,
+        .icon_height = LV_SIZE_CONTENT,
+        .icon = &ui_img__launcher_fav_png,
+        .zoom = APP_ICON_ZOOM(0),
+    },
+    {
+        .id = APP_ICON_ID_SPELLING,
+        .name = "拼读",
+        .icon_width = LV_SIZE_CONTENT,
+        .icon_height = LV_SIZE_CONTENT,
+        .icon = &ui_img__launcher_practice_png,
+        .zoom = APP_ICON_ZOOM(0),
+    },
+    {
+        .id = APP_ICON_ID_SETTING,
+        .name = "设置",
+        .icon_width = LV_SIZE_CONTENT,
+        .icon_height = LV_SIZE_CONTENT,
+        .icon = &ui_img__launcher_setting_png,
+        .zoom = APP_ICON_ZOOM(0),
+    },
 };
 lv_obj_t * ui_AppIcon_Wsp;
 lv_obj_t * ui_AppName_Wsp;
@@ -72,7 +105,7 @@ lv_obj_t * uiStatusBar_LabBatteryLevel;
 // Scan App
 lv_obj_t * uiPage_ScanOCR;
 lv_obj_t * uiPage_ScanOCR_Body;
-lv_obj_t * uiPage_ScanOCR_LabResult;
+lv_obj_t * uiPageScanOCR_TextResult;
 lv_obj_t * uiPage_ScanOCR_ImgOCRTips;
 lv_obj_t * uiPage_ScanOCR_LabelOCRTips;
 lv_obj_t * uiPage_ScanOCR_BtnStart;
@@ -99,17 +132,7 @@ lv_obj_t * uiPage_Wsp_BtnStop;
 lv_obj_t * uiPage_Wsp_Result;
 
 static uint8_t current_screen = UI_PAGE_ID_NONE;
-///////////////////// TEST LVGL SETTINGS ////////////////////
-#if LV_COLOR_DEPTH != 16
-    #error "LV_COLOR_DEPTH should be 16bit to match SquareLine Studio's settings"
-#endif
-#if LV_COLOR_16_SWAP !=0
-    #error "LV_COLOR_16_SWAP should be 0 to match SquareLine Studio's settings"
-#endif
 
-///////////////////// ANIMATIONS ////////////////////
-
-///////////////////// FUNCTIONS ////////////////////
 void ui_event_OpenApp(lv_event_t * event)
 {
     lv_event_code_t event_code = lv_event_get_code(event);
@@ -127,7 +150,7 @@ void ui_event_OpenApp(lv_event_t * event)
                 ui_Screen_AppOCR_init();
             }
             lv_obj_set_parent(ui_StatusBar, uiPage_ScanOCR);
-            // lv_obj_set_style_text_font(uiPage_ScanOCR_LabResult, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+            // lv_obj_set_style_text_font(uiPageScanOCR_TextResult, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
             _ui_screen_change(uiPage_ScanOCR, LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
             break;
         case APP_ICON_ID_AUDIO_PLAYER:
@@ -192,7 +215,7 @@ static void ui_event_BatteryUpdate(lv_event_t *e)
 {
     uint8_t battery_level = 0;
     uint8_t battery_status = 0;
-    
+
     if (uiStatusBar_LabBatteryLevel == NULL) {
         return;
     }
@@ -247,7 +270,7 @@ int ui_set_battery_level(const uint8_t level)
     return 0;
 }
 
-static const lv_img_dsc_t* _uiStatusBar_IconbatteryStateCharging[5] = {
+static const lv_img_dsc_t* _uiStatusBar_BatteryStateChargingIcon[5] = {
     &ui_img__status_charging_1_png,
     &ui_img__status_charging_2_png,
     &ui_img__status_charging_3_png,
@@ -255,7 +278,7 @@ static const lv_img_dsc_t* _uiStatusBar_IconbatteryStateCharging[5] = {
     &ui_img__status_charging_5_png,
 };
 
-static const lv_img_dsc_t* _uiStatusBar_IconbatteryState_status_battery[5] = {
+static const lv_img_dsc_t* _uiStatusBar_BatteryStateNormalIcon[5] = {
     &ui_img__status_battery_1_png,
     &ui_img__status_battery_2_png,
     &ui_img__status_battery_3_png,
@@ -272,9 +295,9 @@ int ui_set_battery_state(const uint8_t state)
     uint8_t level = _battery_level/20;
     printk("[ui] battery level: %d, state: %d\n", level, state);
     if (state == UI_BATTERY_STATE_CHARGING) {
-        lv_img_set_src(uiStatusBar_IconBatteryState, _uiStatusBar_IconbatteryStateCharging[level]);
+        lv_img_set_src(uiStatusBar_IconBatteryState, _uiStatusBar_BatteryStateChargingIcon[level]);
     } else {
-        lv_img_set_src(uiStatusBar_IconBatteryState, _uiStatusBar_IconbatteryState_status_battery[level]);
+        lv_img_set_src(uiStatusBar_IconBatteryState, _uiStatusBar_BatteryStateNormalIcon[level]);
     }
     return 0;
 }
@@ -289,7 +312,9 @@ void uiStatusBar_init(lv_obj_t *parent)
     lv_obj_clear_flag(ui_StatusBar, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_bg_color(ui_StatusBar, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_StatusBar, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_side(ui_StatusBar, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_border_side(ui_StatusBar, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_StatusBar, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(ui_StatusBar, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     uiStatusBar_LabBatteryLevel = lv_label_create(ui_StatusBar);
     lv_obj_set_size(uiStatusBar_LabBatteryLevel, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
@@ -307,7 +332,7 @@ void uiStatusBar_init(lv_obj_t *parent)
     lv_obj_set_pos(uiStatusBar_LabTime, 0, -10);
 
     lv_obj_set_align(uiStatusBar_LabTime, LV_ALIGN_TOP_MID);
-    lv_label_set_text(uiStatusBar_LabTime, "10:30:00");
+    lv_label_set_text(uiStatusBar_LabTime, "10:00:00");
     lv_obj_set_style_text_color(uiStatusBar_LabTime, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(uiStatusBar_LabTime, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(uiStatusBar_LabTime, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -323,7 +348,7 @@ void uiStatusBar_init(lv_obj_t *parent)
     uiStatusBar_LabDate = lv_label_create(ui_StatusBar);
     lv_obj_set_size(uiStatusBar_LabDate, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
     lv_obj_set_pos(uiStatusBar_LabDate, -4, -10);
-    lv_label_set_text(uiStatusBar_LabDate, "2023/4/20");
+    lv_label_set_text(uiStatusBar_LabDate, "2025/1/22");
     lv_obj_set_style_text_color(uiStatusBar_LabDate, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(uiStatusBar_LabDate, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(uiStatusBar_LabDate, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -345,7 +370,7 @@ void uiStatusBar_init(lv_obj_t *parent)
     lv_style_set_radius(&style_btn, 0);  // 设置圆角半径
     // lv_style_set_border_width(&style_btn, 2);  // 设置边框宽度
     // lv_style_set_border_color(&style_btn, lv_palette_darken(LV_PALETTE_BLUE, 3));  // 设置边框颜色
-    
+
     // 将样式应用到按钮
     lv_obj_add_style(uiStatusBar_BtnBackHome, &style_btn, 0);
 }
@@ -355,14 +380,16 @@ void UI_PAGE_ID_HOME_init(void)
 {
     ui_ScreenHome = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_ScreenHome, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_y(ui_ScreenHome, 30);
     lv_obj_set_style_bg_color(ui_ScreenHome, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_ScreenHome, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(ui_ScreenHome, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    uiStatusBar_init(ui_ScreenHome);
+    uiStatusBar_init(lv_layer_sys());
 
     ui_ScreenHome_BodyBase = lv_obj_create(ui_ScreenHome);
-    lv_obj_set_size(ui_ScreenHome_BodyBase, SCREEN_WIDTH, 120);
-    lv_obj_set_pos(ui_ScreenHome_BodyBase, 0, -10);
+    lv_obj_set_size(ui_ScreenHome_BodyBase, SCREEN_WIDTH, 140);
+    // lv_obj_set_pos(ui_ScreenHome_BodyBase, 0, -10);
     lv_obj_set_align(ui_ScreenHome_BodyBase, LV_ALIGN_BOTTOM_LEFT);
     lv_obj_add_flag(ui_ScreenHome_BodyBase, LV_OBJ_FLAG_SCROLL_ONE);     /// Flags
     lv_obj_clear_flag(ui_ScreenHome_BodyBase, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_GESTURE_BUBBLE);      /// Flags
@@ -371,36 +398,37 @@ void UI_PAGE_ID_HOME_init(void)
     lv_obj_set_style_bg_color(ui_ScreenHome_BodyBase, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_ScreenHome_BodyBase, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_side(ui_ScreenHome_BodyBase, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(ui_ScreenHome_BodyBase, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_ScreenHome_Body = lv_obj_create(ui_ScreenHome_BodyBase);
-    lv_obj_set_size(ui_ScreenHome_Body, 720, 140);
-    lv_obj_set_pos(ui_ScreenHome_Body, 0, 0);
-    lv_obj_set_align(ui_ScreenHome_Body, LV_ALIGN_LEFT_MID);
+    lv_obj_set_size(ui_ScreenHome_Body, SCREEN_WIDTH, 120);
+    lv_obj_set_align(ui_ScreenHome_Body, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_ScreenHome_Body, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_scroll_dir(ui_ScreenHome_Body, LV_DIR_HOR);
     lv_obj_set_style_bg_color(ui_ScreenHome_Body, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_ScreenHome_Body, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ScreenHome_Body, 55, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_side(ui_ScreenHome_Body, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    for (int i=0; i<(sizeof(apps)/sizeof(apps[0])); i++) {
+    int app_count = sizeof(apps_list)/sizeof(apps_list[0]);
+    int app_icon_width = SCREEN_WIDTH/app_count;
+    for (int i=0; i<app_count; i++) {
         ui_AppIcon = lv_img_create(ui_ScreenHome_Body);
-        lv_img_set_src(ui_AppIcon, apps[i].icon);
-        if (apps[i].zoom) {
-            lv_img_set_zoom(ui_AppIcon, apps[i].zoom);
+        lv_img_set_src(ui_AppIcon, apps_list[i].icon);
+        if (apps_list[i].zoom) {
+            lv_img_set_zoom(ui_AppIcon, apps_list[i].zoom);
         }
-
-        lv_obj_set_x(ui_AppIcon, 40+i*130);
-        lv_obj_set_align(ui_AppIcon, LV_ALIGN_LEFT_MID);
+        lv_obj_set_x(ui_AppIcon, app_icon_width*i);
         lv_obj_add_flag(ui_AppIcon, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
         lv_obj_clear_flag(ui_AppIcon, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-        lv_obj_add_event_cb(ui_AppIcon, ui_event_OpenApp, LV_EVENT_ALL, (void *)apps[i].id);
-        lv_obj_set_size(ui_AppIcon, apps[i].icon_width, apps[i].icon_height);
+        lv_obj_add_event_cb(ui_AppIcon, ui_event_OpenApp, LV_EVENT_ALL, (void *)apps_list[i].id);
+        lv_obj_set_size(ui_AppIcon, apps_list[i].icon_width, apps_list[i].icon_height);
+        lv_obj_set_style_bg_color(ui_AppIcon, lv_color_hex(0xFFFF00), LV_PART_MAIN | LV_STATE_DEFAULT);
 
         ui_AppName = lv_label_create(ui_ScreenHome_Body);
         lv_obj_set_size(ui_AppName, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-        lv_obj_set_pos(ui_AppName, 60+i*130, 54);
-        lv_obj_set_align(ui_AppName, LV_ALIGN_LEFT_MID);
-        lv_label_set_text(ui_AppName, apps[i].name);
+        lv_obj_align_to(ui_AppName, ui_AppIcon, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
+        lv_label_set_text(ui_AppName, apps_list[i].name);
         lv_obj_set_style_text_color(ui_AppName, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_set_style_text_opa(ui_AppName, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_set_style_text_font(ui_AppName, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -412,7 +440,7 @@ void UI_PAGE_ID_HOME_init(void)
 
 int ui_set_ocr_result_text(const char *result)
 {
-    if (uiPage_ScanOCR_LabResult == NULL || uiPage_ScanOCR == NULL)
+    if (uiPageScanOCR_TextResult == NULL || uiPage_ScanOCR == NULL)
     {
         return -1;
     }
@@ -425,10 +453,10 @@ int ui_set_ocr_result_text(const char *result)
         lv_obj_clear_flag(uiStatusBar_BtnBackHome, LV_OBJ_FLAG_HIDDEN); //显示 BackHome 按钮
         lv_obj_add_flag(uiStatusBar_LabDate, LV_OBJ_FLAG_HIDDEN);   // 隐藏日期
         _ui_screen_change(uiPage_ScanOCR, LV_SCR_LOAD_ANIM_OVER_LEFT, 0, 0);
-        lv_obj_set_style_text_font(uiPage_ScanOCR_LabResult, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
+        // lv_obj_set_style_text_font(uiPageScanOCR_TextResult, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
     }
-    
-    lv_textarea_set_text(uiPage_ScanOCR_LabResult, result);
+
+    // lv_textarea_set_text(uiPageScanOCR_TextResult, result);
     return 0;
 }
 
@@ -483,46 +511,45 @@ void ui_Screen_AppOCR_init(void)
     lv_obj_set_style_bg_opa(uiPage_ScanOCR_Body, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_side(uiPage_ScanOCR_Body, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    // uiPage_ScanOCR_LabelOCRTips = lv_label_create(uiPage_ScanOCR_Body);
-    // lv_obj_set_size(uiPage_ScanOCR_LabelOCRTips, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    // lv_obj_set_pos(uiPage_ScanOCR_LabelOCRTips, -17, 47);
-    // lv_obj_set_align(uiPage_ScanOCR_LabelOCRTips, LV_ALIGN_CENTER);
-    // lv_label_set_text(uiPage_ScanOCR_LabelOCRTips, "扫描中英文字词句");
-    // lv_obj_set_style_text_color(uiPage_ScanOCR_LabelOCRTips, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_set_style_text_opa(uiPage_ScanOCR_LabelOCRTips, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_set_style_text_font(uiPage_ScanOCR_LabelOCRTips, &ui_font_PocketDictPenRegular, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    uiPage_ScanOCR_LabResult = lv_textarea_create(uiPage_ScanOCR);
-    lv_obj_set_size(uiPage_ScanOCR_LabResult, SCREEN_WIDTH*0.8, 120);
-    lv_obj_set_pos(uiPage_ScanOCR_LabResult, 20, 40);
-    lv_obj_set_align(uiPage_ScanOCR_LabResult, LV_ALIGN_TOP_LEFT);
-    lv_obj_set_style_text_font(uiPage_ScanOCR_LabResult, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_textarea_set_placeholder_text(uiPage_ScanOCR_LabResult, UI_TEST_STR);
-    lv_textarea_set_text(uiPage_ScanOCR_LabResult, UI_TEST_STR);
-    lv_obj_set_style_text_color(uiPage_ScanOCR_LabResult, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(uiPage_ScanOCR_LabResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(uiPage_ScanOCR_LabResult, lv_color_hex(0x202020), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(uiPage_ScanOCR_LabResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_color(uiPage_ScanOCR_LabResult, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_opa(uiPage_ScanOCR_LabResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-
-    // uiPage_ScanOCR_ImgOCRTips = lv_img_create(uiPage_ScanOCR_Body);
-    // lv_img_set_src(uiPage_ScanOCR_ImgOCRTips, &ui_img__guide_scan_png);
-    // lv_obj_set_size(uiPage_ScanOCR_ImgOCRTips, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    // lv_obj_set_pos(uiPage_ScanOCR_ImgOCRTips, -11, -3);
-    // lv_obj_set_align(uiPage_ScanOCR_ImgOCRTips, LV_ALIGN_CENTER);
-    // lv_obj_add_flag(uiPage_ScanOCR_ImgOCRTips, LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
-    // lv_obj_clear_flag(uiPage_ScanOCR_ImgOCRTips, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-
-
+#if 1
+    uiPageScanOCR_TextResult = lv_textarea_create(uiPage_ScanOCR);
+    lv_obj_set_size(uiPageScanOCR_TextResult, SCREEN_WIDTH-140, 120);
+    lv_obj_set_pos(uiPageScanOCR_TextResult, 20, 40);
+    lv_obj_set_align(uiPageScanOCR_TextResult, LV_ALIGN_TOP_LEFT);
+    lv_obj_set_style_text_font(uiPageScanOCR_TextResult, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_textarea_set_placeholder_text(uiPageScanOCR_TextResult, UI_TEST_STR);
+    lv_textarea_set_text(uiPageScanOCR_TextResult, UI_TEST_STR);
+    lv_textarea_set_cursor_click_pos(uiPageScanOCR_TextResult, true);
+    lv_obj_set_style_text_color(uiPageScanOCR_TextResult, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(uiPageScanOCR_TextResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(uiPageScanOCR_TextResult, lv_color_hex(0x202020), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(uiPageScanOCR_TextResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(uiPageScanOCR_TextResult, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_opa(uiPageScanOCR_TextResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+#else
+    uiPageScanOCR_TextResult = lv_label_create(uiPage_ScanOCR);
+    lv_obj_set_size(uiPageScanOCR_TextResult, SCREEN_WIDTH-140, 100);
+    lv_obj_set_pos(uiPageScanOCR_TextResult, 20, 40);
+    lv_obj_set_align(uiPageScanOCR_TextResult, LV_ALIGN_TOP_LEFT);
+    lv_obj_set_style_text_font(uiPageScanOCR_TextResult, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_textarea_set_placeholder_text(uiPageScanOCR_TextResult, UI_TEST_STR);
+    // lv_textarea_set_text(uiPageScanOCR_TextResult, UI_TEST_STR);
+    lv_label_set_text(uiPageScanOCR_TextResult, UI_TEST_STR);
+    // lv_textarea_set_cursor_click_pos(uiPageScanOCR_TextResult, true);
+    lv_obj_set_style_text_color(uiPageScanOCR_TextResult, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(uiPageScanOCR_TextResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(uiPageScanOCR_TextResult, lv_color_hex(0x202020), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(uiPageScanOCR_TextResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(uiPageScanOCR_TextResult, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_opa(uiPageScanOCR_TextResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+#endif
     uiPage_ScanOCR_BtnStart = lv_btn_create(uiPage_ScanOCR_Body);
-    lv_obj_set_size(uiPage_ScanOCR_BtnStart, 120, 100);
+    lv_obj_set_size(uiPage_ScanOCR_BtnStart, 100, SCREEN_WIDTH>320?100:60);
     lv_obj_set_pos(uiPage_ScanOCR_BtnStart, 0, 0);
-    lv_obj_set_align(uiPage_ScanOCR_BtnStart, LV_ALIGN_RIGHT_MID);
+    lv_obj_set_align(uiPage_ScanOCR_BtnStart, SCREEN_WIDTH>320?LV_ALIGN_RIGHT_MID:LV_ALIGN_BOTTOM_RIGHT);
     lv_obj_add_flag(uiPage_ScanOCR_BtnStart, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(uiPage_ScanOCR_BtnStart, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    
+
     lv_obj_t * ui_BtnTranslate = lv_label_create(uiPage_ScanOCR_BtnStart);
     lv_label_set_text(ui_BtnTranslate, "翻译");
     lv_obj_set_style_text_font(ui_BtnTranslate, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -592,7 +619,7 @@ void ui_Screen_AppAudioPlayer_init(void)
     lv_obj_set_style_bg_opa(uiPage_AudioPlayer, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     uiPage_AudioPlayer_Body = lv_obj_create(uiPage_AudioPlayer);
-    lv_obj_set_size(uiPage_AudioPlayer_Body, 454, 140);
+    lv_obj_set_size(uiPage_AudioPlayer_Body,  (SCREEN_WIDTH), 140);
     lv_obj_set_pos(uiPage_AudioPlayer_Body, 0,0);
     lv_obj_set_align(uiPage_AudioPlayer_Body, LV_ALIGN_BOTTOM_LEFT);
     lv_obj_add_flag(uiPage_AudioPlayer_Body, LV_OBJ_FLAG_SCROLL_ONE);     /// Flags
@@ -605,28 +632,28 @@ void ui_Screen_AppAudioPlayer_init(void)
     lv_obj_set_style_border_side(uiPage_AudioPlayer_Body, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     uiPage_AudioPlayer_BtnStart = lv_btn_create(uiPage_AudioPlayer);
-    lv_obj_set_size(uiPage_AudioPlayer_BtnStart, 180, 80);
-    lv_obj_set_pos(uiPage_AudioPlayer_BtnStart, 100,10);
+    lv_obj_set_size(uiPage_AudioPlayer_BtnStart, (SCREEN_WIDTH>>2)-20, 80);
+    lv_obj_set_pos(uiPage_AudioPlayer_BtnStart, -(SCREEN_WIDTH>>3)-10,10);
     lv_obj_set_align(uiPage_AudioPlayer_BtnStart, LV_ALIGN_CENTER);
     lv_obj_add_flag(uiPage_AudioPlayer_BtnStart, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(uiPage_AudioPlayer_BtnStart, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    
-    lv_obj_t * ui_BtnLaelAudioPlayStart = lv_label_create(uiPage_AudioPlayer_BtnStart);
-    lv_label_set_text(ui_BtnLaelAudioPlayStart, "Play");
-    lv_obj_set_style_text_font(ui_BtnLaelAudioPlayStart, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_center(ui_BtnLaelAudioPlayStart);
+
+    lv_obj_t * ui_BtnLabelAudioPlay = lv_label_create(uiPage_AudioPlayer_BtnStart);
+    lv_label_set_text(ui_BtnLabelAudioPlay, "Play");
+    lv_obj_set_style_text_font(ui_BtnLabelAudioPlay, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_center(ui_BtnLabelAudioPlay);
 
     uiPage_AudioPlayer_BtnStop = lv_btn_create(uiPage_AudioPlayer);
-    lv_obj_set_size(uiPage_AudioPlayer_BtnStop, 180, 80);
-    lv_obj_set_pos(uiPage_AudioPlayer_BtnStop, -100,10);
+    lv_obj_set_size(uiPage_AudioPlayer_BtnStop, (SCREEN_WIDTH>>2)-20, 80);
+    lv_obj_set_pos(uiPage_AudioPlayer_BtnStop, (SCREEN_WIDTH>>3)+10,10);
     lv_obj_set_align(uiPage_AudioPlayer_BtnStop, LV_ALIGN_CENTER);
     lv_obj_add_flag(uiPage_AudioPlayer_BtnStop, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(uiPage_AudioPlayer_BtnStop, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    
-    lv_obj_t * ui_BtnLabelAudioPlayStop = lv_label_create(uiPage_AudioPlayer_BtnStop);
-    lv_label_set_text(ui_BtnLabelAudioPlayStop, "Stop");
-    lv_obj_set_style_text_font(ui_BtnLabelAudioPlayStop, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_center(ui_BtnLabelAudioPlayStop);
+
+    lv_obj_t * ui_BtnLabelAudioStop = lv_label_create(uiPage_AudioPlayer_BtnStop);
+    lv_label_set_text(ui_BtnLabelAudioStop, "Stop");
+    lv_obj_set_style_text_font(ui_BtnLabelAudioStop, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_center(ui_BtnLabelAudioStop);
 
     lv_obj_add_event_cb(uiPage_AudioPlayer_BtnStart, ui_event_AudioPlayerAction, LV_EVENT_CLICKED, NULL);
     lv_obj_add_event_cb(uiPage_AudioPlayer_BtnStop, ui_event_AudioPlayerAction, LV_EVENT_CLICKED, NULL);
@@ -658,9 +685,9 @@ void ui_Screen_AppWsp_init(void)
     lv_obj_set_align(uiPage_Wsp_BtnStart, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(uiPage_Wsp_BtnStart, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(uiPage_Wsp_BtnStart, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    
+
     lv_obj_t * ui_BtnLaelWspStart = lv_label_create(uiPage_Wsp_BtnStart);
-    lv_label_set_text(ui_BtnLaelWspStart, "Wsp Play");
+    lv_label_set_text(ui_BtnLaelWspStart, "WSP Play");
     lv_obj_set_style_text_font(ui_BtnLaelWspStart, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_center(ui_BtnLaelWspStart);
 
@@ -670,9 +697,9 @@ void ui_Screen_AppWsp_init(void)
     lv_obj_set_align(uiPage_Wsp_BtnStop, LV_ALIGN_RIGHT_MID);
     lv_obj_add_flag(uiPage_Wsp_BtnStop, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(uiPage_Wsp_BtnStop, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    
+
     lv_obj_t * ui_BtnLabelWspStop = lv_label_create(uiPage_Wsp_BtnStop);
-    lv_label_set_text(ui_BtnLabelWspStop, "Wsp Stop");
+    lv_label_set_text(ui_BtnLabelWspStop, "WSP Stop");
     lv_obj_set_style_text_font(ui_BtnLabelWspStop, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_center(ui_BtnLabelWspStop);
 
@@ -707,7 +734,7 @@ void ui_register_set_volume_cb(ui_set_volume_cb_t update_handler)
 {
     volume_update_cb = update_handler;
 }
-    
+
 static void ui_event_SliderHandler(lv_event_t * e)
 {
     lv_event_code_t code = lv_event_get_code(e);
@@ -769,38 +796,38 @@ void ui_Screen_AppSetting_init(void)
     lv_obj_clear_flag(uiPageSetting, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_bg_color(uiPageSetting, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiPageSetting, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_size(uiPageSetting, 454, 180);
+    lv_obj_set_size(uiPageSetting, SCREEN_WIDTH, 180);
 
     uiPageSetting_LabelBacklight = lv_label_create(uiPageSetting);
     lv_obj_set_size(uiPageSetting_LabelBacklight, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_set_pos(uiPageSetting_LabelBacklight, -173, -10);
-    lv_obj_set_align(uiPageSetting_LabelBacklight, LV_ALIGN_CENTER);
+    lv_obj_set_align(uiPageSetting_LabelBacklight, LV_ALIGN_LEFT_MID);
+    lv_obj_set_pos(uiPageSetting_LabelBacklight, 30, 0);
     lv_label_set_text(uiPageSetting_LabelBacklight, "亮度");
     lv_obj_set_style_text_color(uiPageSetting_LabelBacklight, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(uiPageSetting_LabelBacklight, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(uiPageSetting_LabelBacklight, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    uiPageSetting_LabelVolume = lv_label_create(uiPageSetting);
-    lv_obj_set_size(uiPageSetting_LabelVolume, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_set_pos(uiPageSetting_LabelVolume, -175, 44);
-    lv_obj_set_align(uiPageSetting_LabelVolume, LV_ALIGN_CENTER);
-    lv_label_set_text(uiPageSetting_LabelVolume, "音量");
-    lv_obj_set_style_text_color(uiPageSetting_LabelVolume, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(uiPageSetting_LabelVolume, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(uiPageSetting_LabelVolume, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
-
     uiPageSetting_SliderBacklight = lv_slider_create(uiPageSetting);
-    lv_obj_set_size(uiPageSetting_SliderBacklight, 280, 16);
-    lv_obj_set_pos(uiPageSetting_SliderBacklight, 22, -10);
+    lv_obj_set_size(uiPageSetting_SliderBacklight, SCREEN_WIDTH*0.7, 16);
+    lv_obj_set_pos(uiPageSetting_SliderBacklight, 22, 0);
     lv_obj_set_align(uiPageSetting_SliderBacklight, LV_ALIGN_CENTER);
     lv_slider_set_value(uiPageSetting_SliderBacklight, 100, LV_ANIM_OFF);
     lv_slider_set_range(uiPageSetting_SliderBacklight, UI_SILDER_BACKLIGHT_BRIGHTNESS_MIN_VALUE, UI_SILDER_BACKLIGHT_BRIGHTNESS_MAX_VALUE);
     lv_obj_set_style_bg_color(uiPageSetting_SliderBacklight, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiPageSetting_SliderBacklight, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
+    uiPageSetting_LabelVolume = lv_label_create(uiPageSetting);
+    lv_obj_set_size(uiPageSetting_LabelVolume, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_obj_set_align(uiPageSetting_LabelVolume, LV_ALIGN_LEFT_MID);
+    lv_obj_set_pos(uiPageSetting_LabelVolume, 30, 40);
+    lv_label_set_text(uiPageSetting_LabelVolume, "音量");
+    lv_obj_set_style_text_color(uiPageSetting_LabelVolume, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(uiPageSetting_LabelVolume, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(uiPageSetting_LabelVolume, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+
     uiPageSetting_SliderVolume = lv_slider_create(uiPageSetting);
-    lv_obj_set_size(uiPageSetting_SliderVolume, 280, 16);
-    lv_obj_set_pos(uiPageSetting_SliderVolume, 22, 44);
+    lv_obj_set_size(uiPageSetting_SliderVolume,  SCREEN_WIDTH*0.7, 16);
+    lv_obj_set_pos(uiPageSetting_SliderVolume, 22, 40);
     lv_obj_set_align(uiPageSetting_SliderVolume, LV_ALIGN_CENTER);
     lv_slider_set_value(uiPageSetting_SliderVolume, 8, LV_ANIM_OFF);
     lv_slider_set_range(uiPageSetting_SliderVolume, UI_SILDER_VOLUME_MIN_VALUE, UI_SILDER_VOLUME_MAX_VALUE);
@@ -818,11 +845,6 @@ void ui_init(void)
     lv_theme_t * theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED),
                                                false, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
-
-    // ui_Screen_AppOCR_init();
-    // ui_Screen_AppAudioPlayer_init();
-    // ui_Screen_AppSetting_init();
-    // ui_Screen_AppWsp_init();
 
     UI_PAGE_ID_HOME_init();
     lv_disp_load_scr(ui_ScreenHome);
