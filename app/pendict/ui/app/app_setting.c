@@ -7,11 +7,11 @@
 
 
 // Setting App
-lv_obj_t * uiPageSetting;
-lv_obj_t * uiPageSetting_LabelBacklight;
-lv_obj_t * uiPageSetting_LabelVolume;
-lv_obj_t * uiPageSetting_SliderBacklight;
-lv_obj_t * uiPageSetting_SliderVolume;
+lv_obj_t * uiAppSetting;
+lv_obj_t * uiAppSetting_LabelBacklight;
+lv_obj_t * uiAppSetting_LabelVolume;
+lv_obj_t * uiAppSetting_SliderBacklight;
+lv_obj_t * uiAppSetting_SliderVolume;
 
 
 static const lv_font_t * font_normal;
@@ -70,11 +70,11 @@ static void ui_event_SliderHandler(lv_event_t * e)
             lv_draw_label(dsc->draw_ctx, &label_dsc, &txt_area, buf, NULL);
         }
     } else if(code == LV_EVENT_VALUE_CHANGED) {
-        if (obj == uiPageSetting_SliderBacklight) {
+        if (obj == uiAppSetting_SliderBacklight) {
             if (backlight_update_cb) {
                 backlight_update_cb(lv_slider_get_value(obj));
             }
-        } else if (obj == uiPageSetting_SliderVolume) {
+        } else if (obj == uiAppSetting_SliderVolume) {
             if (volume_update_cb) {
                 volume_update_cb(lv_slider_get_value(obj));
             }
@@ -85,55 +85,55 @@ static void ui_event_SliderHandler(lv_event_t * e)
 
 void app_setting_create(lv_obj_t * parent)
 {
-    uiPageSetting = lv_obj_create(NULL);
-    lv_obj_clear_flag(uiPageSetting, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    lv_obj_set_style_bg_color(uiPageSetting, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(uiPageSetting, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_size(uiPageSetting, SCREEN_WIDTH, 180);
+    uiAppSetting = lv_obj_create(NULL);
+    lv_obj_clear_flag(uiAppSetting, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_bg_color(uiAppSetting, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(uiAppSetting, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_size(uiAppSetting, SCREEN_WIDTH, 180);
 
-    uiPageSetting_LabelBacklight = lv_label_create(uiPageSetting);
-    lv_obj_set_size(uiPageSetting_LabelBacklight, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_set_align(uiPageSetting_LabelBacklight, LV_ALIGN_LEFT_MID);
-    lv_obj_set_pos(uiPageSetting_LabelBacklight, 30, 0);
-    lv_label_set_text(uiPageSetting_LabelBacklight, "亮度");
-    lv_obj_set_style_text_color(uiPageSetting_LabelBacklight, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(uiPageSetting_LabelBacklight, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(uiPageSetting_LabelBacklight, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+    uiAppSetting_LabelBacklight = lv_label_create(uiAppSetting);
+    lv_obj_set_size(uiAppSetting_LabelBacklight, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_obj_set_align(uiAppSetting_LabelBacklight, LV_ALIGN_LEFT_MID);
+    lv_obj_set_pos(uiAppSetting_LabelBacklight, 30, 0);
+    lv_label_set_text(uiAppSetting_LabelBacklight, "亮度");
+    lv_obj_set_style_text_color(uiAppSetting_LabelBacklight, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(uiAppSetting_LabelBacklight, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(uiAppSetting_LabelBacklight, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    uiPageSetting_SliderBacklight = lv_slider_create(uiPageSetting);
-    lv_obj_set_size(uiPageSetting_SliderBacklight, SCREEN_WIDTH*0.7, 16);
-    lv_obj_set_pos(uiPageSetting_SliderBacklight, 22, 0);
-    lv_obj_set_align(uiPageSetting_SliderBacklight, LV_ALIGN_CENTER);
-    lv_slider_set_value(uiPageSetting_SliderBacklight, 100, LV_ANIM_OFF);
-    lv_slider_set_range(uiPageSetting_SliderBacklight, UI_SILDER_BACKLIGHT_BRIGHTNESS_MIN_VALUE, UI_SILDER_BACKLIGHT_BRIGHTNESS_MAX_VALUE);
-    lv_obj_set_style_bg_color(uiPageSetting_SliderBacklight, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(uiPageSetting_SliderBacklight, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    uiAppSetting_SliderBacklight = lv_slider_create(uiAppSetting);
+    lv_obj_set_size(uiAppSetting_SliderBacklight, SCREEN_WIDTH*0.7, 16);
+    lv_obj_set_pos(uiAppSetting_SliderBacklight, 22, 0);
+    lv_obj_set_align(uiAppSetting_SliderBacklight, LV_ALIGN_CENTER);
+    lv_slider_set_value(uiAppSetting_SliderBacklight, 100, LV_ANIM_OFF);
+    lv_slider_set_range(uiAppSetting_SliderBacklight, UI_SILDER_BACKLIGHT_BRIGHTNESS_MIN_VALUE, UI_SILDER_BACKLIGHT_BRIGHTNESS_MAX_VALUE);
+    lv_obj_set_style_bg_color(uiAppSetting_SliderBacklight, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(uiAppSetting_SliderBacklight, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
-    uiPageSetting_LabelVolume = lv_label_create(uiPageSetting);
-    lv_obj_set_size(uiPageSetting_LabelVolume, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_set_align(uiPageSetting_LabelVolume, LV_ALIGN_LEFT_MID);
-    lv_obj_set_pos(uiPageSetting_LabelVolume, 30, 40);
-    lv_label_set_text(uiPageSetting_LabelVolume, "音量");
-    lv_obj_set_style_text_color(uiPageSetting_LabelVolume, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(uiPageSetting_LabelVolume, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(uiPageSetting_LabelVolume, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+    uiAppSetting_LabelVolume = lv_label_create(uiAppSetting);
+    lv_obj_set_size(uiAppSetting_LabelVolume, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_obj_set_align(uiAppSetting_LabelVolume, LV_ALIGN_LEFT_MID);
+    lv_obj_set_pos(uiAppSetting_LabelVolume, 30, 40);
+    lv_label_set_text(uiAppSetting_LabelVolume, "音量");
+    lv_obj_set_style_text_color(uiAppSetting_LabelVolume, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(uiAppSetting_LabelVolume, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(uiAppSetting_LabelVolume, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    uiPageSetting_SliderVolume = lv_slider_create(uiPageSetting);
-    lv_obj_set_size(uiPageSetting_SliderVolume,  SCREEN_WIDTH*0.7, 16);
-    lv_obj_set_pos(uiPageSetting_SliderVolume, 22, 40);
-    lv_obj_set_align(uiPageSetting_SliderVolume, LV_ALIGN_CENTER);
-    lv_slider_set_value(uiPageSetting_SliderVolume, 8, LV_ANIM_OFF);
-    lv_slider_set_range(uiPageSetting_SliderVolume, UI_SILDER_VOLUME_MIN_VALUE, UI_SILDER_VOLUME_MAX_VALUE);
-    lv_obj_set_style_bg_color(uiPageSetting_SliderVolume, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(uiPageSetting_SliderVolume, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
+    uiAppSetting_SliderVolume = lv_slider_create(uiAppSetting);
+    lv_obj_set_size(uiAppSetting_SliderVolume,  SCREEN_WIDTH*0.7, 16);
+    lv_obj_set_pos(uiAppSetting_SliderVolume, 22, 40);
+    lv_obj_set_align(uiAppSetting_SliderVolume, LV_ALIGN_CENTER);
+    lv_slider_set_value(uiAppSetting_SliderVolume, 8, LV_ANIM_OFF);
+    lv_slider_set_range(uiAppSetting_SliderVolume, UI_SILDER_VOLUME_MIN_VALUE, UI_SILDER_VOLUME_MAX_VALUE);
+    lv_obj_set_style_bg_color(uiAppSetting_SliderVolume, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(uiAppSetting_SliderVolume, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
     font_normal = LV_FONT_DEFAULT;
-    lv_obj_add_event_cb(uiPageSetting_SliderBacklight, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(uiPageSetting_SliderVolume, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(uiAppSetting_SliderBacklight, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(uiAppSetting_SliderVolume, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
 }
 
 
 lv_obj_t * app_setting_get_page(void)
 {
-    return uiPageSetting;
+    return uiAppSetting;
 }

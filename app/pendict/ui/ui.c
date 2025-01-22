@@ -16,6 +16,7 @@
 #include "app/app_setting.h"
 #include "app/app_audio_player.h"
 #include "app/app_spelling.h"
+#include "app/app_dictionary.h"
 
 
 lv_obj_t * uiAppLauncher;
@@ -128,7 +129,7 @@ void ui_event_OpenApp(lv_event_t * event)
                 app_ocr_create(NULL);
             }
             lv_obj_set_parent(ui_StatusBar, app_ocr_get_page());
-            // lv_obj_set_style_text_font(uiPageScanOCR_TextResult, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+            // lv_obj_set_style_text_font(uiAppScanOCR_TextResult, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
             _ui_screen_change(app_ocr_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
             break;
         case UI_APP_ID_DICTIONARY:
