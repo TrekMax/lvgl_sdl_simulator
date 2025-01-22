@@ -23,15 +23,10 @@ lv_obj_t * uiAppLauncher;
 lv_obj_t * uiAppLauncher_BodyBase;
 lv_obj_t * uiAppLauncher_Body;
 
-lv_obj_t * ui_AppName;
-lv_obj_t *ui_AppIcon;
-
-
-#define APP_ICON_ZOOM(x)    (x*256)
-
-struct ui_app_t apps_list[] = {
+#if 0
+struct app_icon_t apps_list[] = {
     {
-        .id = UI_APP_ID_OCR,
+        // .id = UI_APP_ID_OCR,
         .name = "扫描",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
@@ -39,7 +34,7 @@ struct ui_app_t apps_list[] = {
         .zoom = APP_ICON_ZOOM(0),
     },
     {
-        .id = UI_APP_ID_DICTIONARY,
+        // .id = UI_APP_ID_DICTIONARY,
         .name = "词典",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
@@ -47,7 +42,7 @@ struct ui_app_t apps_list[] = {
         .zoom = APP_ICON_ZOOM(0),
     },
     {
-        .id = UI_APP_ID_AUDIO_PLAY,
+        // .id = UI_APP_ID_AUDIO_PLAY,
         .name = "播音",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
@@ -55,7 +50,7 @@ struct ui_app_t apps_list[] = {
         .zoom = APP_ICON_ZOOM(0),
     },
     {
-        .id = UI_APP_ID_SPELLING,
+        // .id = UI_APP_ID_SPELLING,
         .name = "拼读",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
@@ -63,13 +58,28 @@ struct ui_app_t apps_list[] = {
         .zoom = APP_ICON_ZOOM(0),
     },
     {
-        .id = UI_APP_ID_SETTING,
+        // .id = UI_APP_ID_SETTING,
         .name = "设置",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
         .icon = &ui_img__launcher_setting_png,
         .zoom = APP_ICON_ZOOM(0),
     },
+};
+#endif
+
+extern struct lisaui_app_t app_ocr_scan;
+// extern struct lisaui_app_t app_dictionary;
+extern struct lisaui_app_t app_audio_player;
+// extern struct lisaui_app_t app_spelling;
+// extern struct lisaui_app_t app_setting;
+
+static struct lisaui_app_t *lisaui_app_lists[] = {
+    &app_ocr_scan,
+    // &app_dictionary,
+    &app_audio_player,
+    // &app_spelling,
+    // &app_setting,
 };
 
 // 状态栏
@@ -107,63 +117,11 @@ void ui_event_OpenApp(lv_event_t * event)
     int *param = lv_event_get_user_data(event);
     int app_id = (int)*param;
     LV_UNUSED(target);
+
     if(event_code == LV_EVENT_CLICKED) {
         lv_obj_clear_flag(uiStatusBar_BtnBackHome, LV_OBJ_FLAG_HIDDEN); //显示 BackHome 按钮
         lv_obj_add_flag(uiStatusBar_LabDate, LV_OBJ_FLAG_HIDDEN);   // 隐藏日期
-        printk("[ui] open app: %d, %s\n", app_id, apps_list[app_id].name);
-        switch (app_id)
-        {
-        case UI_APP_ID_OCR:
-            m_current_appid = UI_APP_ID_OCR;
-            if (app_ocr_get_page() == NULL) {
-                app_ocr_create(NULL);
-            }
-            lv_obj_set_parent(ui_StatusBar, app_ocr_get_page());
-            // lv_obj_set_style_text_font(uiAppScanOCR_TextResult, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
-            _ui_screen_change(app_ocr_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
-            break;
-        case UI_APP_ID_DICTIONARY:
-            m_current_appid = UI_APP_ID_DICTIONARY;
-            if (app_dictionary_get_page() == NULL) {
-                app_dictionary_create(NULL);
-                if (app_dictionary_get_page() == NULL) {
-                    printk("[ui] app_dictionary_get_page failed\n");
-                    return;
-                }
-            }
-            lv_obj_set_parent(ui_StatusBar, app_dictionary_get_page());
-            _ui_screen_change(app_dictionary_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
-            break;
-        case UI_APP_ID_AUDIO_PLAY:
-            m_current_appid = UI_APP_ID_AUDIO_PLAY;
-            if (app_audio_player_get_page() == NULL) {
-                app_audio_player_create(NULL);
-            }
-            lv_obj_set_parent(ui_StatusBar, app_audio_player_get_page());
-            _ui_screen_change(app_audio_player_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
-            break;
-        case UI_APP_ID_SPELLING:
-            m_current_appid = UI_APP_ID_SPELLING;
-            if (app_spelling_get_page() == NULL) {
-                app_spelling_create(NULL);
-            }
-            lv_obj_set_parent(ui_StatusBar, app_spelling_get_page());
-            _ui_screen_change(app_spelling_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
-            break;
-        case UI_APP_ID_SETTING:
-            m_current_appid = UI_APP_ID_SETTING;
-            if ( app_setting_get_page() == NULL) {
-                app_setting_create(NULL);
-            }
-            lv_obj_set_parent(ui_StatusBar, app_setting_get_page());
-            _ui_screen_change( app_setting_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
-            break;
-        case UI_APP_ID_DIALOGUE:
-            m_current_appid = UI_APP_ID_DIALOGUE;
-            break;
-        default:
-            break;
-        }
+        lisaui_app_enter(app_id);
     }
 }
 
@@ -384,7 +342,7 @@ void UI_APP_ID_LAUNCHER_init(void)
     lv_obj_set_style_bg_color(uiAppLauncher_Body, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiAppLauncher_Body, 55, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_side(uiAppLauncher_Body, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
-
+#if 0
     int app_count = sizeof(apps_list)/sizeof(apps_list[0]);
     int app_icon_width = SCREEN_WIDTH/app_count;
     for (int i=0; i<app_count; i++) {
@@ -396,7 +354,7 @@ void UI_APP_ID_LAUNCHER_init(void)
         lv_obj_set_x(ui_AppIcon, app_icon_width*i);
         lv_obj_add_flag(ui_AppIcon, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
         lv_obj_clear_flag(ui_AppIcon, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-        lv_obj_add_event_cb(ui_AppIcon, ui_event_OpenApp, LV_EVENT_ALL, (void *)&apps_list[i].id);
+        // lv_obj_add_event_cb(ui_AppIcon, ui_event_OpenApp, LV_EVENT_ALL, (void *)&apps_list[i].id);
         lv_obj_set_size(ui_AppIcon, apps_list[i].icon_width, apps_list[i].icon_height);
         lv_obj_set_style_bg_color(ui_AppIcon, lv_color_hex(0xFFFF00), LV_PART_MAIN | LV_STATE_DEFAULT);
 
@@ -409,7 +367,36 @@ void UI_APP_ID_LAUNCHER_init(void)
         lv_obj_set_style_text_opa(ui_AppName, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_set_style_text_font(ui_AppName, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     }
+#else
 
+    lv_obj_t * ui_AppName;
+    lv_obj_t *ui_AppIcon;
+    int app_count = sizeof(lisaui_app_lists)/sizeof(lisaui_app_lists[0]);
+    int app_icon_width = SCREEN_WIDTH/app_count;
+    for (int i=0; i< app_count; i++) {
+        ui_AppIcon = lv_img_create(uiAppLauncher_Body);
+        lv_img_set_src(ui_AppIcon, lisaui_app_lists[i]->icon->icon);
+        if (lisaui_app_lists[i]->icon->zoom) {
+            lv_img_set_zoom(ui_AppIcon, lisaui_app_lists[i]->icon->zoom);
+        }
+        lv_obj_set_x(ui_AppIcon, app_icon_width*i);
+        lv_obj_add_flag(ui_AppIcon, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+        lv_obj_clear_flag(ui_AppIcon, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+        lv_obj_add_event_cb(ui_AppIcon, ui_event_OpenApp, LV_EVENT_ALL, (void *)&lisaui_app_lists[i]->app_id);
+        lv_obj_set_size(ui_AppIcon, lisaui_app_lists[i]->icon->icon_width, lisaui_app_lists[i]->icon->icon_height);
+        lv_obj_set_style_bg_color(ui_AppIcon, lv_color_hex(0xFFFF00), LV_PART_MAIN | LV_STATE_DEFAULT);
+
+        ui_AppName = lv_label_create(uiAppLauncher_Body);
+        lv_obj_set_size(ui_AppName, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+        lv_obj_align_to(ui_AppName, ui_AppIcon, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
+        lv_label_set_text(ui_AppName, lisaui_app_lists[i]->icon->name);
+        lv_obj_set_style_text_color(ui_AppName, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_text_opa(ui_AppName, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_text_font(ui_AppName, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
+
+#endif
     ui_timer_date_init();
     m_current_appid = UI_APP_ID_LAUNCHER;
 }
@@ -423,4 +410,75 @@ void ui_init(void)
 
     UI_APP_ID_LAUNCHER_init();
     lv_disp_load_scr(uiAppLauncher);
+
+    app_audio_player_init();
+    app_ocr_scan_init();
+}
+
+
+int lisaui_app_register(struct lisaui_app_t *app)
+{
+    return 0;
+}
+int lisaui_app_unregister(struct lisaui_app_t *app)
+{
+    return 0;
+}
+
+void lisaui_app_enter(const int app_id)
+{
+    if (app_id >= UI_APP_ID_MAX) {
+        printk("[ui] invalid app id: %d\n", app_id);
+        return;
+    }
+    if (lisaui_app_lists[app_id] == NULL) {
+        printk("[ui] app not registered\n");
+        return;
+    }
+    struct lisaui_app_t *app = lisaui_app_lists[app_id];
+    printk("[ui] open app: %d, %s\n", app_id, app->icon->name);
+    if (lisaui_app_lists[app_id]->get_obj_handle() == NULL) {
+        if (lisaui_app_lists[app_id]->create(NULL) != 0) {
+            printk("[ui] app(%s) create failed\n", app->icon->name);
+            return;
+        }
+        printk("[ui] app create success\n");
+    } 
+    if (lisaui_app_lists[app_id]->enter) {
+        if (lisaui_app_lists[app_id]->enter()) {
+            printk("[ui] app enter failed\n");
+            return;
+        }
+        {
+            m_current_appid = app_id;
+            lv_obj_set_parent(ui_StatusBar, lisaui_app_lists[app_id]->get_obj_handle());
+            _ui_screen_change(lisaui_app_lists[app_id]->get_obj_handle(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
+        }
+    }
+}
+
+void lisaui_app_exit(const int app_id)
+{
+    if (app_id >= UI_APP_ID_MAX) {
+        printk("[ui] invalid app id: %d\n", app_id);
+        return;
+    }
+    if (lisaui_app_lists[app_id] == NULL) {
+        printk("[ui] app not registered\n");
+        return;
+    }
+    struct lisaui_app_t *app = lisaui_app_lists[app_id];
+    printk("[ui] close app: %d, %s\n", app_id, app->icon->name);
+    if (lisaui_app_lists[app_id]->exit) {
+        if (lisaui_app_lists[app_id]->exit()) {
+            printk("[ui] app exit failed\n");
+            return;
+        }
+    }
+    if (lisaui_app_lists[app_id]->destroy) {
+        if (lisaui_app_lists[app_id]->destroy()) {
+            printk("[ui] app destroy failed\n");
+            return;
+        }
+    }
 }

@@ -45,7 +45,7 @@ void ui_event_AudioPlayerAction(lv_event_t * e)
     }
 }
 
-void app_audio_player_create(lv_obj_t * parent)
+int app_audio_player_create(lv_obj_t * parent)
 {
     uiApp_AudioPlayer = lv_obj_create(NULL);
     lv_obj_clear_flag(uiApp_AudioPlayer, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -91,9 +91,54 @@ void app_audio_player_create(lv_obj_t * parent)
 
     lv_obj_add_event_cb(uiApp_AudioPlayer_BtnStart, ui_event_AudioPlayerAction, LV_EVENT_CLICKED, NULL);
     lv_obj_add_event_cb(uiApp_AudioPlayer_BtnStop, ui_event_AudioPlayerAction, LV_EVENT_CLICKED, NULL);
+
+    return 0;
 }
 
 lv_obj_t * app_audio_player_get_page(void)
 {
     return uiApp_AudioPlayer;
+}
+
+int app_audio_player_destroy(void)
+{
+    printk("[%d:%s] destroy\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_audio_player_enter(void)
+{
+    printk("[%d:%s] enter\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_audio_player_exit(void)
+{
+    printk("[%d:%s] exit\n", __LINE__, __func__);
+    return 0;
+}
+
+struct app_icon_t icon_audio_player = {
+    .name = "播音",
+    .icon_width = LV_SIZE_CONTENT,
+    .icon_height = LV_SIZE_CONTENT,
+    .icon = &ui_img__launcher_composition_png,
+    .zoom = APP_ICON_ZOOM(0),
+};
+
+struct lisaui_app_t app_audio_player = {
+    .create = app_audio_player_create,
+    .destroy = app_audio_player_destroy,
+    .enter = app_audio_player_enter,
+    .exit = app_audio_player_exit,
+
+    .get_obj_handle = app_audio_player_get_page,
+    .app_id = UI_APP_ID_AUDIO_PLAY,
+    .icon = &icon_audio_player,
+};
+
+int app_audio_player_init(void)
+{
+    app_audio_player.app_id = 1;
+    return lisaui_app_register(&app_audio_player);
 }

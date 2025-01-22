@@ -18,8 +18,7 @@ extern "C" {
 
 #include "../ui.h"
 
-void app_audio_player_create(lv_obj_t * parent);
-lv_obj_t * app_audio_player_get_page(void);
+int app_audio_player_init(void);
 
 #ifdef __cplusplus
 }
