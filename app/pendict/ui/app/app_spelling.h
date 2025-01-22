@@ -19,7 +19,8 @@ extern "C" {
 #include "lvgl/lvgl.h"
 
 
-void arcs_demo_create(lv_obj_t * parent);
+void app_spelling_create(lv_obj_t * parent);
+lv_obj_t *app_spelling_get_page(void);
 
 #if defined(__cplusplus)
 }

@@ -24,18 +24,36 @@ extern "C" {
 #include "ui_events.h"
 #include "assets/assets_res.h"
 
-enum ui_page_id_t {
-    UI_PAGE_ID_NONE,
-    UI_PAGE_ID_HOME,
-    UI_PAGE_ID_OCR,
-    UI_PAGE_ID_AUDIO_PLAY,
-    UI_PAGE_ID_SETTING,
-    UI_PAGE_ID_DICTIONARY,
-    UI_PAGE_ID_DIALOGUE,
-    UI_PAGE_ID_SPELLING,
+#include "incbin.h"
+
+enum ui_app_id_t {
+
+    UI_APP_ID_OCR,
+    UI_APP_ID_DICTIONARY,
+    UI_APP_ID_AUDIO_PLAY,
+    UI_APP_ID_SPELLING,
+    UI_APP_ID_SETTING,
+    UI_APP_ID_DIALOGUE,
+
+    UI_APP_ID_NONE,
+    UI_APP_ID_LAUNCHER,
+    UI_APP_ID_MAX,
 };
 
 void ui_init(void);
+int ui_app_get_current_appid(void);
+int ui_app_set_current_appid(const int app_id);
+
+
+struct ui_app_t {
+    const int id;
+    const char *name;
+    const lv_img_dsc_t *icon;
+    uint16_t zoom;
+    lv_obj_t *icon_canvas;
+    uint16_t icon_width;
+    uint16_t icon_height;
+};
 
 #include "lv_drv_conf.h"
 #define SCREEN_WIDTH SDL_HOR_RES//320

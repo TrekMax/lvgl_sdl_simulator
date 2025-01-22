@@ -1,5 +1,5 @@
 /**
- * @file app_ocr.h
+ * @file app_dictionary.h
  * @author TrekMax (QinYUN575@Foxmail.com)
  * @brief 
  * @version 0.1
@@ -9,9 +9,8 @@
  * 
  * SPDX-License-Identifier: Apache-2.0
  */
-
-#ifndef __APP_OCR_H__
-#define __APP_OCR_H__
+#ifndef __APP_DICTIONARY_H__
+#define __APP_DICTIONARY_H__
 
 #include "../ui.h"
 
@@ -19,11 +18,11 @@
 extern "C" {
 #endif
 
-void app_ocr_create(lv_obj_t * parent);
-lv_obj_t * app_ocr_get_page(void);
+void app_dictionary_create(lv_obj_t * parent);
+lv_obj_t * app_dictionary_get_page(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __APP_OCR_H__ */
+#endif // __APP_DICTIONARY_H__
