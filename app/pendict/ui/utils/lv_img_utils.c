@@ -18,16 +18,19 @@
 #endif
 // #include "log_print.h"
 // #define LOG_INF CLOG
-#define LOG_INF LV_LOG_USER
+#include <stdio.h>
+#define LOG_INF printf
+
+// #define LOG_INF LV_LOG_USER
 
 int lv_img_png_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size)
 {
 	img_header_t header;
-	LOG_INF("lv_img_png_src_init: data=%p, size=%d", data, size);
+	LOG_INF("lv_img_png_src_init: data=%p, size=%d\r\n", data, size);
 
 	if (img_png_get_info(data, size, &header))
 	{
-		LOG_INF("lv_img_png_src_init: get png info failed");
+		LOG_INF("lv_img_png_src_init: get png info failed\r\n");
 		return -1;
 	}
 
@@ -37,18 +40,18 @@ int lv_img_png_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size)
 	dsc->header.h = header.height;
 	dsc->header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA;
 
-	LOG_INF("lv_img_png_src_init: w=%d, h=%d", dsc->header.w, dsc->header.h);
+	LOG_INF("lv_img_png_src_init: w=%d, h=%d\r\n", dsc->header.w, dsc->header.h);
 	return 0;
 }
 
 int lv_img_gif_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size)
 {
 	img_header_t header;
-	LOG_INF("lv_img_gif_src_init: data=%p, size=%d", data, size);
+	LOG_INF("lv_img_gif_src_init: data=%p, size=%d\r\n", data, size);
 
 	if (img_gif_get_info(data, size, &header))
 	{
-		LOG_INF("lv_img_gif_src_init: get gif info failed");
+		LOG_INF("lv_img_gif_src_init: get gif info failed\r\n");
 		return -1;
 	}
 
@@ -58,18 +61,18 @@ int lv_img_gif_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size)
 	dsc->header.h = header.height;
 	dsc->header.cf = LV_IMG_CF_RAW;
 
-	LOG_INF("lv_img_gif_src_init: w=%d, h=%d", dsc->header.w, dsc->header.h);
+	LOG_INF("lv_img_gif_src_init: w=%d, h=%d\r\n", dsc->header.w, dsc->header.h);
 	return 0;
 }
 
 int lv_img_jpg_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size)
 {
 	img_header_t header;
-	LOG_INF("lv_img_jpg_src_init: data=%p, size=%d", data, size);
+	LOG_INF("lv_img_jpg_src_init: data=%p, size=%d\r\n", data, size);
 
 	if (img_jpg_get_info(data, size, &header))
 	{
-		LOG_INF("lv_img_jpg_src_init: get jpg info failed");
+		LOG_INF("lv_img_jpg_src_init: get jpg info failed\r\n");
 		return -1;
 	}
 
@@ -79,6 +82,6 @@ int lv_img_jpg_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size)
 	dsc->header.h = header.height;
 	dsc->header.cf = LV_IMG_CF_RAW;
 
-	LOG_INF("lv_img_jpg_src_init: w=%d, h=%d", dsc->header.w, dsc->header.h);
+	LOG_INF("lv_img_jpg_src_init: w=%d, h=%d\r\n", dsc->header.w, dsc->header.h);
 	return 0;
 }

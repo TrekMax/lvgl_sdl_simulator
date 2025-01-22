@@ -7,12 +7,12 @@
  *      INCLUDES
  *********************/
 #include "lv_demo_widgets.h"
-#include "lv_arcs_demo.h"
-// #if LV_USE_DEMO_WIDGETS
 
-// #if LV_MEM_CUSTOM == 0 && LV_MEM_SIZE < (38ul * 1024ul)
-//     #error Insufficient memory for lv_demo_widgets. Please set LV_MEM_SIZE to at least 38KB (38ul * 1024ul).  48KB is recommended.
-// #endif
+#if LV_USE_DEMO_WIDGETS
+
+#if LV_MEM_CUSTOM == 0 && LV_MEM_SIZE < (38ul * 1024ul)
+    #error Insufficient memory for lv_demo_widgets. Please set LV_MEM_SIZE to at least 38KB (38ul * 1024ul).  48KB is recommended.
+#endif
 
 /*********************
  *      DEFINES
@@ -186,14 +186,12 @@ void lv_demo_widgets(void)
         lv_obj_align_to(label, logo, LV_ALIGN_OUT_RIGHT_BOTTOM, 10, 0);
     }
 
-    // lv_obj_t * t1 = lv_tabview_add_tab(tv, "Profile");
-    // lv_obj_t * t2 = lv_tabview_add_tab(tv, "Analytics");
-    // lv_obj_t * t3 = lv_tabview_add_tab(tv, "Shop");
-    // profile_create(t1);
-    // analytics_create(t2);
-    // shop_create(t3);
-    lv_obj_t * t1 = lv_tabview_add_tab(tv, "ARCS");
-    arcs_demo_create(t1);
+    lv_obj_t * t1 = lv_tabview_add_tab(tv, "Profile");
+    lv_obj_t * t2 = lv_tabview_add_tab(tv, "Analytics");
+    lv_obj_t * t3 = lv_tabview_add_tab(tv, "Shop");
+    profile_create(t1);
+    analytics_create(t2);
+    shop_create(t3);
 
     color_changer_create(tv);
 }
@@ -1599,5 +1597,4 @@ static void meter3_anim_cb(void * var, int32_t v)
     lv_label_set_text_fmt(label, "%"LV_PRId32, v);
 }
 
-// #endif
-
+#endif

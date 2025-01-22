@@ -18,7 +18,8 @@
 	#include "lvgl/lvgl.h"
 #endif
 // #define LOG_INF LV_LOG_USER
-#define LOG_INF
+#include <stdio.h>
+#define LOG_INF printf
 
 #pragma pack(push, 1)
 typedef struct
@@ -119,16 +120,16 @@ int img_gif_get_info(const uint8_t * src, int size, img_header_t * header)
 
 int img_jpg_get_info(const uint8_t * src, int size, img_header_t * header)
 {
-	LOG_INF("img_jpg_get_info: src=%p, size=%d", src, size);
+	LOG_INF("img_jpg_get_info: src=%p, size=%d\r\n", src, size);
 	if (size < 2)
 	{
-		LOG_INF("img_jpg_get_info: size too short");
+		LOG_INF("img_jpg_get_info: size too short\r\n");
 		return -1;
 	}
 
 	if (src[0] != 0xFF || src[1] != 0xD8)
 	{
-		LOG_INF("img_jpg_get_info: signature not match");
+		LOG_INF("img_jpg_get_info: signature not match\r\n");
 		return -2;
 	}
 
@@ -153,12 +154,12 @@ int img_jpg_get_info(const uint8_t * src, int size, img_header_t * header)
 
 	if (i >= size)
 	{
-		LOG_INF("img_jpg_get_info: not found SOF0");
+		LOG_INF("img_jpg_get_info: not found SOF0\r\n");
 		return -3;
 	}
 
 	header->height = (src[i + 5] << 8) | src[i + 6];
 	header->width = (src[i + 7] << 8) | src[i + 8];
-	LOG_INF("img_jpg_get_info: w=%d, h=%d", header->width, header->height);
+	LOG_INF("img_jpg_get_info: w=%d, h=%d\r\n", header->width, header->height);
 	return 0;
 }

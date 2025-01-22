@@ -18,14 +18,14 @@
 extern "C" {
 #endif
 
+LV_IMG_DECLARE(ui_img__launcher_scan_png);
+LV_IMG_DECLARE(ui_img__launcher_fav_png);
 LV_IMG_DECLARE(ui_img__launcher_composition_png);
 LV_IMG_DECLARE(ui_img__launcher_setting_png);
-LV_IMG_DECLARE(ui_img__launcher_scan_png);
-LV_IMG_DECLARE(ui_img__status_charging_5_png);
+LV_IMG_DECLARE(ui_img__launcher_practice_png);
+
 LV_IMG_DECLARE(ui_img__angle_left_double_png);
 LV_IMG_DECLARE(ui_img__guide_scan_png);
-LV_IMG_DECLARE(ui_img__launcher_fav_png);
-LV_IMG_DECLARE(ui_img__launcher_practice_png);
 
 LV_IMG_DECLARE(ui_img__status_battery_1_png);
 LV_IMG_DECLARE(ui_img__status_battery_2_png);
@@ -37,6 +37,7 @@ LV_IMG_DECLARE(ui_img__status_charging_1_png);
 LV_IMG_DECLARE(ui_img__status_charging_2_png);
 LV_IMG_DECLARE(ui_img__status_charging_3_png);
 LV_IMG_DECLARE(ui_img__status_charging_4_png);
+LV_IMG_DECLARE(ui_img__status_charging_5_png);
 
 LV_FONT_DECLARE(lv_font_chinese_18);
 

@@ -1,16 +1,16 @@
 /**
- * @file lv_arcs_demo.h
+ * @file app_sketchpad.h
  * @author TrekMax (QinYUN575@Foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2025-01-10
+ * @date 2025-01-22
  * 
  * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
  * 
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef LV_ARCS_DEMO_H
-#define LV_ARCS_DEMO_H
+#ifndef __APP_SKETCHPAD_H__
+#define __APP_SKETCHPAD_H__
 
 #if defined(__cplusplus)
 extern "C" {
@@ -18,11 +18,10 @@ extern "C" {
 
 #include "lvgl/lvgl.h"
 
-
-void arcs_demo_create(lv_obj_t * parent);
+int app_sketchpad_init(void);
 
 #if defined(__cplusplus)
 }
 #endif
 
-#endif // LV_ARCS_DEMO_H
+#endif // __APP_SKETCHPAD_H__

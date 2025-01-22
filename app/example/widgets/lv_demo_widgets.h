@@ -15,6 +15,10 @@ extern "C" {
  *********************/
 #include "lvgl/lvgl.h"
 
+// #if LV_USE_DEMO_WIDGETS
+// #include "widgets/lv_demo_widgets.h"
+// #endif
+
 /*********************
  *      DEFINES
  *********************/

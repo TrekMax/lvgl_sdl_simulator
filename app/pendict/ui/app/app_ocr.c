@@ -181,6 +181,5 @@ struct lisaui_app_t app_ocr_scan = {
 
 int app_ocr_scan_init(void)
 {
-    app_ocr_scan.app_id = UI_APP_ID_OCR;
     return lisaui_app_register(&app_ocr_scan);
 }

@@ -1,3 +1,14 @@
+/**
+ * @file app_sketchpad.c
+ * @author TrekMax (QinYUN575@Foxmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2025-01-22
+ * 
+ * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
+ * 
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include "app_spelling.h"
 
 
@@ -17,16 +28,16 @@ static lv_style_t style_title;
 static lv_img_dsc_t img_png1;
 INCBIN(img_png1, "app/pendict/ui/assets/img/logo-m2.png");
 
-static lv_img_dsc_t img_gif1;
+static lv_img_dsc_t img_gif11;
 static lv_img_dsc_t img_gif2;
 static lv_img_dsc_t img_gif3;
-static lv_img_dsc_t img_jpg1;
 
-INCBIN(img_gif1, "app/pendict/ui/assets/img/00a3758.gif");
-INCBIN(img_gif2, "app/pendict/ui/assets/img/00b39b6.gif");
+INCBIN(img_gif11, "app/pendict/ui/assets/img/00a3758.gif");
+// INCBIN(img_gif2, "app/pendict/ui/assets/img/00b39b6.gif");
 // INCBIN(img_gif3, "app/pendict/ui/assets/img/00b44af.gif");
 
-INCBIN(img_jpg1, "app/pendict/ui/assets/img/Meisje.jpg");
+// static lv_img_dsc_t img_jpg1;
+// INCBIN(img_jpg1, "app/pendict/ui/assets/img/Meisje.jpg");
 
 
 
@@ -105,7 +116,7 @@ int app_spelling_create(lv_obj_t * parent)
 #if 1
     // /*Create the second panel*/
     lv_obj_t * panel2 = lv_obj_create(uiApp_Wsp);
-    lv_obj_set_style_bg_color(panel2, lv_color_hex(0x000FF0), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(panel2, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(panel2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_side(panel2, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_height(panel2, LV_SIZE_CONTENT);
@@ -117,27 +128,27 @@ int app_spelling_create(lv_obj_t * parent)
     lv_img_png_src_init(&img_png1, gimg_png1Data, gimg_png1Size);
     lv_img_set_src(lv_img_logo, &img_png1);
 
-    img_jpg = lv_img_create(panel2);
-    // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);
-    lv_img_jpg_src_init(&img_jpg1, gimg_jpg1Data, gimg_jpg1Size);
-    lv_img_set_src(img_jpg, &img_jpg1);
-    lv_obj_align(img_jpg, LV_ALIGN_LEFT_MID, 100, 0);
-    // lv_obj_set_size(img, 160, 160);
-    // lv_img_set_zoom(img_jpg, 120);
+    // img_jpg = lv_img_create(panel2);
+    // // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);
+    // lv_img_jpg_src_init(&img_jpg1, gimg_jpg1Data, gimg_jpg1Size);
+    // lv_img_set_src(img_jpg, &img_jpg1);
+    // lv_obj_align(img_jpg, LV_ALIGN_LEFT_MID, 100, 0);
+    // // lv_obj_set_size(img, 160, 160);
+    // // lv_img_set_zoom(img_jpg, 120);
 
-    img = lv_gif_create(panel2);
-    // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);
-    lv_img_gif_src_init(&img_gif1, gimg_gif1Data, gimg_gif1Size);
-    lv_gif_set_src(img, &img_gif1);
-    lv_obj_align(img, LV_ALIGN_LEFT_MID, 260, 0);
-    // lv_obj_set_size(img, 160, 160);
-    // lv_img_set_zoom(img, 120);
+    // img = lv_gif_create(panel2);
+    // // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);
+    // lv_img_gif_src_init(&img_gif1, gimg_gif1Data, gimg_gif1Size);
+    // lv_gif_set_src(img, &img_gif1);
+    // lv_obj_align(img, LV_ALIGN_LEFT_MID, 260, 0);
+    // // lv_obj_set_size(img, 160, 160);
+    // // lv_img_set_zoom(img, 120);
 
-    img2 = lv_gif_create(panel2);
-    // lv_gif_set_src(img2, LV_SYMBOL_GIF_FILE_PATH_2);
-    lv_img_gif_src_init(&img_gif2, gimg_gif2Data, gimg_gif2Size);
-    lv_gif_set_src(img2, &img_gif2);
-    lv_obj_align(img2, LV_ALIGN_LEFT_MID, 260+120, 0);
+    // img2 = lv_gif_create(panel2);
+    // // lv_gif_set_src(img2, LV_SYMBOL_GIF_FILE_PATH_2);
+    // lv_img_gif_src_init(&img_gif2, gimg_gif2Data, gimg_gif2Size);
+    // lv_gif_set_src(img2, &img_gif2);
+    // lv_obj_align(img2, LV_ALIGN_LEFT_MID, 260+120, 0);
     // lv_obj_set_size(img2, 160, 160);
     // lv_img_set_zoom(img2, 120);
 
@@ -258,6 +269,5 @@ struct lisaui_app_t app_spelling = {
 
 int app_spelling_init(void)
 {
-    app_spelling.app_id = UI_APP_ID_SPELLING;
     return lisaui_app_register(&app_spelling);
 }

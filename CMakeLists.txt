@@ -4,13 +4,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(GenerateVersionHeader)
 
 project(demo C)
-
+add_compile_options(-g)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_BUILD_TYPE Debug)
 
 find_package(SDL2 REQUIRED SDL2)
 # find_package(freetype2 REQUIRED freetype2)
+# find_package(rlottie REQUIRED rlottie)
 include_directories(
     ${SDL2_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIRS}/../
@@ -26,6 +27,7 @@ include_directories(
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 
+# add_subdirectory(components/lv_lib_rlottie)
 add_subdirectory(components/lvgl)
 add_subdirectory(components/lv_drivers)
 add_subdirectory(components/utils)
@@ -37,4 +39,4 @@ add_subdirectory(app/pendict)
 # add_subdirectory(app/printer)
 # add_subdirectory(app/x-ui)
 # add_subdirectory(app/awe)
-# add_subdirectory(app/widget)
+# add_subdirectory(app/example)
