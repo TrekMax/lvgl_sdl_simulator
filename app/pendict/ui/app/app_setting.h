@@ -18,9 +18,7 @@ extern "C" {
 
 #include "../ui.h"
 
-void app_setting_create(lv_obj_t * parent);
-lv_obj_t * app_setting_get_page(void);
-
+int app_setting_init(void);
 
 #ifdef __cplusplus
 }

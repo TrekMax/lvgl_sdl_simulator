@@ -18,8 +18,7 @@
 extern "C" {
 #endif
 
-void app_dictionary_create(lv_obj_t * parent);
-lv_obj_t * app_dictionary_get_page(void);
+int app_dictionary_init(void);
 
 #ifdef __cplusplus
 }
