@@ -26,7 +26,7 @@ INCBIN(img_gif2, "app/pendict/ui/assets/img/00b39b6.gif");
 static lv_img_dsc_t img_jpg1;
 INCBIN(img_jpg1, "app/pendict/ui/assets/img/Meisje.jpg");
 
-void arcs_demo_create(lv_obj_t * parent)
+void app_spelling_create(lv_obj_t * parent)
 {
     lv_obj_t * img, *img2, *img3, *img4, *img_jpg;
     lv_obj_t * lv_img_logo;

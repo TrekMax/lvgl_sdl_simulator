@@ -33,7 +33,9 @@ SET(SOURCES
         
         ./app/app_spelling.c
         ./app/app_ocr.c
-
+        ./app/app_setting.c
+        # ./app/app_practice.c
+        ./app/app_dictionary.c
 )
 
 include_directories(

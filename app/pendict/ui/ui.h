@@ -33,9 +33,13 @@ enum ui_page_id_t {
     UI_PAGE_ID_DICTIONARY,
     UI_PAGE_ID_DIALOGUE,
     UI_PAGE_ID_SPELLING,
+
+    UI_PAGE_ID_MAX,
 };
 
 void ui_init(void);
+int ui_app_get_current_appid(void);
+int ui_app_set_current_appid(const int app_id);
 
 #include "lv_drv_conf.h"
 #define SCREEN_WIDTH SDL_HOR_RES//320
