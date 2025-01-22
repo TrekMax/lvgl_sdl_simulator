@@ -18,10 +18,8 @@ extern "C" {
 
 #include "../ui.h"
 
-void ui_event_OpenAppDictionary(lv_event_t * e);
-
-void ui_Screen_AppDictionary_init(void);
-
+void app_dictionary_create(lv_obj_t * parent);
+lv_obj_t * app_dictionary_get_page(void);
 
 #ifdef __cplusplus
 }

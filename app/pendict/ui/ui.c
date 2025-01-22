@@ -132,6 +132,16 @@ void ui_event_OpenApp(lv_event_t * event)
             _ui_screen_change(app_ocr_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
             break;
         case UI_APP_ID_DICTIONARY:
+            m_current_appid = UI_APP_ID_DICTIONARY;
+            if (app_dictionary_get_page() == NULL) {
+                app_dictionary_create(NULL);
+                if (app_dictionary_get_page() == NULL) {
+                    printk("[ui] app_dictionary_get_page failed\n");
+                    return;
+                }
+            }
+            lv_obj_set_parent(ui_StatusBar, app_dictionary_get_page());
+            _ui_screen_change(app_dictionary_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
             break;
         case UI_APP_ID_AUDIO_PLAY:
             m_current_appid = UI_APP_ID_AUDIO_PLAY;
