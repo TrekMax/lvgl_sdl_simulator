@@ -33,6 +33,7 @@ lv_obj_t * uiStatusBar_IconBatteryState;
 lv_obj_t * uiStatusBar_LabBatteryLevel;
 
 /**********************************************************/
+#if 0
 extern struct lisaui_app_t app_ocr_scan;
 extern struct lisaui_app_t app_dictionary;
 extern struct lisaui_app_t app_audio_player;
@@ -46,6 +47,9 @@ static struct lisaui_app_t *lisaui_app_lists[] = {
     &app_spelling,
     &app_setting,
 };
+#endif
+void lisaui_launcher_add_app(struct lisaui_app_t *app);
+static struct lisaui_app_t *lisaui_app_lists[UI_APP_ID_MAX] = {NULL};
 
 static uint8_t m_current_appid = UI_APP_ID_NONE;
 
@@ -68,10 +72,30 @@ int ui_app_set_current_appid(const int app_id)
 
 int lisaui_app_register(struct lisaui_app_t *app)
 {
+    if (app->app_id >= UI_APP_ID_MAX) {
+        printk("[ui] invalid app id: %d\n", app->app_id);
+        return -1;
+    }
+    if (lisaui_app_lists[app->app_id] != NULL) {
+        printk("[ui] app already registered\n");
+        return -1;
+    }
+    lisaui_app_lists[app->app_id] = app;
+    lisaui_launcher_add_app(app);
     return 0;
 }
+
 int lisaui_app_unregister(struct lisaui_app_t *app)
 {
+    if (app->app_id >= UI_APP_ID_MAX) {
+        printk("[ui] invalid app id: %d\n", app->app_id);
+        return -1;
+    }
+    if (lisaui_app_lists[app->app_id] == NULL) {
+        printk("[ui] app not registered\n");
+        return -1;
+    }
+    lisaui_app_lists[app->app_id] = NULL;
     return 0;
 }
 
@@ -92,7 +116,7 @@ void lisaui_app_enter(const int app_id)
             printk("[ui] app(%s) create failed\n", app->icon->name);
             return;
         }
-        printk("[ui] app create success\n");
+        printk("[ui] app(%s) create success\n", app->icon->name);
     } 
     if (lisaui_app_lists[app_id]->enter) {
         if (lisaui_app_lists[app_id]->enter()) {
@@ -133,6 +157,42 @@ void lisaui_app_exit(const int app_id)
     }
 }
 #endif
+
+void ui_event_OpenApp(lv_event_t * event);
+void lisaui_launcher_add_app(struct lisaui_app_t *app)
+{
+    if (app->app_id >= UI_APP_ID_MAX) {
+        printk("[ui] invalid app id: %d\n", app->app_id);
+        return;
+    }
+    // if (lisaui_app_lists[app->app_id] != NULL) {
+    //     printk("[ui] app already registered\n");
+    //     return;
+    // }
+    lv_obj_t * ui_AppName;
+    lv_obj_t *ui_AppIcon;
+    int app_icon_width = SCREEN_WIDTH/5;
+    ui_AppIcon = lv_img_create(uiAppLauncher_Body);
+    lv_img_set_src(ui_AppIcon, app->icon->icon);
+    if (app->icon->zoom) {
+        lv_img_set_zoom(ui_AppIcon, app->icon->zoom);
+    }
+    lv_obj_set_x(ui_AppIcon, app_icon_width*(app->app_id%5));
+    lv_obj_add_flag(ui_AppIcon, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
+    lv_obj_clear_flag(ui_AppIcon, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_add_event_cb(ui_AppIcon, ui_event_OpenApp, LV_EVENT_ALL, (void *)&app->app_id);
+    lv_obj_set_size(ui_AppIcon, app->icon->icon_width, app->icon->icon_height);
+    lv_obj_set_style_bg_color(ui_AppIcon, lv_color_hex(0xFFFF00), LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_AppName = lv_label_create(uiAppLauncher_Body);
+    lv_obj_set_size(ui_AppName, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_obj_align_to(ui_AppName, ui_AppIcon, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
+    lv_label_set_text(ui_AppName, app->icon->name);
+    lv_obj_set_style_text_color(ui_AppName, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_AppName, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_AppName, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+}
 
 /**********************************************************/
 
@@ -372,33 +432,6 @@ void UI_APP_ID_LAUNCHER_init(void)
     lv_obj_set_style_bg_opa(uiAppLauncher_Body, 55, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_side(uiAppLauncher_Body, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_t * ui_AppName;
-    lv_obj_t *ui_AppIcon;
-    int app_count = sizeof(lisaui_app_lists)/sizeof(lisaui_app_lists[0]);
-    int app_icon_width = SCREEN_WIDTH/app_count;
-    for (int i=0; i< app_count; i++) {
-        ui_AppIcon = lv_img_create(uiAppLauncher_Body);
-        lv_img_set_src(ui_AppIcon, lisaui_app_lists[i]->icon->icon);
-        if (lisaui_app_lists[i]->icon->zoom) {
-            lv_img_set_zoom(ui_AppIcon, lisaui_app_lists[i]->icon->zoom);
-        }
-        lv_obj_set_x(ui_AppIcon, app_icon_width*i);
-        lv_obj_add_flag(ui_AppIcon, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
-        lv_obj_clear_flag(ui_AppIcon, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-        lv_obj_add_event_cb(ui_AppIcon, ui_event_OpenApp, LV_EVENT_ALL, (void *)&lisaui_app_lists[i]->app_id);
-        lv_obj_set_size(ui_AppIcon, lisaui_app_lists[i]->icon->icon_width, lisaui_app_lists[i]->icon->icon_height);
-        lv_obj_set_style_bg_color(ui_AppIcon, lv_color_hex(0xFFFF00), LV_PART_MAIN | LV_STATE_DEFAULT);
-
-        ui_AppName = lv_label_create(uiAppLauncher_Body);
-        lv_obj_set_size(ui_AppName, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-        lv_obj_align_to(ui_AppName, ui_AppIcon, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
-
-        lv_label_set_text(ui_AppName, lisaui_app_lists[i]->icon->name);
-        lv_obj_set_style_text_color(ui_AppName, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-        lv_obj_set_style_text_opa(ui_AppName, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-        lv_obj_set_style_text_font(ui_AppName, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
-    }
-
     ui_timer_date_init();
     m_current_appid = UI_APP_ID_LAUNCHER;
 }
@@ -416,4 +449,6 @@ void ui_init(void)
     app_ocr_scan_init();
     app_audio_player_init();
     app_spelling_init();
+    app_setting_init();
+    app_dictionary_init();
 }

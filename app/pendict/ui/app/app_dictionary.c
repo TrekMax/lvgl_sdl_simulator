@@ -20,7 +20,7 @@ static lv_obj_t * uiApp_Dictionary;
 
 int app_dictionary_create(lv_obj_t * parent)
 {
-    uiApp_Dictionary = lv_obj_create(NULL);
+    uiApp_Dictionary = lv_obj_create(parent);
     lv_obj_clear_flag(uiApp_Dictionary, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_bg_color(uiApp_Dictionary, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiApp_Dictionary, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
