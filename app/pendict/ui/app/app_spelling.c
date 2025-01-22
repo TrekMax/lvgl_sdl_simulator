@@ -14,19 +14,19 @@ static lv_style_t style_title;
 #define LV_SYMBOL_GIF_FILE_PATH_3 "A:/img/79D1.gif"
 #define LV_SYMBOL_GIF_FILE_PATH_4 "A:/img/6280.gif"
 
-// static lv_img_dsc_t img_png1;
-// INCBIN(img_png1, "app/pendict/ui/assets/img/logo-m2.png");
+static lv_img_dsc_t img_png1;
+INCBIN(img_png1, "app/pendict/ui/assets/img/logo-m2.png");
 
 static lv_img_dsc_t img_gif1;
 static lv_img_dsc_t img_gif2;
 static lv_img_dsc_t img_gif3;
-static lv_img_dsc_t img_jpg1;
 
 INCBIN(img_gif1, "app/pendict/ui/assets/img/00a3758.gif");
 INCBIN(img_gif2, "app/pendict/ui/assets/img/00b39b6.gif");
 // INCBIN(img_gif3, "app/pendict/ui/assets/img/00b44af.gif");
 
-INCBIN(img_jpg1, "app/pendict/ui/assets/img/Meisje.jpg");
+// static lv_img_dsc_t img_jpg1;
+// INCBIN(img_jpg1, "app/pendict/ui/assets/img/Meisje.jpg");
 
 
 
@@ -112,18 +112,18 @@ int app_spelling_create(lv_obj_t * parent)
     lv_obj_set_pos(panel2, 10, 30);
     lv_obj_set_width(panel2, SCREEN_WIDTH-180);
 
-    // lv_img_logo = lv_img_create(panel2);
-    // // lv_img_set_src(lv_img_logo, LV_SYMBOL_PNG_FILE_PATH);
-    // lv_img_png_src_init(&img_png1, gimg_png1Data, gimg_png1Size);
-    // lv_img_set_src(lv_img_logo, &img_png1);
+    lv_img_logo = lv_img_create(panel2);
+    // lv_img_set_src(lv_img_logo, LV_SYMBOL_PNG_FILE_PATH);
+    lv_img_png_src_init(&img_png1, gimg_png1Data, gimg_png1Size);
+    lv_img_set_src(lv_img_logo, &img_png1);
 
-    img_jpg = lv_img_create(panel2);
-    // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);
-    lv_img_jpg_src_init(&img_jpg1, gimg_jpg1Data, gimg_jpg1Size);
-    lv_img_set_src(img_jpg, &img_jpg1);
-    lv_obj_align(img_jpg, LV_ALIGN_LEFT_MID, 100, 0);
-    // lv_obj_set_size(img, 160, 160);
-    // lv_img_set_zoom(img_jpg, 120);
+    // img_jpg = lv_img_create(panel2);
+    // // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);
+    // lv_img_jpg_src_init(&img_jpg1, gimg_jpg1Data, gimg_jpg1Size);
+    // lv_img_set_src(img_jpg, &img_jpg1);
+    // lv_obj_align(img_jpg, LV_ALIGN_LEFT_MID, 100, 0);
+    // // lv_obj_set_size(img, 160, 160);
+    // // lv_img_set_zoom(img_jpg, 120);
 
     img = lv_gif_create(panel2);
     // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);

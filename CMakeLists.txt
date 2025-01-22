@@ -9,6 +9,10 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_BUILD_TYPE Debug)
 
+set(LOTTIE_MODULE OFF)
+set(LOTTIE_THREAD OFF)
+set(BUILD_SHARED_LIBS OFF)
+
 find_package(SDL2 REQUIRED SDL2)
 # find_package(freetype2 REQUIRED freetype2)
 include_directories(
@@ -26,6 +30,7 @@ include_directories(
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 
+# add_subdirectory(components/lv_lib_rlottie)
 add_subdirectory(components/lvgl)
 add_subdirectory(components/lv_drivers)
 add_subdirectory(components/utils)
