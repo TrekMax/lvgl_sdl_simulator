@@ -204,7 +204,7 @@ int ui_set_wsp_result_text(const char *result)
     {
         return -1;
     }
-    if (ui_app_get_current_appid() == UI_PAGE_ID_NONE) {
+    if (ui_app_get_current_appid() == UI_APP_ID_NONE) {
         return -1;
     }
     lv_textarea_set_text(uiPage_Wsp_Result, result);

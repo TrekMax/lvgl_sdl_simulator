@@ -35,18 +35,12 @@ typedef struct {
     uint16_t icon_height;
 } ui_app_t;
 
-#define APP_ICON_ID_OCR              (1)
-#define APP_ICON_ID_AUDIO_PLAYER     (2)
-#define APP_ICON_ID_DIALOGUE         (3)
-#define APP_ICON_ID_DICTIONARY       (4)
-#define APP_ICON_ID_SPELLING         (5)
-#define APP_ICON_ID_SETTING          (6)
 
 #define APP_ICON_ZOOM(x)    (x*256)
 
 ui_app_t apps_list[] = {
     {
-        .id = APP_ICON_ID_OCR,
+        .id = UI_APP_ID_OCR,
         .name = "扫描",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
@@ -54,7 +48,7 @@ ui_app_t apps_list[] = {
         .zoom = APP_ICON_ZOOM(0),
     },
     {
-        .id = APP_ICON_ID_DICTIONARY,
+        .id = UI_APP_ID_DICTIONARY,
         .name = "词典",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
@@ -62,7 +56,7 @@ ui_app_t apps_list[] = {
         .zoom = APP_ICON_ZOOM(0),
     },
     {
-        .id = APP_ICON_ID_AUDIO_PLAYER,
+        .id = UI_APP_ID_AUDIO_PLAY,
         .name = "播音",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
@@ -70,7 +64,7 @@ ui_app_t apps_list[] = {
         .zoom = APP_ICON_ZOOM(0),
     },
     {
-        .id = APP_ICON_ID_SPELLING,
+        .id = UI_APP_ID_SPELLING,
         .name = "拼读",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
@@ -78,7 +72,7 @@ ui_app_t apps_list[] = {
         .zoom = APP_ICON_ZOOM(0),
     },
     {
-        .id = APP_ICON_ID_SETTING,
+        .id = UI_APP_ID_SETTING,
         .name = "设置",
         .icon_width = LV_SIZE_CONTENT,
         .icon_height = LV_SIZE_CONTENT,
@@ -86,15 +80,6 @@ ui_app_t apps_list[] = {
         .zoom = APP_ICON_ZOOM(0),
     },
 };
-lv_obj_t * ui_AppIcon_Wsp;
-lv_obj_t * ui_AppName_Wsp;
-
-void ui_event_OpenAppAudioPlayer(lv_event_t * e);
-void ui_event_OpenAppSetting(lv_event_t * e);
-void ui_event_OpenAppWsp(lv_event_t * e);
-void ui_Screen_AppWsp_init(void);
-void ui_Screen_AppSetting_init(void);
-void ui_Screen_AppAudioPlayer_init(void);
 
 // 状态栏
 void ui_event_StatusBar_BtnBackHome(lv_event_t * e);
@@ -107,20 +92,20 @@ lv_obj_t * uiStatusBar_LabBatteryLevel;
 
 
 
-static uint8_t current_screen = UI_PAGE_ID_NONE;
+static uint8_t m_current_appid = UI_APP_ID_NONE;
 
 int ui_app_get_current_appid(void)
 {
-    return current_screen;
+    return m_current_appid;
 }
 
 int ui_app_set_current_appid(const int app_id)
 {
-    if (UI_PAGE_ID_MAX <= app_id) {
+    if (UI_APP_ID_MAX <= app_id) {
         printk("[ui] invalid app id: %d\n", app_id);
         return -1;
     }
-    current_screen = app_id;
+    m_current_appid = app_id;
     return 0;
 }
 
@@ -134,10 +119,11 @@ void ui_event_OpenApp(lv_event_t * event)
     if(event_code == LV_EVENT_CLICKED) {
         lv_obj_clear_flag(uiStatusBar_BtnBackHome, LV_OBJ_FLAG_HIDDEN); //显示 BackHome 按钮
         lv_obj_add_flag(uiStatusBar_LabDate, LV_OBJ_FLAG_HIDDEN);   // 隐藏日期
+        printk("[ui] open app: %d, %s\n", app_id, apps_list[app_id].name);
         switch (app_id)
         {
-        case APP_ICON_ID_OCR:
-            current_screen = UI_PAGE_ID_OCR;
+        case UI_APP_ID_OCR:
+            m_current_appid = UI_APP_ID_OCR;
             if (app_ocr_get_page() == NULL) {
                 app_ocr_create(NULL);
             }
@@ -145,37 +131,34 @@ void ui_event_OpenApp(lv_event_t * event)
             // lv_obj_set_style_text_font(uiPageScanOCR_TextResult, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
             _ui_screen_change(app_ocr_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
             break;
-        case APP_ICON_ID_AUDIO_PLAYER:
-            current_screen = UI_PAGE_ID_AUDIO_PLAY;
+        case UI_APP_ID_DICTIONARY:
+            break;
+        case UI_APP_ID_AUDIO_PLAY:
+            m_current_appid = UI_APP_ID_AUDIO_PLAY;
             if (app_audio_player_get_page() == NULL) {
                 app_audio_player_create(NULL);
             }
             lv_obj_set_parent(ui_StatusBar, app_audio_player_get_page());
             _ui_screen_change(app_audio_player_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
             break;
-        case APP_ICON_ID_SETTING:
-            current_screen = UI_PAGE_ID_SETTING;
-            if ( app_setting_get_page() == NULL) {
-                app_setting_create(NULL);
-            }
-            lv_obj_set_parent(ui_StatusBar, app_setting_get_page());
-            _ui_screen_change( app_setting_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
-            break;
-        case APP_ICON_ID_SPELLING:
-            current_screen = UI_PAGE_ID_SPELLING;
+        case UI_APP_ID_SPELLING:
+            m_current_appid = UI_APP_ID_SPELLING;
             if (app_spelling_get_page() == NULL) {
                 app_spelling_create(NULL);
             }
             lv_obj_set_parent(ui_StatusBar, app_spelling_get_page());
             _ui_screen_change(app_spelling_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
             break;
-        case APP_ICON_ID_DIALOGUE:
-            current_screen = UI_PAGE_ID_DIALOGUE;
+        case UI_APP_ID_SETTING:
+            m_current_appid = UI_APP_ID_SETTING;
             if ( app_setting_get_page() == NULL) {
                 app_setting_create(NULL);
             }
-            lv_obj_set_parent(ui_StatusBar,  app_setting_get_page());
+            lv_obj_set_parent(ui_StatusBar, app_setting_get_page());
             _ui_screen_change( app_setting_get_page(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
+            break;
+        case UI_APP_ID_DIALOGUE:
+            m_current_appid = UI_APP_ID_DIALOGUE;
             break;
         default:
             break;
@@ -189,7 +172,7 @@ void ui_event_StatusBar_BtnBackHome(lv_event_t * e)
     lv_obj_t * target = lv_event_get_target(e);
     LV_UNUSED(target);
     if(event_code == LV_EVENT_CLICKED) {
-        current_screen = UI_PAGE_ID_HOME;
+        m_current_appid = UI_APP_ID_LAUNCHER;
         lv_obj_set_parent(ui_StatusBar, uiAppLauncher);
         lv_obj_add_flag(uiStatusBar_BtnBackHome, LV_OBJ_FLAG_HIDDEN); // 隐藏 BackHome 按钮
         lv_obj_clear_flag(uiStatusBar_LabDate, LV_OBJ_FLAG_HIDDEN);   // 显示日期
@@ -368,7 +351,7 @@ void uiStatusBar_init(lv_obj_t *parent)
 }
 
 ///////////////////// SCREENS ////////////////////
-void UI_PAGE_ID_HOME_init(void)
+void UI_APP_ID_LAUNCHER_init(void)
 {
     uiAppLauncher = lv_obj_create(NULL);
     lv_obj_clear_flag(uiAppLauncher, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -427,10 +410,8 @@ void UI_PAGE_ID_HOME_init(void)
     }
 
     ui_timer_date_init();
-    current_screen = UI_PAGE_ID_HOME;
+    m_current_appid = UI_APP_ID_LAUNCHER;
 }
-
-
 
 void ui_init(void)
 {
@@ -439,6 +420,6 @@ void ui_init(void)
                                                false, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
 
-    UI_PAGE_ID_HOME_init();
+    UI_APP_ID_LAUNCHER_init();
     lv_disp_load_scr(uiAppLauncher);
 }

@@ -120,11 +120,11 @@ int ui_set_ocr_result_text(const char *result)
     {
         return -1;
     }
-    if (ui_app_get_current_appid() == UI_PAGE_ID_NONE) {
+    if (ui_app_get_current_appid() == UI_APP_ID_NONE) {
         return -1;
     }
-    if (ui_app_get_current_appid() != UI_PAGE_ID_OCR) {
-        ui_app_set_current_appid(UI_PAGE_ID_OCR);
+    if (ui_app_get_current_appid() != UI_APP_ID_OCR) {
+        ui_app_set_current_appid(UI_APP_ID_OCR);
         // lv_obj_set_parent(ui_StatusBar, uiPage_ScanOCR);
         // lv_obj_clear_flag(uiStatusBar_BtnBackHome, LV_OBJ_FLAG_HIDDEN); //显示 BackHome 按钮
         // lv_obj_add_flag(uiStatusBar_LabDate, LV_OBJ_FLAG_HIDDEN);   // 隐藏日期

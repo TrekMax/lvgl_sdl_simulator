@@ -24,17 +24,18 @@ extern "C" {
 #include "ui_events.h"
 #include "assets/assets_res.h"
 
-enum ui_page_id_t {
-    UI_PAGE_ID_NONE,
-    UI_PAGE_ID_HOME,
-    UI_PAGE_ID_OCR,
-    UI_PAGE_ID_AUDIO_PLAY,
-    UI_PAGE_ID_SETTING,
-    UI_PAGE_ID_DICTIONARY,
-    UI_PAGE_ID_DIALOGUE,
-    UI_PAGE_ID_SPELLING,
+enum ui_app_id_t {
 
-    UI_PAGE_ID_MAX,
+    UI_APP_ID_OCR,
+    UI_APP_ID_DICTIONARY,
+    UI_APP_ID_AUDIO_PLAY,
+    UI_APP_ID_SPELLING,
+    UI_APP_ID_SETTING,
+    UI_APP_ID_DIALOGUE,
+
+    UI_APP_ID_NONE,
+    UI_APP_ID_LAUNCHER,
+    UI_APP_ID_MAX,
 };
 
 void ui_init(void);
