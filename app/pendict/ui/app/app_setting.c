@@ -156,7 +156,7 @@ int app_setting_exit(void)
 }
 
 struct app_icon_t icon_setting = {
-    .name = "拼读",
+    .name = "设置",
     .icon_width = LV_SIZE_CONTENT,
     .icon_height = LV_SIZE_CONTENT,
     .icon = &ui_img__launcher_setting_png,
@@ -176,6 +176,5 @@ struct lisaui_app_t app_setting = {
 
 int app_setting_init(void)
 {
-    app_setting.app_id = UI_APP_ID_SETTING;
     return lisaui_app_register(&app_setting);
 }

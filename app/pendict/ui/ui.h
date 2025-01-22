@@ -35,6 +35,7 @@ enum ui_app_id_t {
     UI_APP_ID_SETTING,
     UI_APP_ID_DIALOGUE,
 
+    UI_APP_ID_DEMO,
     UI_APP_ID_NONE,
     UI_APP_ID_LAUNCHER,
     UI_APP_ID_MAX,

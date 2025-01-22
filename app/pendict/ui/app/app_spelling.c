@@ -14,8 +14,8 @@ static lv_style_t style_title;
 #define LV_SYMBOL_GIF_FILE_PATH_3 "A:/img/79D1.gif"
 #define LV_SYMBOL_GIF_FILE_PATH_4 "A:/img/6280.gif"
 
-static lv_img_dsc_t img_png1;
-INCBIN(img_png1, "app/pendict/ui/assets/img/logo-m2.png");
+// static lv_img_dsc_t img_png1;
+// INCBIN(img_png1, "app/pendict/ui/assets/img/logo-m2.png");
 
 static lv_img_dsc_t img_gif1;
 static lv_img_dsc_t img_gif2;
@@ -112,10 +112,10 @@ int app_spelling_create(lv_obj_t * parent)
     lv_obj_set_pos(panel2, 10, 30);
     lv_obj_set_width(panel2, SCREEN_WIDTH-180);
 
-    lv_img_logo = lv_img_create(panel2);
-    // lv_img_set_src(lv_img_logo, LV_SYMBOL_PNG_FILE_PATH);
-    lv_img_png_src_init(&img_png1, gimg_png1Data, gimg_png1Size);
-    lv_img_set_src(lv_img_logo, &img_png1);
+    // lv_img_logo = lv_img_create(panel2);
+    // // lv_img_set_src(lv_img_logo, LV_SYMBOL_PNG_FILE_PATH);
+    // lv_img_png_src_init(&img_png1, gimg_png1Data, gimg_png1Size);
+    // lv_img_set_src(lv_img_logo, &img_png1);
 
     img_jpg = lv_img_create(panel2);
     // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);
@@ -258,6 +258,5 @@ struct lisaui_app_t app_spelling = {
 
 int app_spelling_init(void)
 {
-    app_spelling.app_id = UI_APP_ID_SPELLING;
     return lisaui_app_register(&app_spelling);
 }

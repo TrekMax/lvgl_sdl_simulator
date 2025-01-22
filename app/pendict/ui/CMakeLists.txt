@@ -22,7 +22,7 @@ SET(SOURCES
         assets/bitmaps/ui_img__status_charging_3_png.c
         assets/bitmaps/ui_img__status_charging_4_png.c
         assets/bitmaps/ui_img__status_charging_5_png.c
-        
+
         ./assets/fonts/lv_font_chinese_18.c
 
         ui.c
@@ -35,8 +35,8 @@ SET(SOURCES
         ./app/app_ocr.c
         ./app/app_setting.c
         ./app/app_dictionary.c
-        # ./app/app_practice.c
         ./app/app_audio_player.c
+        ./app/app_demo.c
 )
 
 include_directories(
