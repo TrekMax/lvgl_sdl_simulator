@@ -1,6 +1,5 @@
 #include "app_spelling.h"
 
-#include "incbin.h"
 
 #include "../ui.h"
 #include "../utils/lv_img_utils.h"
@@ -19,11 +18,14 @@ static lv_img_dsc_t img_png1;
 INCBIN(img_png1, "app/pendict/ui/assets/img/logo-m2.png");
 
 static lv_img_dsc_t img_gif1;
-INCBIN(img_gif1, "app/pendict/ui/assets/img/00a3758.gif");
 static lv_img_dsc_t img_gif2;
-INCBIN(img_gif2, "app/pendict/ui/assets/img/00b39b6.gif");
-
+static lv_img_dsc_t img_gif3;
 static lv_img_dsc_t img_jpg1;
+
+INCBIN(img_gif1, "app/pendict/ui/assets/img/00a3758.gif");
+INCBIN(img_gif2, "app/pendict/ui/assets/img/00b39b6.gif");
+// INCBIN(img_gif3, "app/pendict/ui/assets/img/00b44af.gif");
+
 INCBIN(img_jpg1, "app/pendict/ui/assets/img/Meisje.jpg");
 
 

@@ -12,6 +12,9 @@
 #include "app_ocr.h"
 #include "../ui.h"
 
+// static lv_img_dsc_t img_gif4;
+// INCBIN(img_gif4, "app/pendict/ui/assets/img/00b44af.gif");
+
 // Scan App
 lv_obj_t * uiApp_ScanOCR;
 lv_obj_t * uiApp_ScanOCR_Body;

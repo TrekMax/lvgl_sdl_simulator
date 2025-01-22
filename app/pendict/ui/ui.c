@@ -26,20 +26,10 @@ lv_obj_t * uiAppLauncher_Body;
 lv_obj_t * ui_AppName;
 lv_obj_t *ui_AppIcon;
 
-typedef struct {
-    const int id;
-    const char *name;
-    const lv_img_dsc_t *icon;
-    uint16_t zoom;
-    lv_obj_t *icon_canvas;
-    uint16_t icon_width;
-    uint16_t icon_height;
-} ui_app_t;
-
 
 #define APP_ICON_ZOOM(x)    (x*256)
 
-ui_app_t apps_list[] = {
+struct ui_app_t apps_list[] = {
     {
         .id = UI_APP_ID_OCR,
         .name = "扫描",

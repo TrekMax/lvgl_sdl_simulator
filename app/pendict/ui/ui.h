@@ -24,6 +24,8 @@ extern "C" {
 #include "ui_events.h"
 #include "assets/assets_res.h"
 
+#include "incbin.h"
+
 enum ui_app_id_t {
 
     UI_APP_ID_OCR,
@@ -41,6 +43,17 @@ enum ui_app_id_t {
 void ui_init(void);
 int ui_app_get_current_appid(void);
 int ui_app_set_current_appid(const int app_id);
+
+
+struct ui_app_t {
+    const int id;
+    const char *name;
+    const lv_img_dsc_t *icon;
+    uint16_t zoom;
+    lv_obj_t *icon_canvas;
+    uint16_t icon_width;
+    uint16_t icon_height;
+};
 
 #include "lv_drv_conf.h"
 #define SCREEN_WIDTH SDL_HOR_RES//320

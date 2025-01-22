@@ -12,11 +12,11 @@
 #ifndef __APP_DICTIONARY_H__
 #define __APP_DICTIONARY_H__
 
+#include "../ui.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "../ui.h"
 
 void app_dictionary_create(lv_obj_t * parent);
 lv_obj_t * app_dictionary_get_page(void);
