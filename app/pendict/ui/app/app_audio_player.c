@@ -139,6 +139,6 @@ struct lisaui_app_t app_audio_player = {
 
 int app_audio_player_init(void)
 {
-    app_audio_player.app_id = 1;
+    app_audio_player.app_id = UI_APP_ID_AUDIO_PLAY;
     return lisaui_app_register(&app_audio_player);
 }

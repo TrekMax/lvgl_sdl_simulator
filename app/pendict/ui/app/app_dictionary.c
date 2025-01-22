@@ -18,7 +18,7 @@ static lv_img_dsc_t gif5;
 
 static lv_obj_t * uiApp_Dictionary;
 
-void app_dictionary_create(lv_obj_t * parent)
+int app_dictionary_create(lv_obj_t * parent)
 {
     uiApp_Dictionary = lv_obj_create(NULL);
     lv_obj_clear_flag(uiApp_Dictionary, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -31,9 +31,55 @@ void app_dictionary_create(lv_obj_t * parent)
     // lv_img_gif_src_init(&img_gif_1, gimg_gif_1Data, gimg_gif_1Size);
     // lv_gif_set_src(img_gif, &img_gif_1);
     // lv_obj_align(img_gif, LV_ALIGN_LEFT_MID, 260+120, 0);
+
+    return 0;
 }
 
 lv_obj_t * app_dictionary_get_page(void)
 {
     return uiApp_Dictionary;
+}
+
+
+int app_dictionary_destroy(void)
+{
+    printk("[%d:%s] destroy\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_dictionary_enter(void)
+{
+    printk("[%d:%s] enter\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_dictionary_exit(void)
+{
+    printk("[%d:%s] exit\n", __LINE__, __func__);
+    return 0;
+}
+
+struct app_icon_t icon_dictionary = {
+    .name = "拼读",
+    .icon_width = LV_SIZE_CONTENT,
+    .icon_height = LV_SIZE_CONTENT,
+    .icon = &ui_img__launcher_fav_png,
+    .zoom = APP_ICON_ZOOM(0),
+};
+
+struct lisaui_app_t app_dictionary = {
+    .create = app_dictionary_create,
+    .destroy = app_dictionary_destroy,
+    .enter = app_dictionary_enter,
+    .exit = app_dictionary_exit,
+
+    .get_obj_handle = app_dictionary_get_page,
+    .app_id = UI_APP_ID_DICTIONARY,
+    .icon = &icon_dictionary,
+};
+
+int app_dictionary_init(void)
+{
+    app_dictionary.app_id = UI_APP_ID_DICTIONARY;
+    return lisaui_app_register(&app_dictionary);
 }

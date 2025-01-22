@@ -79,8 +79,7 @@ static void ui_event_SliderHandler(lv_event_t * e)
     }
 }
 
-
-void app_setting_create(lv_obj_t * parent)
+int app_setting_create(lv_obj_t * parent)
 {
     uiAppSetting = lv_obj_create(NULL);
     lv_obj_clear_flag(uiAppSetting, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -127,10 +126,56 @@ void app_setting_create(lv_obj_t * parent)
     font_normal = LV_FONT_DEFAULT;
     lv_obj_add_event_cb(uiAppSetting_SliderBacklight, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(uiAppSetting_SliderVolume, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
+
+    return 0;
 }
 
 
 lv_obj_t * app_setting_get_page(void)
 {
     return uiAppSetting;
+}
+
+
+int app_setting_destroy(void)
+{
+    printk("[%d:%s] destroy\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_setting_enter(void)
+{
+    printk("[%d:%s] enter\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_setting_exit(void)
+{
+    printk("[%d:%s] exit\n", __LINE__, __func__);
+    return 0;
+}
+
+struct app_icon_t icon_setting = {
+    .name = "拼读",
+    .icon_width = LV_SIZE_CONTENT,
+    .icon_height = LV_SIZE_CONTENT,
+    .icon = &ui_img__launcher_setting_png,
+    .zoom = APP_ICON_ZOOM(0),
+};
+
+struct lisaui_app_t app_setting = {
+    .create = app_setting_create,
+    .destroy = app_setting_destroy,
+    .enter = app_setting_enter,
+    .exit = app_setting_exit,
+
+    .get_obj_handle = app_setting_get_page,
+    .app_id = UI_APP_ID_SETTING,
+    .icon = &icon_setting,
+};
+
+int app_setting_init(void)
+{
+    app_setting.app_id = UI_APP_ID_SETTING;
+    return lisaui_app_register(&app_setting);
 }

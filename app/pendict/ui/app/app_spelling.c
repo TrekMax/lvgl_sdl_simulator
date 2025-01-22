@@ -37,7 +37,7 @@ lv_obj_t * uiApp_Wsp_BtnStart;
 lv_obj_t * uiApp_Wsp_BtnStop;
 lv_obj_t * uiApp_Wsp_Result;
 
-void app_spelling_create(lv_obj_t * parent)
+int app_spelling_create(lv_obj_t * parent)
 {
     uiApp_Wsp = lv_obj_create(NULL);
     lv_obj_clear_flag(uiApp_Wsp, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
@@ -171,6 +171,7 @@ void app_spelling_create(lv_obj_t * parent)
     lv_obj_set_style_border_opa(uiLabResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
 #endif
+    return 0;
 }
 
 static ui_wsp_action_cb_t ui_wsp_action_cb = NULL;
@@ -216,4 +217,47 @@ int ui_set_wsp_result_text(const char *result)
 lv_obj_t * app_spelling_get_page(void)
 {
     return uiApp_Wsp;
+}
+
+int app_spelling_destroy(void)
+{
+    printk("[%d:%s] destroy\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_spelling_enter(void)
+{
+    printk("[%d:%s] enter\n", __LINE__, __func__);
+    return 0;
+}
+
+int app_spelling_exit(void)
+{
+    printk("[%d:%s] exit\n", __LINE__, __func__);
+    return 0;
+}
+
+struct app_icon_t icon_spelling = {
+    .name = "拼读",
+    .icon_width = LV_SIZE_CONTENT,
+    .icon_height = LV_SIZE_CONTENT,
+    .icon = &ui_img__launcher_practice_png,
+    .zoom = APP_ICON_ZOOM(0),
+};
+
+struct lisaui_app_t app_spelling = {
+    .create = app_spelling_create,
+    .destroy = app_spelling_destroy,
+    .enter = app_spelling_enter,
+    .exit = app_spelling_exit,
+
+    .get_obj_handle = app_spelling_get_page,
+    .app_id = UI_APP_ID_SPELLING,
+    .icon = &icon_spelling,
+};
+
+int app_spelling_init(void)
+{
+    app_spelling.app_id = UI_APP_ID_SPELLING;
+    return lisaui_app_register(&app_spelling);
 }
