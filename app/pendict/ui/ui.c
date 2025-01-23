@@ -165,7 +165,7 @@ void lisaui_launcher_add_app(struct lisaui_app_t *app)
     // }
     lv_obj_t * ui_AppName;
     lv_obj_t *ui_AppIcon;
-    int app_icon_width = SCREEN_WIDTH/6+20;
+    int app_icon_width = SCREEN_WIDTH/6+40;
     ui_AppIcon = lv_img_create(uiAppLauncher_Body);
     lv_img_set_src(ui_AppIcon, app->icon->icon);
     if (app->icon->zoom) {
@@ -183,7 +183,7 @@ void lisaui_launcher_add_app(struct lisaui_app_t *app)
     ui_AppName = lv_label_create(uiAppLauncher_Body);
     lv_label_set_text(ui_AppName, app->icon->name);
     lv_obj_set_size(ui_AppName, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_align_to(ui_AppName, ui_AppIcon, LV_ALIGN_OUT_BOTTOM_MID, -10, 10);
+    lv_obj_align_to(ui_AppName, ui_AppIcon, LV_ALIGN_OUT_BOTTOM_MID, -10, 4);
 
     lv_obj_set_style_text_color(ui_AppName, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_AppName, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -416,7 +416,7 @@ void UI_APP_ID_LAUNCHER_init(void)
     lv_obj_set_style_radius(uiAppLauncher_BodyBase, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     uiAppLauncher_Body = lv_obj_create(uiAppLauncher_BodyBase);
-    lv_obj_set_size(uiAppLauncher_Body, SCREEN_WIDTH, 120);
+    lv_obj_set_size(uiAppLauncher_Body, SCREEN_WIDTH+100, 140);
     lv_obj_set_align(uiAppLauncher_Body, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(uiAppLauncher_Body, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_scroll_dir(uiAppLauncher_Body, LV_DIR_HOR);

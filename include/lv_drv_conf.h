@@ -95,8 +95,8 @@
 #endif
 
 #if USE_SDL || USE_SDL_GPU
-#if 1
-#define SDL_HOR_RES     640//*2
+#if 0
+#define SDL_HOR_RES     320//*2
 #define SDL_VER_RES     170//*2
 #else
 #define SDL_HOR_RES     320*2//640

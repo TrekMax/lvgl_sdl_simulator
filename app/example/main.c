@@ -18,9 +18,9 @@
 #include "version.h"
 #include "config.h"
 #include "utils_log.h"
-#include <stdio.h>\
+#include <stdio.h>
 
-#include "ui/lv_port_file.h"
+// #include "ui/lv_port_file.h"
 
 // #include "ui/ui_page_manager.h"
 
@@ -109,12 +109,13 @@ int main(int argc, char **argv)
 
     /*Initialize the HAL (display, input devices, tick) for LVGL*/
     hal_init();
-    lv_port_fs_init();
+    // lv_port_fs_init();
 
-    // ui_init();
-    extern void lv_demo_widgets(void);
-    // lv_demo_physics();
-    lv_demo_widgets();
+    // extern void lv_demo_widgets(void);
+    // lv_demo_widgets();
+
+    extern void lv_demo_benchmark(void);
+    lv_demo_benchmark();
 
     while(1) {
         /* Periodically call the lv_task handler.

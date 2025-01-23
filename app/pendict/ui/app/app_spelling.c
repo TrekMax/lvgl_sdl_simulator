@@ -105,7 +105,7 @@ int app_spelling_create(lv_obj_t * parent)
 #if 1
     // /*Create the second panel*/
     lv_obj_t * panel2 = lv_obj_create(uiApp_Wsp);
-    lv_obj_set_style_bg_color(panel2, lv_color_hex(0x000FF0), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(panel2, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(panel2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_side(panel2, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_height(panel2, LV_SIZE_CONTENT);
