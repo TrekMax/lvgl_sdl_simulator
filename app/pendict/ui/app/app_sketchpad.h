@@ -12,15 +12,15 @@
 #ifndef __APP_SKETCHPAD_H__
 #define __APP_SKETCHPAD_H__
 
-#include "../ui.h"
-
-#ifdef __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
+#include "lvgl/lvgl.h"
+
 int app_sketchpad_init(void);
 
-#ifdef __cplusplus
+#if defined(__cplusplus)
 }
 #endif
 

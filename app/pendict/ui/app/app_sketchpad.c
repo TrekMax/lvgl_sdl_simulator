@@ -14,12 +14,9 @@
 #include "../ui.h"
 #include "../utils/lv_img_utils.h"
 
-// static lv_img_dsc_t gif5;
-// INCBIN(gif5, "app/pendict/ui/assets/img/00b44af.gif");
-// static lv_img_dsc_t img_png6;
-// INCBIN(img_png6, "app/pendict/ui/assets/img/logo-m2.png");
 
-static lv_obj_t * uiApp_Sketchpad;
+// FIXME: INCBIN 之后 的 lv_obj_t * 不能为 static, 编译阶段提示 dwarf line number information for .data ignored
+lv_obj_t * uiApp_Sketchpad = NULL;
 
 int app_sketchpad_create(lv_obj_t * parent)
 {
@@ -37,8 +34,8 @@ int app_sketchpad_create(lv_obj_t * parent)
     // // lv_obj_align(img_gif, LV_ALIGN_LEFT_MID, 260+120, 0);
     // lv_img_logo = lv_img_create(parent);
     // // lv_img_set_src(lv_img_logo, LV_SYMBOL_PNG_FILE_PATH);
-    // lv_img_png_src_init(&img_png1, gimg_png1Data, gimg_png1Size);
-    // lv_img_set_src(lv_img_logo, &img_png1);
+    // lv_img_png_src_init(&img_png6, gimg_png6Data, gimg_png6Size);
+    // lv_img_set_src(lv_img_logo, &img_png6);
 
     return 0;
 }

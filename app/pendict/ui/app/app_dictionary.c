@@ -14,12 +14,12 @@
 #include "../ui.h"
 #include "../utils/lv_img_utils.h"
 
-// static lv_img_dsc_t gif5;
-// INCBIN(gif5, "app/pendict/ui/assets/img/00b44af.gif");
-// static lv_img_dsc_t img_png6;
-// INCBIN(img_png6, "app/pendict/ui/assets/img/logo-m2.png");
+static lv_img_dsc_t gif5;
+INCBIN(gif5, "app/pendict/ui/assets/img/00b44af.gif");
+static lv_img_dsc_t img_png6;
+INCBIN(img_png6, "app/pendict/ui/assets/img/logo-m2.png");
 
-static lv_obj_t * uiApp_Dictionary;
+lv_obj_t * uiApp_Dictionary = NULL;
 
 int app_dictionary_create(lv_obj_t * parent)
 {
@@ -28,17 +28,17 @@ int app_dictionary_create(lv_obj_t * parent)
     lv_obj_set_style_bg_color(uiApp_Dictionary, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiApp_Dictionary, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    // lv_obj_t * img_gif;
-    // lv_obj_t * lv_img_logo;
-    // // img_gif = lv_gif_create(uiApp_Dictionary);
-    // // // lv_gif_set_src(img2, LV_SYMBOL_GIF_FILE_PATH_2);
-    // // lv_img_gif_src_init(&img_gif_1, gimg_gif_1Data, gimg_gif_1Size);
-    // // lv_gif_set_src(img_gif, &img_gif_1);
-    // // lv_obj_align(img_gif, LV_ALIGN_LEFT_MID, 260+120, 0);
-    // lv_img_logo = lv_img_create(parent);
-    // // lv_img_set_src(lv_img_logo, LV_SYMBOL_PNG_FILE_PATH);
-    // lv_img_png_src_init(&img_png1, gimg_png1Data, gimg_png1Size);
-    // lv_img_set_src(lv_img_logo, &img_png1);
+    lv_obj_t * img_gif;
+    lv_obj_t * lv_img_logo;
+    // img_gif = lv_gif_create(uiApp_Dictionary);
+    // // lv_gif_set_src(img2, LV_SYMBOL_GIF_FILE_PATH_2);
+    // lv_img_gif_src_init(&img_gif_1, gimg_gif_1Data, gimg_gif_1Size);
+    // lv_gif_set_src(img_gif, &img_gif_1);
+    // lv_obj_align(img_gif, LV_ALIGN_LEFT_MID, 260+120, 0);
+    lv_img_logo = lv_img_create(parent);
+    // lv_img_set_src(lv_img_logo, LV_SYMBOL_PNG_FILE_PATH);
+    lv_img_png_src_init(&img_png6, gimg_png6Data, gimg_png6Size);
+    lv_img_set_src(lv_img_logo, &img_png6);
 
     return 0;
 }

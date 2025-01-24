@@ -97,28 +97,30 @@ void lisaui_app_enter(const int app_id)
         printk("[ui] invalid app id: %d\n", app_id);
         return;
     }
-    if (lisaui_app_lists[app_id] == NULL) {
+    struct lisaui_app_t *app = lisaui_app_lists[app_id];
+    if (app == NULL) {
         printk("[ui] app not registered\n");
         return;
     }
-    struct lisaui_app_t *app = lisaui_app_lists[app_id];
     printk("[ui] open app: %d, %s\n", app_id, app->icon->name);
-    if (lisaui_app_lists[app_id]->get_obj_handle() == NULL) {
-        if (lisaui_app_lists[app_id]->create(NULL) != 0) {
+    if (app->get_obj_handle() == NULL) {
+        if (app->create(NULL) != 0) {
             printk("[ui] app(%s) create failed\n", app->icon->name);
             return;
         }
         printk("[ui] app(%s) create success\n", app->icon->name);
     } 
-    if (lisaui_app_lists[app_id]->enter) {
-        if (lisaui_app_lists[app_id]->enter()) {
+    if (app->enter) {
+        if (app->enter()) {
             printk("[ui] app enter failed\n");
             return;
         }
         {
-            m_current_appid = app_id;
-            lv_obj_set_parent(ui_StatusBar, lisaui_app_lists[app_id]->get_obj_handle());
-            _ui_screen_change(lisaui_app_lists[app_id]->get_obj_handle(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
+            if (ui_StatusBar, app->get_obj_handle()!=NULL) {
+                m_current_appid = app_id;
+                lv_obj_set_parent(ui_StatusBar, app->get_obj_handle());
+                _ui_screen_change(app->get_obj_handle(), LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
+            }
         }
     }
 }
@@ -129,20 +131,20 @@ void lisaui_app_exit(const int app_id)
         printk("[ui] invalid app id: %d\n", app_id);
         return;
     }
-    if (lisaui_app_lists[app_id] == NULL) {
+    struct lisaui_app_t *app = lisaui_app_lists[app_id];
+    if (app == NULL) {
         printk("[ui] app not registered\n");
         return;
     }
-    struct lisaui_app_t *app = lisaui_app_lists[app_id];
     printk("[ui] close app: %d, %s\n", app_id, app->icon->name);
-    if (lisaui_app_lists[app_id]->exit) {
-        if (lisaui_app_lists[app_id]->exit()) {
+    if (app->exit) {
+        if (app->exit()) {
             printk("[ui] app exit failed\n");
             return;
         }
     }
-    if (lisaui_app_lists[app_id]->destroy) {
-        if (lisaui_app_lists[app_id]->destroy()) {
+    if (app->destroy) {
+        if (app->destroy()) {
             printk("[ui] app destroy failed\n");
             return;
         }
