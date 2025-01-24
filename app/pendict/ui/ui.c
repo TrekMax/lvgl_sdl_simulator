@@ -18,6 +18,7 @@
 #include "app/app_spelling.h"
 #include "app/app_dictionary.h"
 #include "app/app_demo.h"
+#include "app/app_sketchpad.h"
 
 
 
@@ -444,4 +445,6 @@ void ui_init(void)
     app_audio_player_init();
     app_spelling_init();
     app_setting_init();
+
+    app_sketchpad_init();
 }

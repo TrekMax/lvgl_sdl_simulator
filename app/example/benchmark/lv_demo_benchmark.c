@@ -768,6 +768,58 @@ static void monitor_cb(lv_disp_drv_t * drv, uint32_t time, uint32_t px)
 
     //    lv_obj_invalidate(lv_scr_act());
 }
+#include <stdio.h>
+static void print_generate_report(void)
+{
+#if 1
+    uint32_t weight_sum = 0;
+    uint32_t weight_normal_sum = 0;
+    uint32_t weight_opa_sum = 0;
+    uint32_t fps_sum = 0;
+    uint32_t fps_normal_sum = 0;
+    uint32_t fps_opa_sum = 0;
+    uint32_t i;
+    for(i = 0; scenes[i].create_cb; i++) {
+        fps_normal_sum += scenes[i].fps_normal * scenes[i].weight;
+        weight_normal_sum += scenes[i].weight;
+
+        uint32_t w = LV_MAX(scenes[i].weight / 2, 1);
+        fps_opa_sum += scenes[i].fps_opa * w;
+        weight_opa_sum += w;
+    }
+
+
+    fps_sum = fps_normal_sum + fps_opa_sum;
+    weight_sum = weight_normal_sum + weight_opa_sum;
+
+    uint32_t fps_weighted = fps_sum / weight_sum;
+    uint32_t fps_normal_unweighted = fps_normal_sum / weight_normal_sum;
+    uint32_t fps_opa_unweighted = fps_opa_sum / weight_opa_sum;
+
+    uint32_t opa_speed_pct = (fps_opa_unweighted * 100) / fps_normal_unweighted;
+
+/* Print performance results in table format */
+    printf("\n\n=== LVGL Benchmark Results ===\n");
+    printf("%-30s | %10s | %10s\n", "Test Case", "Normal FPS", "Opacity FPS");
+    printf("---------------------------------------------------------------\n");
+    
+    for(i = 0; scenes[i].create_cb; i++) {
+        printf("%-30s | %10d | %10d\n", 
+                scenes[i].name, 
+                scenes[i].fps_normal,
+                scenes[i].fps_opa);
+    }
+    
+    printf("---------------------------------------------------------------\n");
+    printf("%-30s | %10d | %10d\n", 
+            "Average FPS", 
+            fps_normal_unweighted,
+            fps_opa_unweighted);
+    printf("%-30s | %10d\n", "Weighted Average FPS", fps_weighted);
+    printf("%-30s | %10d%%\n", "Opacity Performance", opa_speed_pct);
+    printf("=== End of Benchmark Results ===\n\n");
+#endif
+}
 
 static void generate_report(void)
 {
@@ -1034,6 +1086,7 @@ static void scene_next_task_cb(lv_timer_t * timer)
         }
 
         generate_report();      /* generate report */
+        print_generate_report();
     }
 }
 
