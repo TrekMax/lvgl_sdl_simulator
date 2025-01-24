@@ -10,6 +10,8 @@ file(GLOB_RECURSE SRC_FILES
 add_subdirectory(ui)
 
 target_sources(${target_name} PRIVATE ${SRC_FILES})
+set(LINK_SCRIPTS -T${CMAKE_CURRENT_SOURCE_DIR}/ui/lisaui_apps.ld)
+
 target_link_libraries(
     ${target_name}
     PRIVATE
@@ -17,6 +19,10 @@ target_link_libraries(
     -lm 
     -lpthread
     -ldl
+    # -L/usr/local/lib -lfreetype
     lv_drivers
     ui
+    ${LINK_SCRIPTS}
 )
+
+# set(CMAKE_VERBOSE_MAKEFILE ON)

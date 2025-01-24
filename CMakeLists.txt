@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_BUILD_TYPE Debug)
 
 find_package(SDL2 REQUIRED SDL2)
-# find_package(freetype2 REQUIRED freetype2)
+# find_package(freetype REQUIRED freetype)
 # find_package(rlottie REQUIRED rlottie)
 include_directories(
     ${SDL2_INCLUDE_DIRS}
@@ -23,6 +23,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/components
     ${PROJECT_SOURCE_DIR}/include/
     ${PROJECT_SOURCE_DIR}/components/utils/include/
+    /usr/include/freetype2
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -35,8 +36,9 @@ add_subdirectory(components/utils)
 # add_subdirectory(app/launcher)
 # add_subdirectory(app/lv_demo_100ask)
 # add_subdirectory(app/physics)
-add_subdirectory(app/pendict)
+# add_subdirectory(app/pendict)
 # add_subdirectory(app/printer)
 # add_subdirectory(app/x-ui)
 # add_subdirectory(app/awe)
 # add_subdirectory(app/example)
+add_subdirectory(app/app_manager)
