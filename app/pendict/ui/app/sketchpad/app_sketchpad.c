@@ -11,37 +11,56 @@
  */
 #include "app_sketchpad.h"
 
-#include "../ui.h"
-#include "../utils/lv_img_utils.h"
-
+#include "../../ui.h"
+#include "../../utils/lv_img_utils.h"
+#include "lv_100ask_sketchpad.h"
 
 // FIXME: INCBIN 之后 的 lv_obj_t * 不能为 static, 编译阶段提示 dwarf line number information for .data ignored
 lv_obj_t * uiApp_Sketchpad = NULL;
+
+/*=====================
+ * Other functions
+ *====================*/
+
+/**********************
+ *   STATIC FUNCTIONS
+ **********************/
+
+// static void event_handler(lv_event_t * e)
+// {
+//     lv_obj_t * sketchpad = lv_event_get_target(e);
+
+//     void * canvas_buf = lv_canvas_get_buf(sketchpad);
+//     lv_draw_buf_t * canvas_draw_buf = lv_canvas_get_draw_buf(sketchpad);
+
+//     LV_LOG_USER("LV_EVENT_VALUE_CHANGED");
+
+// }
+
+#define SKETCHPAD_DEFAULT_WIDTH  SCREEN_WIDTH
+#define SKETCHPAD_DEFAULT_HEIGHT SCREEN_HEIGHT
+
+static lv_color_t cbuf[LV_CANVAS_BUF_SIZE_TRUE_COLOR(SKETCHPAD_DEFAULT_WIDTH, SKETCHPAD_DEFAULT_HEIGHT)];
 
 int app_sketchpad_create(lv_obj_t * parent)
 {
     uiApp_Sketchpad = lv_obj_create(parent);
     lv_obj_clear_flag(uiApp_Sketchpad, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_bg_color(uiApp_Sketchpad, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(uiApp_Sketchpad, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(uiApp_Sketchpad, 100, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    // lv_obj_t * img_gif;
-    // lv_obj_t * lv_img_logo;
-    // // img_gif = lv_gif_create(uiApp_Sketchpad);
-    // // // lv_gif_set_src(img2, LV_SYMBOL_GIF_FILE_PATH_2);
-    // // lv_img_gif_src_init(&img_gif_1, gimg_gif_1Data, gimg_gif_1Size);
-    // // lv_gif_set_src(img_gif, &img_gif_1);
-    // // lv_obj_align(img_gif, LV_ALIGN_LEFT_MID, 260+120, 0);
-    // lv_img_logo = lv_img_create(parent);
-    // // lv_img_set_src(lv_img_logo, LV_SYMBOL_PNG_FILE_PATH);
-    // lv_img_png_src_init(&img_png6, gimg_png6Data, gimg_png6Size);
-    // lv_img_set_src(lv_img_logo, &img_png6);
 
+    lv_obj_t *sketchpad = lv_100ask_sketchpad_create(uiApp_Sketchpad);
+
+    lv_canvas_set_buffer(sketchpad, cbuf, SKETCHPAD_DEFAULT_WIDTH, SKETCHPAD_DEFAULT_HEIGHT, LV_IMG_CF_TRUE_COLOR);
+    lv_obj_center(sketchpad);
+    lv_canvas_fill_bg(sketchpad, lv_palette_lighten(LV_PALETTE_GREY, 3), LV_OPA_COVER);
     return 0;
 }
 
 lv_obj_t * app_sketchpad_get_page(void)
 {
+    printk("[%d:%s] get page: %p\n", __LINE__, __func__, uiApp_Sketchpad);
     return uiApp_Sketchpad;
 }
 
@@ -49,6 +68,10 @@ lv_obj_t * app_sketchpad_get_page(void)
 int app_sketchpad_destroy(void)
 {
     printk("[%d:%s] destroy\n", __LINE__, __func__);
+    if (uiApp_Sketchpad) {
+        lv_obj_del(uiApp_Sketchpad);
+        uiApp_Sketchpad = NULL;
+    }
     return 0;
 }
 

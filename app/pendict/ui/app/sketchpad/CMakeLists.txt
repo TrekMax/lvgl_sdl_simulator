@@ -37,15 +37,13 @@ SET(SOURCES
     ./app/app_dictionary.c
     ./app/app_audio_player.c
     ./app/app_demo.c
-    ./app/sketchpad/app_sketchpad.c
-    ./app/sketchpad/lv_100ask_sketchpad.c
+    ./app/app_sketchpad.c
 )
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/app
     ${CMAKE_CURRENT_BINARY_DIR}/assets
     ${CMAKE_CURRENT_BINARY_DIR}/fonts
-    ${CMAKE_CURRENT_BINARY_DIR}/app
-    ${CMAKE_CURRENT_BINARY_DIR}/app/sketchpad/
     )
 add_library(ui ${SOURCES})

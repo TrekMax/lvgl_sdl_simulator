@@ -18,7 +18,7 @@
 #include "app/app_spelling.h"
 #include "app/app_dictionary.h"
 #include "app/app_demo.h"
-#include "app/app_sketchpad.h"
+#include "app/sketchpad/app_sketchpad.h"
 
 
 
@@ -215,11 +215,13 @@ void ui_event_StatusBar_BtnBackHome(lv_event_t * e)
     lv_obj_t * target = lv_event_get_target(e);
     LV_UNUSED(target);
     if(event_code == LV_EVENT_CLICKED) {
-        m_current_appid = UI_APP_ID_LAUNCHER;
         lv_obj_set_parent(ui_StatusBar, uiAppLauncher);
         lv_obj_add_flag(uiStatusBar_BtnBackHome, LV_OBJ_FLAG_HIDDEN); // 隐藏 BackHome 按钮
         lv_obj_clear_flag(uiStatusBar_LabDate, LV_OBJ_FLAG_HIDDEN);   // 显示日期
         _ui_screen_change(uiAppLauncher, LV_SCR_LOAD_ANIM_FADE_ON, 60, 0);
+        lisaui_app_exit(m_current_appid);
+        m_current_appid = UI_APP_ID_LAUNCHER;
+
     }
 }
 
