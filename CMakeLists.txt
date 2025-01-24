@@ -9,10 +9,6 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_BUILD_TYPE Debug)
 
-set(LOTTIE_MODULE OFF)
-set(LOTTIE_THREAD OFF)
-set(BUILD_SHARED_LIBS OFF)
-
 find_package(SDL2 REQUIRED SDL2)
 # find_package(freetype2 REQUIRED freetype2)
 # find_package(rlottie REQUIRED rlottie)

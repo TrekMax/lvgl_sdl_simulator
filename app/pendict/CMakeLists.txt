@@ -19,5 +19,4 @@ target_link_libraries(
     -ldl
     lv_drivers
     ui
-    -lrlottie
 )
