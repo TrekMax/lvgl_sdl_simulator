@@ -450,5 +450,5 @@ void ui_init(void)
     app_spelling_init();
     app_setting_init();
 
-    app_sketchpad_init();
+    // app_sketchpad_init();
 }
