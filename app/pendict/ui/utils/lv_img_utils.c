@@ -18,8 +18,9 @@
 #endif
 // #include "log_print.h"
 // #define LOG_INF CLOG
-#include <stdio.h>
-#define LOG_INF printf
+#define LOG_INF LV_LOG_USER
+// #include <stdio.h>
+// #define LOG_INF printf
 
 // #define LOG_INF LV_LOG_USER
 

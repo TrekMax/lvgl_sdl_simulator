@@ -17,9 +17,9 @@
 #else
 	#include "lvgl/lvgl.h"
 #endif
-// #define LOG_INF LV_LOG_USER
-#include <stdio.h>
-#define LOG_INF printf
+#define LOG_INF LV_LOG_USER
+// #include <stdio.h>
+// #define LOG_INF printf
 
 #pragma pack(push, 1)
 typedef struct

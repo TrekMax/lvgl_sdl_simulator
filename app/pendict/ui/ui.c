@@ -174,7 +174,7 @@ void lisaui_launcher_add_app(struct lisaui_app_t *app)
     if (app->icon->zoom) {
         lv_img_set_zoom(ui_AppIcon, app->icon->zoom);
     }
-    printk("app_registered_count: %d\n", app_registered_count);
+    // printk("app_registered_count: %d\n", app_registered_count);
     lv_obj_set_size(uiAppLauncher_Body, app_icon_width*app_registered_count, 120);
     lv_obj_set_x(ui_AppIcon, app_icon_width*(app_registered_count-1));
     lv_obj_add_flag(ui_AppIcon, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST);     /// Flags
