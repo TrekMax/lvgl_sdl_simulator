@@ -142,6 +142,8 @@ static void hal_init(void)
     indev_drv.type = LV_INDEV_TYPE_POINTER;
     indev_drv.read_cb = sdl_mouse_read;
     lv_indev_drv_register(&indev_drv);
+
+    LOGI(TAG, "SDL_HOR_RES: %d, SDL_VER_RES: %d", SDL_HOR_RES, SDL_VER_RES);
 }
 
 /**

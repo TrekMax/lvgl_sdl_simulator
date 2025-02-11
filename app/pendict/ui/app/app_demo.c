@@ -13,14 +13,14 @@
 #include "../ui.h"
 #include "../utils/lv_img_utils.h"
 
+
+
 static lv_img_dsc_t img_gif4;
-INCBIN(img_gif4, "app/pendict/ui/assets/img/00b44af.gif");
+INCBIN(img_gif4, RES_PERFIX_PATH("ui/assets/img/00b44af.gif"));
 
 static lv_img_dsc_t img_jpg1;
-INCBIN(img_jpg1, "app/pendict/ui/assets/img/Het_meisje_met_de_parel.jpg");
-// INCBIN(img_jpg1, "app/pendict/ui/assets/img/small_image.sjpg");
+INCBIN(img_jpg1, RES_PERFIX_PATH("ui/assets/img/Het_meisje_met_de_parel.jpg"));
 
-// Scan App
 lv_obj_t * uiApp_Demo;
 lv_obj_t * uiApp_Demo_Body;
 lv_obj_t * uiApp_Demo_TextResult;
@@ -108,13 +108,13 @@ int app_demo_create(lv_obj_t * parent)
     lv_obj_set_style_border_opa(uiApp_Demo_TextResult, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_t *uiTest_Textarea = lv_textarea_create(panel1);
-    lv_obj_set_size(uiTest_Textarea, SCREEN_WIDTH-140, 700);
+    lv_obj_set_size(uiTest_Textarea, SCREEN_WIDTH-160, 700);
     lv_obj_set_pos(uiTest_Textarea, 20, 40);
     // lv_obj_set_align(uiTest_Textarea, LV_ALIGN_TOP_LEFT);
 
     lv_obj_set_style_text_font(uiTest_Textarea, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_textarea_set_placeholder_text(uiTest_Textarea, UI_TEST_STR);
-    lv_textarea_set_text(uiTest_Textarea, UI_TEST_STR UI_TEST_STR UI_TEST_STR UI_TEST_STR UI_TEST_STR UI_TEST_STR UI_TEST_STR UI_TEST_STR);
+    lv_textarea_set_text(uiTest_Textarea, UI_TEST_STR UI_TEST_STR UI_TEST_STR UI_TEST_STR);
     lv_obj_align_to(uiTest_Textarea, img_gif, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);
     // lv_label_set_text(uiTest_Textarea, UI_TEST_STR);
     // lv_textarea_set_cursor_click_pos(uiTest_Textarea, true);
@@ -127,15 +127,16 @@ int app_demo_create(lv_obj_t * parent)
 
     // lv_obj_center(ui_BtnTranslate);
 #endif
-    // lv_obj_t *img_jpg;
-    // img_jpg = lv_img_create(panel1);
-    // // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);
-    // lv_img_jpg_src_init(&img_jpg1, gimg_jpg1Data, gimg_jpg1Size);
-    // lv_img_set_src(img_jpg, &img_jpg1);
-    // // lv_obj_set_size(img_jpg, 100, 100);
-    // // lv_obj_set_height(img_jpg, 100);
+    lv_obj_t *img_jpg;
+    img_jpg = lv_img_create(panel1);
+    // lv_gif_set_src(img, LV_SYMBOL_GIF_FILE_PATH_1);
+    lv_img_jpg_src_init(&img_jpg1, gimg_jpg1Data, gimg_jpg1Size);
+    lv_img_set_src(img_jpg, &img_jpg1);
+    // lv_obj_set_size(img_jpg, 100, 100);
+    // lv_obj_set_height(img_jpg, 100);
     // lv_img_set_zoom(img_jpg, 256);
-    // lv_obj_align_to(img_jpg, img_gif, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);
+    lv_obj_align_to(img_jpg, img_gif, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);
+
     lv_style_init(&style_title);
     lv_style_set_text_font(&style_title, &lv_font_montserrat_18);
     lv_style_init(&style_text_muted);
@@ -261,4 +262,11 @@ struct lisaui_app_t app_demo = {
 int app_demo_init(void)
 {
     return lisaui_app_register(&app_demo);
+}
+
+REGISTER_LISAUI_APP(lisaui_demo, app_demo_init);
+
+
+void printk_app_demo_info(void)
+{
 }

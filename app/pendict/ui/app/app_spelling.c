@@ -271,3 +271,10 @@ int app_spelling_init(void)
 {
     return lisaui_app_register(&app_spelling);
 }
+
+REGISTER_LISAUI_APP(lisaui_spelling, app_spelling_init);
+
+void printk_app_spelling_info(void)
+{
+    printk("app_spelling_info\n");
+}

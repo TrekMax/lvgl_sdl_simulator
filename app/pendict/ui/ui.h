@@ -18,6 +18,8 @@ extern "C" {
 
 #include "lvgl/lvgl.h"
 
+#define RES_PERFIX_PATH(res)     "app/pendict/" res
+
 #define printk printf
 
 #include <stdio.h>
@@ -78,6 +80,21 @@ struct lisaui_app_t {
 int lisaui_app_register(struct lisaui_app_t *app);
 int lisaui_app_unregister(struct lisaui_app_t *app);
 void lisaui_app_enter(const int app_id);
+
+typedef struct {
+    const char *app_name;
+    int (*app_init_func)(void);
+} lvgl_app_t;
+
+#define LISAUI_APP_SECTION __attribute__((used, section(".lisaui_apps")))
+
+#define REGISTER_LISAUI_APP(name, init_func) \
+    LISAUI_APP_SECTION \
+    static const lvgl_app_t lisaui_app_##name = { \
+        .app_name = #name, \
+        .app_init_func = init_func, \
+    };
+
 
 #ifdef __cplusplus
 } /*extern "C"*/

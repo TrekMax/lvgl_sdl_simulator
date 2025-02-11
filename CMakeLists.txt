@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_BUILD_TYPE Debug)
 
 find_package(SDL2 REQUIRED SDL2)
-# find_package(freetype2 REQUIRED freetype2)
+# find_package(freetype REQUIRED freetype)
 # find_package(rlottie REQUIRED rlottie)
 include_directories(
     ${SDL2_INCLUDE_DIRS}
@@ -23,6 +23,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/components
     ${PROJECT_SOURCE_DIR}/include/
     ${PROJECT_SOURCE_DIR}/components/utils/include/
+    /usr/include/freetype2
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 

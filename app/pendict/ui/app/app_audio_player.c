@@ -141,3 +141,5 @@ int app_audio_player_init(void)
 {
     return lisaui_app_register(&app_audio_player);
 }
+
+REGISTER_LISAUI_APP(lisaui_audio_player, app_audio_player_init);
