@@ -133,7 +133,11 @@ struct lisaui_app_t app_audio_player = {
     .exit = app_audio_player_exit,
 
     .get_obj_handle = app_audio_player_get_page,
-    .app_id = UI_APP_ID_AUDIO_PLAY,
+    .info = {
+        .name = "Audio Player",
+        .package_name = "com.listenai.audio_player",
+        .id = UI_APP_ID_AUDIO_PLAYER,
+    },
     .icon = &icon_audio_player,
 };
 

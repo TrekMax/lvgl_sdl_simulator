@@ -244,27 +244,6 @@ struct app_icon_t icon_demo = {
     .icon = &ui_img__launcher_fav_png,
     .zoom = APP_ICON_ZOOM(0),
 };
-struct app_icon_t icon_demo1 = {
-    .name = "Demo1",
-    .icon_width = LV_SIZE_CONTENT,
-    .icon_height = LV_SIZE_CONTENT,
-    .icon = &ui_img__launcher_composition_png,
-    .zoom = APP_ICON_ZOOM(0),
-};
-struct app_icon_t icon_demo2 = {
-    .name = "Demo2",
-    .icon_width = LV_SIZE_CONTENT,
-    .icon_height = LV_SIZE_CONTENT,
-    .icon = &ui_img__launcher_setting_png,
-    .zoom = APP_ICON_ZOOM(0),
-};
-struct app_icon_t icon_demo3 = {
-    .name = "Demo3",
-    .icon_width = LV_SIZE_CONTENT,
-    .icon_height = LV_SIZE_CONTENT,
-    .icon = &ui_img__launcher_practice_png,
-    .zoom = APP_ICON_ZOOM(0),
-};
 
 struct lisaui_app_t app_demo = {
     .create = app_demo_create,
@@ -273,46 +252,16 @@ struct lisaui_app_t app_demo = {
     .exit = app_demo_exit,
 
     .get_obj_handle = app_demo_get_page,
-    .app_id = UI_APP_ID_DEMO,
+    .info = {
+        .name = "Demo",
+        .package_name = "com.listenai.lisaui.demo",
+        .id = UI_APP_ID_DEMO,
+    },
     .icon = &icon_demo,
 };
-struct lisaui_app_t app_demo1 = {
-    .create = app_demo_create,
-    .destroy = app_demo_destroy,
-    .enter = app_demo_enter,
-    .exit = app_demo_exit,
-
-    .get_obj_handle = app_demo_get_page,
-    .app_id = UI_APP_ID_DEMO1,
-    .icon = &icon_demo1,
-};
-struct lisaui_app_t app_demo2 = {
-    .create = app_demo_create,
-    .destroy = app_demo_destroy,
-    .enter = app_demo_enter,
-    .exit = app_demo_exit,
-
-    .get_obj_handle = app_demo_get_page,
-    .app_id = UI_APP_ID_DEMO2,
-    .icon = &icon_demo2,
-};
-struct lisaui_app_t app_demo3 = {
-    .create = app_demo_create,
-    .destroy = app_demo_destroy,
-    .enter = app_demo_enter,
-    .exit = app_demo_exit,
-
-    .get_obj_handle = app_demo_get_page,
-    .app_id = UI_APP_ID_DEMO3,
-    .icon = &icon_demo3,
-};
-
 int app_demo_init(void)
 {
     lisaui_app_register(&app_demo);
-    // lisaui_app_register(&app_demo1);
-    // lisaui_app_register(&app_demo2);
-    // lisaui_app_register(&app_demo3);
     return 0;
 }
 

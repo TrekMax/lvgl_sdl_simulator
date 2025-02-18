@@ -59,32 +59,34 @@ int ui_app_set_current_appid(const int app_id)
 
 int lisaui_app_register(struct lisaui_app_t *app)
 {
-    if (app->app_id >= UI_APP_ID_MAX) {
-        printk("[ui] invalid app id: %d\n", app->app_id);
+    int app_id = app->info.id;
+    if (app_id >= UI_APP_ID_MAX) {
+        printk("[ui] invalid app id: %d\n", app_id);
         return -1;
     }
-    if (lisaui_app_lists[app->app_id] != NULL) {
+    if (lisaui_app_lists[app_id] != NULL) {
         printk("[ui] app already registered\n");
         return -1;
     }
     app_registered_count++;
-    lisaui_app_lists[app->app_id] = app;
+    lisaui_app_lists[app_id] = app;
     lisaui_launcher_add_app(app);
-    printk("[%d:%s] app(%d:%s) register successful\r\n", __LINE__, __func__, app->app_id, app->icon->name);
+    printk("[%d:%s] app(%d:%s) register successful\r\n", __LINE__, __func__, app_id, app->icon->name);
     return 0;
 }
 
 int lisaui_app_unregister(struct lisaui_app_t *app)
 {
-    if (app->app_id >= UI_APP_ID_MAX) {
-        printk("[ui] invalid app id: %d\n", app->app_id);
+    int app_id = app->info.id;
+    if (app_id >= UI_APP_ID_MAX) {
+        printk("[ui] invalid app id: %d\n", app_id);
         return -1;
     }
-    if (lisaui_app_lists[app->app_id] == NULL) {
+    if (lisaui_app_lists[app_id] == NULL) {
         printk("[ui] app not registered\n");
         return -1;
     }
-    lisaui_app_lists[app->app_id] = NULL;
+    lisaui_app_lists[app_id] = NULL;
     app_registered_count--;
     return 0;
 }
@@ -158,11 +160,12 @@ void ui_event_StatusBar_BtnBackHome(lv_event_t *e);
 
 void lisaui_launcher_add_app(struct lisaui_app_t *app)
 {
-    if (app->app_id >= UI_APP_ID_MAX) {
-        printk("[ui] invalid app id: %d\n", app->app_id);
+    int app_id = app->info.id;
+    if (app_id >= UI_APP_ID_MAX) {
+        printk("[ui] invalid app id: %d\n", app_id);
         return;
     }
-    // if (lisaui_app_lists[app->app_id] != NULL) {
+    // if (lisaui_app_lists[app_id] != NULL) {
     //     printk("[ui] app already registered\n");
     //     return;
     // }
@@ -179,7 +182,7 @@ void lisaui_launcher_add_app(struct lisaui_app_t *app)
     lv_obj_set_x(ui_AppIcon, app_icon_width * (app_registered_count - 1));
     lv_obj_add_flag(ui_AppIcon, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST); /// Flags
     lv_obj_clear_flag(ui_AppIcon, LV_OBJ_FLAG_SCROLLABLE);                        /// Flags
-    lv_obj_add_event_cb(ui_AppIcon, ui_event_OpenApp, LV_EVENT_ALL, (void *)&app->app_id);
+    lv_obj_add_event_cb(ui_AppIcon, ui_event_OpenApp, LV_EVENT_ALL, (void *)&app_id);
     lv_obj_set_size(ui_AppIcon, app->icon->icon_width, app->icon->icon_height);
     lv_obj_set_style_bg_color(ui_AppIcon, lv_color_hex(0xFFFF00), LV_PART_MAIN | LV_STATE_DEFAULT);
 

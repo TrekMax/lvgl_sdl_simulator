@@ -263,7 +263,11 @@ struct lisaui_app_t app_spelling = {
     .exit = app_spelling_exit,
 
     .get_obj_handle = app_spelling_get_page,
-    .app_id = UI_APP_ID_SPELLING,
+    .info = {
+        .name = "Spelling",
+        .package_name = "com.listenai.lisaui.spelling",
+        .id = UI_APP_ID_SPELLING,
+    },
     .icon = &icon_spelling,
 };
 

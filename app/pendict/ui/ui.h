@@ -32,7 +32,7 @@ enum ui_app_id_t {
 
     UI_APP_ID_OCR,
     UI_APP_ID_DICTIONARY,
-    UI_APP_ID_AUDIO_PLAY,
+    UI_APP_ID_AUDIO_PLAYER,
     UI_APP_ID_SPELLING,
     UI_APP_ID_SETTING,
     UI_APP_ID_DIALOGUE,
@@ -42,6 +42,8 @@ enum ui_app_id_t {
     UI_APP_ID_DEMO1,
     UI_APP_ID_DEMO2,
     UI_APP_ID_DEMO3,
+
+    UI_APP_ID_BEZIER,
     
     UI_APP_ID_NONE,
     UI_APP_ID_LAUNCHER,
@@ -62,6 +64,14 @@ struct app_icon_t {
     uint16_t icon_height;
 };
 
+struct app_info_t {
+    const char *name;
+    const char *package_name;
+
+    const int id;
+    int uuid;
+};
+
 #define APP_ICON_ZOOM(x)    (x*256)
 #include "lv_drv_conf.h"
 #define SCREEN_WIDTH SDL_HOR_RES//320
@@ -75,8 +85,7 @@ struct lisaui_app_t {
 
     lv_obj_t * (*get_obj_handle)(void);
 
-    int app_id;
-    int app_uuid;
+    struct app_info_t info;
     struct app_icon_t *icon;
 };
 

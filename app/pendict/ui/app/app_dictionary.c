@@ -502,7 +502,11 @@ struct lisaui_app_t app_dictionary = {
     .exit = app_dictionary_exit,
 
     .get_obj_handle = app_dictionary_get_page,
-    .app_id = UI_APP_ID_DICTIONARY,
+    .info = {
+        .name = "词典",
+        .package_name = "com.listenai.dictionary",
+        .id = UI_APP_ID_DICTIONARY,
+    },
     .icon = &icon_dictionary,
 };
 

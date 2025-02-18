@@ -170,7 +170,11 @@ struct lisaui_app_t app_setting = {
     .exit = app_setting_exit,
 
     .get_obj_handle = app_setting_get_page,
-    .app_id = UI_APP_ID_SETTING,
+    .info = {
+        .name = "设置",
+        .package_name = "com.listenai.lisaui.setting",
+        .id = UI_APP_ID_SETTING,
+    },
     .icon = &icon_setting,
 };
 

@@ -34,7 +34,9 @@ SET(SOURCES
     
     ./utils/img_utils.c
     ./utils/lv_img_utils.c
-    
+    )
+
+set(APP_SOURCES
     ./app/app_ocr.c
     ./app/app_demo.c
     ./app/app_dictionary.c
@@ -42,20 +44,15 @@ SET(SOURCES
     ./app/app_bezier_demo.c
     ./app/app_spelling.c
     ./app/app_setting.c
-    # ./app/sketchpad/app_sketchpad.c
-    # ./app/sketchpad/lv_100ask_sketchpad.c
-
-    ./app/widgets/llm_dialog.c
-    ./app/widgets/floating_button.c
-    )
+)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/assets
     ${CMAKE_CURRENT_BINARY_DIR}/fonts
-    ${CMAKE_CURRENT_BINARY_DIR}/app
     ${CMAKE_CURRENT_BINARY_DIR}/widgets
-    # ${CMAKE_CURRENT_BINARY_DIR}/app/sketchpad/
+
+    ${CMAKE_CURRENT_BINARY_DIR}/app
     )
 
-add_library(ui ${SOURCES})
+add_library(ui ${SOURCES} ${APP_SOURCES})

@@ -12,9 +12,6 @@
 #include "app_ocr.h"
 #include "../ui.h"
 
-// static lv_img_dsc_t img_gif4;
-// INCBIN(img_gif4, "app/pendict/ui/assets/img/00b44af.gif");
-
 // Scan App
 lv_obj_t * uiOCR_panel;
 lv_obj_t * uiOCR_ResultText;
@@ -142,7 +139,12 @@ struct lisaui_app_t app_ocr_scan = {
     .exit = app_ocr_scan_exit,
 
     .get_obj_handle = app_ocr_get_page,
-    .app_id = UI_APP_ID_OCR,
+
+    .info = {
+        .name = "OCR",
+        .package_name = "com.listenai.lisaui.ocr",
+        .id = UI_APP_ID_OCR,
+    },
     .icon = &icon_ocr_scan,
 };
 

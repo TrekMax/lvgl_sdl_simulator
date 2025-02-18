@@ -202,7 +202,11 @@ struct lisaui_app_t app_bezier_demo = {
     .exit = app_bezier_demo_exit,
 
     .get_obj_handle = app_bezier_demo_get_page,
-    .app_id = UI_APP_ID_DEMO,
+    .info = {
+        .name = "Bezier",
+        .package_name = "com.listenai.lisaui.bezier",
+        .id = UI_APP_ID_BEZIER,
+    },
     .icon = &icon_demo,
 };
 
