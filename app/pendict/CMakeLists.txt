@@ -10,8 +10,7 @@ file(GLOB_RECURSE SRC_FILES
 add_subdirectory(ui)
 
 target_sources(${target_name} PRIVATE ${SRC_FILES})
-set(LINK_SCRIPTS "-T/home/listenai/Develop/GUI/LVGL/lvgl_sdl_simulator/app/pendict/ui/lisaui_apps.ld")
-# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -z separate-code")
+set(LINK_SCRIPTS -T${CMAKE_CURRENT_SOURCE_DIR}/ui/lisaui_apps.ld)
 
 target_link_libraries(
     ${target_name}

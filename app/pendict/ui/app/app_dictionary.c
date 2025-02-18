@@ -20,11 +20,11 @@ INCBIN(img_gif5, RES_PERFIX_PATH("ui/assets/img/00b44af.gif"));
 static lv_img_dsc_t img_favorite;
 static lv_img_dsc_t img_book;
 static lv_img_dsc_t img_voice;
-INCBIN(img_favorite,    RES_PERFIX_PATH("ui/assets/img/icons/favorite.png"));
-INCBIN(img_book,        RES_PERFIX_PATH("ui/assets/img/icons/books.png"));
-INCBIN(img_voice,       RES_PERFIX_PATH("ui/assets/img/icons/voice.png"));
+INCBIN(img_favorite, RES_PERFIX_PATH("ui/assets/img/icons/favorite.png"));
+INCBIN(img_book, RES_PERFIX_PATH("ui/assets/img/icons/books.png"));
+INCBIN(img_voice, RES_PERFIX_PATH("ui/assets/img/icons/voice.png"));
 
-lv_obj_t *uiApp_Dictionary = NULL;
+lv_obj_t *uiApp_DictionaryScreen = NULL;
 lv_obj_t *uiApp_DictionaryBtnStart = NULL;
 
 lv_obj_t *lisaui_explain_text_create(lv_obj_t *parent, const char *tittle, const char *description)
@@ -32,7 +32,10 @@ lv_obj_t *lisaui_explain_text_create(lv_obj_t *parent, const char *tittle, const
     lv_obj_t *panel1 = lv_obj_create(parent);
     return panel1;
 }
-#define UI_TEST_SCR1 "1.[古籍释义]《广韵》《集韵》《韵会》𠀤余六切，音育。地之肥也。以其能生长万物，故从育从土地之肥也。以其能生长万物，故从育从土以其能生长万物，故从育从土"
+#define UI_TEST_SCR1                                                                                                                                                            \
+    "1.[古籍释义]"                                                                                                                                                          \
+    "《广韵》《集韵》《韵会》𠀤余六切，音育。地之肥也。以其能生长万物，故从育从土地之肥也。以其能生长万物，故从育从土" \
+    "以其能生长万物，故从育从土"
 
 struct _explain_t {
     const char *tittle;
@@ -40,7 +43,8 @@ struct _explain_t {
 };
 
 static struct _explain_t explain_list[] = {
-    {"[古籍释义]", "《广韵》《集韵》《韵会》𠀤余六切，音育。地之肥也。以其能生长万物，故从育从土地之肥也。以其能生长万物，故从育从土以其能生长万物，故从育从土"},
+    {"[古籍释义]", "《广韵》《集韵》《韵会》𠀤余六切，音育。地之肥也。以其能生长万物，故从育从土地之肥也。以其能生长万"
+                   "物，故从育从土以其能生长万物，故从育从土"},
     {"基本字义", "#0000ff 聆#líng ⒈ 听：聆听。聆取。聆教（jiào ）"},
     {"基本词义", "〈动〉\n(1) (形声。从耳，令声。本义：细听) [3]\\n(2) 同本义 [hear]聆广乐之九奏兮。——张衡《思玄赋》\
     \n\t宝玉接过来，一面目视其文，耳聆其歌。——《红楼梦》\
@@ -48,12 +52,26 @@ static struct _explain_t explain_list[] = {
     \n(3) 又如：聆偈(听经)；聆受(倾听并接受)；聆训(听受训教)；聆教(聆听教晦)；聆音察理(听到声音就能明察事理)\
     \n(4) 明了，清楚 [understand]\
     \n\t观读之者，晓然若盲之开目，聆然若聋之通耳。——汉· 王充《论衡》 [3]\
-    \n(5) 又如：聆聆(明了，清楚) [1]"},\
+    \n(5) 又如：聆聆(明了，清楚) [1]"},
     {"释义", "#0000ff 聆听#。#0000ff 聆取#。#00ff00 聆教（jiao）#"},
     {"同义词", "XXX"},
     {"反义词", "XXX"},
 };
 
+static void lisaui_img_event_cb(lv_event_t *e)
+{
+    static bool is_pause = false;
+    // printk("gif event code : %d\n", e->code);
+    if (e->code == LV_EVENT_CLICKED) {
+        lv_obj_t *img_gif = lv_event_get_target(e);
+        if (is_pause) {
+            lv_gif_resume(img_gif);
+        } else {
+            lv_gif_pause(img_gif);
+        }
+        is_pause = !is_pause;
+    }
+}
 
 lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
 {
@@ -63,7 +81,6 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
 
     lv_obj_clear_flag(parent, LV_OBJ_FLAG_SCROLL_ELASTIC);
     lv_obj_t *base_panel = lv_obj_create(parent);
-    lv_obj_set_pos(base_panel, 0, 10);
 
     // 设置 Flex 布局和对齐方式
     lv_obj_set_layout(base_panel, LV_LAYOUT_FLEX); // 设置为Flex布局
@@ -72,7 +89,7 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
     lv_obj_set_style_outline_width(base_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_clear_flag(base_panel, LV_OBJ_FLAG_SCROLL_ELASTIC);
 
-    lv_obj_set_width(base_panel, SCREEN_WIDTH - 80);
+    lv_obj_set_width(base_panel, SCREEN_WIDTH);
     lv_obj_set_height(base_panel, SCREEN_HEIGHT - 20);
 
     lv_obj_set_scrollbar_mode(base_panel, LV_SCROLLBAR_MODE_OFF);
@@ -82,10 +99,10 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
     lv_obj_set_style_pad_all(base_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(base_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_outline_width(base_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(base_panel, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(base_panel, lv_color_hex(0x00FF00), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(base_panel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_t * img_container = lv_obj_create(base_panel);
+    lv_obj_t *img_container = lv_obj_create(base_panel);
     // lv_obj_set_size(img_container, SCREEN_WIDTH - 100, 100);
     lv_obj_set_width(img_container, SCREEN_WIDTH - 100);
     lv_obj_set_height(img_container, LV_SIZE_CONTENT);
@@ -99,6 +116,9 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
     lv_img_gif_src_init(&img_gif5, gimg_gif5Data, gimg_gif5Size);
     lv_gif_set_src(img_gif, &img_gif5);
     lv_obj_align(img_gif, LV_ALIGN_TOP_LEFT, 0, 0);
+    lv_obj_add_flag(img_gif, LV_OBJ_FLAG_CLICKABLE);
+    
+    lv_obj_add_event_cb(img_gif, lisaui_img_event_cb, LV_EVENT_ALL, NULL);
 
     lv_obj_t *uiDictionary_pingyinBtn = lv_btn_create(img_container);
     lv_obj_set_size(uiDictionary_pingyinBtn, 80, 40);
@@ -112,14 +132,14 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
 
     lv_obj_t *uiDictionary_explain = lv_label_create(img_container);
     lv_label_set_text(uiDictionary_explain, "#FFFFFF 释义：# #FFFF00 肥沃的土地#");
-    lv_label_set_recolor(uiDictionary_explain, true);                      /*Enable re-coloring by commands in the text*/
+    lv_label_set_recolor(uiDictionary_explain, true); /*Enable re-coloring by commands in the text*/
     // lv_label_set_text(uiDictionary_explain, "释义：肥沃的土地");
-    // lv_label_set_text(uiDictionary_explain, "#0000ff Re-color# #ff00ff words# #ff0000 of a# label, align the lines to the center "
+    // lv_label_set_text(uiDictionary_explain, "#0000ff Re-color# #ff00ff words# #ff0000 of a# label, align the lines to
+    // the center "
     //     "and wrap long text automatically.");
     lv_obj_set_style_text_font(uiDictionary_explain, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_obj_set_style_text_color(uiDictionary_explain, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_align_to(uiDictionary_explain, uiDictionary_pingyin, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 20);
-
 
     static lv_style_t style;
     lv_style_init(&style);
@@ -166,13 +186,14 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
     lv_style_set_transition(&style_pr, &trans);
 
     lv_obj_t *uiApp_Demo_TextResult = NULL;
-    for (int i = 0; i < sizeof(explain_list)/sizeof(struct _explain_t); i++) {
+    for (int i = 0; i < sizeof(explain_list) / sizeof(struct _explain_t); i++) {
         lv_obj_t *uiApp_DictionaryBtnStart1 = lv_btn_create(base_panel);
         lv_obj_set_size(uiApp_DictionaryBtnStart1, 120, 40);
-        lv_obj_align_to(uiApp_DictionaryBtnStart1, img_gif, LV_ALIGN_OUT_BOTTOM_LEFT, 10, 20 + i * 100);
+        lv_obj_set_x(uiApp_DictionaryBtnStart1, 20);
+        lv_obj_align_to(uiApp_DictionaryBtnStart1, img_gif, LV_ALIGN_OUT_BOTTOM_LEFT, 30, 20 + i * 100);
         lv_obj_add_flag(uiApp_DictionaryBtnStart1, LV_OBJ_FLAG_SCROLL_ON_FOCUS); /// Flags
         lv_obj_clear_flag(uiApp_DictionaryBtnStart1, LV_OBJ_FLAG_SCROLLABLE);    /// Flags
-        lv_obj_remove_style_all(uiApp_DictionaryBtnStart1);                          /*Remove the style coming from the theme*/
+        lv_obj_remove_style_all(uiApp_DictionaryBtnStart1); /*Remove the style coming from the theme*/
         lv_obj_add_style(uiApp_DictionaryBtnStart1, &style, 0);
         lv_obj_add_style(uiApp_DictionaryBtnStart1, &style_pr, LV_STATE_PRESSED);
         lv_obj_set_size(uiApp_DictionaryBtnStart1, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
@@ -182,7 +203,7 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
         lv_label_set_text(ui_BtnTranslate, explain_list[i].tittle);
         lv_obj_set_style_text_font(ui_BtnTranslate, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_set_style_text_color(ui_BtnTranslate, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-        
+
         uiApp_Demo_TextResult = lv_label_create(base_panel);
         if (SCREEN_WIDTH > 320) {
             lv_obj_set_width(uiApp_Demo_TextResult, SCREEN_WIDTH - 120);
@@ -218,13 +239,14 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
 
     lv_obj_t *uiApp_Demo_Text = lv_textarea_create(base_panel);
     lv_obj_align_to(uiApp_Demo_Text, uiApp_Demo_TextResult, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 100);
-    lv_obj_set_size(uiApp_Demo_Text, SCREEN_WIDTH - 80, 240);
+    lv_obj_set_size(uiApp_Demo_Text, SCREEN_WIDTH - 80, LV_SIZE_CONTENT);
     lv_obj_set_style_text_font(uiApp_Demo_Text, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_bg_color(uiApp_Demo_Text, lv_color_hex(0xFF0000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_textarea_set_text(uiApp_Demo_Text, UI_TEST_STR1);
 
     lv_obj_set_style_text_color(uiApp_Demo_Text, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(uiApp_Demo_Text, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(uiApp_Demo_Text, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(uiApp_Demo_Text, lv_color_hex(0xFF0000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiApp_Demo_Text, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_color(uiApp_Demo_Text, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_opa(uiApp_Demo_Text, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -236,7 +258,7 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
 #include <math.h>
 
 // 三次贝塞尔曲线计算函数
-static int32_t bezier_path_cb(const lv_anim_t * anim)
+static int32_t bezier_path_cb(const lv_anim_t *anim)
 {
     float t = (float)anim->act_time / anim->time; // 当前时间比例
     float t2 = t * t;
@@ -256,21 +278,21 @@ static int32_t bezier_path_cb(const lv_anim_t * anim)
 
     return (int32_t)value;
 }
-static void menu_anim_cb(void * var, int32_t v)
+static void menu_anim_cb(void *var, int32_t v)
 {
     lv_obj_set_x(var, v);
 }
 
 static lv_anim_t anim;
-static lv_obj_t * menu;
-static lv_obj_t * menu_tips;
+static lv_obj_t *menu;
+static lv_obj_t *menu_tips;
 
 static void show_menu()
 {
     lv_anim_init(&anim);
     lv_anim_set_var(&anim, menu);
-    lv_anim_set_values(&anim, -SCREEN_WIDTH+100, 0); // 从左侧滑入
-    lv_anim_set_time(&anim, 500); // 动画时间
+    lv_anim_set_values(&anim, -SCREEN_WIDTH + 100, 0); // 从左侧滑入
+    lv_anim_set_time(&anim, 500);                      // 动画时间
     lv_anim_set_exec_cb(&anim, menu_anim_cb);
     // lv_anim_set_path_cb(&anim, bezier_path_cb); // 使用自定义贝塞尔曲线路径
     lv_anim_start(&anim);
@@ -282,8 +304,8 @@ static void hide_menu()
 {
     lv_anim_init(&anim);
     lv_anim_set_var(&anim, menu);
-    lv_anim_set_values(&anim, 0, -SCREEN_WIDTH+100); // 滑出到左侧
-    lv_anim_set_time(&anim, 500); // 动画时间
+    lv_anim_set_values(&anim, 0, -SCREEN_WIDTH + 100); // 滑出到左侧
+    lv_anim_set_time(&anim, 500);                      // 动画时间
     lv_anim_set_exec_cb(&anim, menu_anim_cb);
     // lv_anim_set_path_cb(&anim, bezier_path_cb); // 使用自定义贝塞尔曲线路径
     lv_anim_start(&anim);
@@ -296,12 +318,12 @@ void menu_lv_group_focus_cb(struct _lv_group_t *)
     printk("focus cb\r\n");
 }
 
-static void btn_event_cb(lv_event_t * e)
+static void btn_event_cb(lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     printk("menu event code: 0x%02X(%d)\r\n", code, code);
-    if(code == LV_EVENT_CLICKED) {
-        if(lv_obj_get_x(menu) < 0) {
+    if (code == LV_EVENT_CLICKED) {
+        if (lv_obj_get_x(menu) < 0) {
             show_menu();
             lv_group_focus_obj(menu);
             lv_obj_add_state(menu, LV_STATE_FOCUSED);
@@ -312,14 +334,14 @@ static void btn_event_cb(lv_event_t * e)
     }
 }
 
-static void focus_event_cb(lv_event_t * e)
+static void focus_event_cb(lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
-    lv_obj_t * obj = lv_event_get_target(e);
+    lv_obj_t *obj = lv_event_get_target(e);
 
-    if(code == LV_EVENT_DEFOCUSED) {
-        if(obj == menu) {
-        // if(obj == menu || obj == btn) {
+    if (code == LV_EVENT_DEFOCUSED) {
+        if (obj == menu) {
+            // if(obj == menu || obj == btn) {
             printk("menu defocused\r\n");
             hide_menu();
         }
@@ -329,11 +351,10 @@ static void focus_event_cb(lv_event_t * e)
     // printk("menu event code: 0x%02X(%d)\r\n", code, code);
 }
 
-
 lv_obj_t *lisaui_explain_menu_create(lv_obj_t *parent)
 {
 
-    #if 1
+#if 1
     lv_obj_t *uiIcon_Book = lv_img_create(parent);
     lv_img_png_src_init(&img_book, gimg_bookData, gimg_bookSize);
     lv_img_set_src(uiIcon_Book, &img_book);
@@ -362,11 +383,11 @@ lv_obj_t *lisaui_explain_menu_create(lv_obj_t *parent)
     // lv_label_set_text(btn_label, "Menu");
 
     menu = lv_obj_create(lv_layer_top());
-    lv_obj_set_size(menu, SCREEN_WIDTH-100, lv_obj_get_height(lv_layer_top()));
+    lv_obj_set_size(menu, SCREEN_WIDTH - 100, lv_obj_get_height(lv_layer_top()));
     lv_obj_set_style_bg_color(menu, lv_color_hex(0x333333), 0);
     lv_obj_set_style_pad_all(menu, 0, 0);
     lv_obj_set_style_border_width(menu, 0, 0);
-    lv_obj_set_style_outline_width(menu, 0, 0); 
+    lv_obj_set_style_outline_width(menu, 0, 0);
     lv_obj_align(menu, LV_ALIGN_LEFT_MID, -200, 0); // 初始位置在屏幕左侧外部
     lv_obj_add_flag(menu, LV_OBJ_FLAG_HIDDEN);
 
@@ -388,17 +409,17 @@ lv_obj_t *lisaui_explain_menu_create(lv_obj_t *parent)
 #else
 
     // lv_obj_t * label1 = lv_label_create(lv_scr_act());
-    lv_obj_t * label1 = lv_label_create(uiApp_DictionaryPanel);
-    lv_label_set_long_mode(label1, LV_LABEL_LONG_WRAP);     /*Break the long lines*/
-    lv_label_set_recolor(label1, true);                      /*Enable re-coloring by commands in the text*/
+    lv_obj_t *label1 = lv_label_create(uiApp_DictionaryPanel);
+    lv_label_set_long_mode(label1, LV_LABEL_LONG_WRAP); /*Break the long lines*/
+    lv_label_set_recolor(label1, true);                 /*Enable re-coloring by commands in the text*/
     lv_label_set_text(label1, "#0000ff Re-color# #ff00ff words# #ff0000 of a# label, align the lines to the center "
-                    "and wrap long text automatically.");
-    lv_obj_set_width(label1, 150);  /*Set smaller width to make the lines wrap*/
+                              "and wrap long text automatically.");
+    lv_obj_set_width(label1, 150); /*Set smaller width to make the lines wrap*/
     lv_obj_set_style_text_align(label1, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_align(label1, LV_ALIGN_CENTER, 0, 0);
 
-    lv_obj_t * label2 = lv_label_create(uiApp_DictionaryPanel);
-    lv_label_set_long_mode(label2, LV_LABEL_LONG_SCROLL_CIRCULAR);     /*Circular scroll*/
+    lv_obj_t *label2 = lv_label_create(uiApp_DictionaryPanel);
+    lv_label_set_long_mode(label2, LV_LABEL_LONG_SCROLL_CIRCULAR); /*Circular scroll*/
     lv_obj_set_width(label2, 150);
     lv_label_set_text(label2, "It is a circularly scrolling text. ");
     lv_obj_align(label2, LV_ALIGN_CENTER, 0, 50);
@@ -407,16 +428,17 @@ lv_obj_t *lisaui_explain_menu_create(lv_obj_t *parent)
 
 int app_dictionary_create(lv_obj_t *parent)
 {
-    uiApp_Dictionary = lv_obj_create(parent);
-    lv_obj_set_size(uiApp_Dictionary, SCREEN_WIDTH, SCREEN_HEIGHT);
-    lv_obj_clear_flag(uiApp_Dictionary, LV_OBJ_FLAG_SCROLLABLE); /// Flags
-    lv_obj_set_style_bg_color(uiApp_Dictionary, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(uiApp_Dictionary, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(uiApp_Dictionary, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    lv_obj_t *uiApp_DictionaryPanel = lv_obj_create(uiApp_Dictionary);
-    lv_obj_set_size(uiApp_DictionaryPanel, SCREEN_WIDTH, SCREEN_HEIGHT);
-    lv_obj_set_pos(uiApp_DictionaryPanel, 0, 0);
+    uiApp_DictionaryScreen = lv_obj_create(parent);
+    lv_obj_set_size(uiApp_DictionaryScreen, LV_PCT(100), LV_PCT(100));
+    lv_obj_clear_flag(uiApp_DictionaryScreen, LV_OBJ_FLAG_SCROLLABLE); /// Flags
+    lv_obj_set_style_bg_color(uiApp_DictionaryScreen, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(uiApp_DictionaryScreen, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(uiApp_DictionaryScreen, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    
+    lv_obj_t *uiApp_DictionaryPanel = lv_obj_create(uiApp_DictionaryScreen);
+    lv_obj_set_size(uiApp_DictionaryPanel, LV_PCT(100), LV_PCT(90));
+    // lv_obj_set_pos(uiApp_DictionaryScreen, 20, 30);
+    // lv_obj_set_pos(uiApp_DictionaryPanel, 0, 30);
     lv_obj_set_align(uiApp_DictionaryPanel, LV_ALIGN_TOP_LEFT);
     lv_obj_add_flag(uiApp_DictionaryPanel, LV_OBJ_FLAG_SCROLL_ONE); /// Flags
     lv_obj_clear_flag(uiApp_DictionaryPanel,
@@ -438,12 +460,18 @@ int app_dictionary_create(lv_obj_t *parent)
 
 lv_obj_t *app_dictionary_get_page(void)
 {
-    return uiApp_Dictionary;
+    return uiApp_DictionaryScreen;
 }
 
 int app_dictionary_destroy(void)
 {
     printk("[%d:%s] destroy\n", __LINE__, __func__);
+    // lv_obj_t * page = app_dictionary_get_page();
+    // if (page) {
+    //     lv_obj_del(page);
+    //     printk("[%d:%s] destroy page\n", __LINE__, __func__);
+    //     page = NULL;
+    // }
     return 0;
 }
 

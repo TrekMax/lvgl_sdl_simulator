@@ -22,7 +22,7 @@
 #include "app/sketchpad/app_sketchpad.h"
 
 lv_obj_t *uiAppLauncher;
-lv_obj_t *uiAppLauncher_BodyBase;
+lv_obj_t *uiAppLauncherPanel;
 lv_obj_t *uiAppLauncher_Body;
 
 // 状态栏
@@ -145,6 +145,8 @@ void lisaui_app_exit(const int app_id)
         if (app->destroy()) {
             printk("[ui] app destroy failed\n");
             return;
+        } else {
+            printk("[ui] app destroy success\n");
         }
     }
 }
@@ -213,6 +215,9 @@ void ui_event_StatusBar_BtnBackHome(lv_event_t *e)
     lv_obj_t *target = lv_event_get_target(e);
     LV_UNUSED(target);
     if (event_code == LV_EVENT_CLICKED) {
+        if (uiAppLauncher == NULL) {
+            return;
+        }
         lv_obj_set_parent(ui_StatusBar, uiAppLauncher);
         lv_obj_add_flag(uiStatusBar_BtnBackHome, LV_OBJ_FLAG_HIDDEN); // 隐藏 BackHome 按钮
         lv_obj_clear_flag(uiStatusBar_LabDate, LV_OBJ_FLAG_HIDDEN);   // 显示日期
@@ -321,7 +326,7 @@ void uiStatusBar_init(lv_obj_t *parent)
     lv_obj_set_align(ui_StatusBar, LV_ALIGN_TOP_MID);
     lv_obj_clear_flag(ui_StatusBar, LV_OBJ_FLAG_SCROLLABLE); /// Flags
     lv_obj_set_style_bg_color(ui_StatusBar, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_StatusBar, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_StatusBar, 100, LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_obj_set_style_border_side(ui_StatusBar, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(ui_StatusBar, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_radius(ui_StatusBar, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -384,33 +389,36 @@ void uiStatusBar_init(lv_obj_t *parent)
     lv_obj_add_style(uiStatusBar_BtnBackHome, &style_btn, 0);
 }
 
-void Lisaui_launcher(void)
+void lisaui_launcher(void)
 {
+    uiStatusBar_init(lv_layer_top());
+
     uiAppLauncher = lv_obj_create(NULL);
-    lv_obj_clear_flag(uiAppLauncher, LV_OBJ_FLAG_SCROLLABLE); /// Flags
-    lv_obj_set_y(uiAppLauncher, 30);
+    // lv_obj_clear_flag(uiAppLauncher, LV_OBJ_FLAG_SCROLLABLE); /// Flags
     lv_obj_set_style_bg_color(uiAppLauncher, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiAppLauncher, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_radius(uiAppLauncher, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_scrollbar_mode(uiAppLauncher, LV_SCROLLBAR_MODE_OFF);
+    // lv_obj_set_y(uiAppLauncher, 60);
 
-    uiStatusBar_init(lv_layer_sys());
-
-    uiAppLauncher_BodyBase = lv_obj_create(uiAppLauncher);
-    lv_obj_set_size(uiAppLauncher_BodyBase, SCREEN_WIDTH, 140);
-    // lv_obj_set_pos(uiAppLauncher_BodyBase, 0, -10);
-    lv_obj_set_align(uiAppLauncher_BodyBase, LV_ALIGN_BOTTOM_LEFT);
-    lv_obj_add_flag(uiAppLauncher_BodyBase, LV_OBJ_FLAG_SCROLL_ONE); /// Flags
-    lv_obj_clear_flag(uiAppLauncher_BodyBase,
+    uiAppLauncherPanel = lv_obj_create(uiAppLauncher);
+    lv_obj_set_size(uiAppLauncherPanel, LV_PCT(100), LV_PCT(98));
+    // lv_obj_set_pos(uiAppLauncherPanel, 0, -10);
+    lv_obj_set_align(uiAppLauncherPanel, LV_ALIGN_BOTTOM_LEFT);
+    lv_obj_add_flag(uiAppLauncherPanel, LV_OBJ_FLAG_SCROLL_ONE); /// Flags
+    lv_obj_clear_flag(uiAppLauncherPanel,
                       LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_GESTURE_BUBBLE); /// Flags
-    lv_obj_set_scrollbar_mode(uiAppLauncher_BodyBase, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_scroll_dir(uiAppLauncher_BodyBase, LV_DIR_HOR);
-    lv_obj_set_style_bg_color(uiAppLauncher_BodyBase, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(uiAppLauncher_BodyBase, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_side(uiAppLauncher_BodyBase, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_radius(uiAppLauncher_BodyBase, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_scrollbar_mode(uiAppLauncherPanel, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_scroll_dir(uiAppLauncherPanel, LV_DIR_HOR);
+    lv_obj_set_style_bg_color(uiAppLauncherPanel, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(uiAppLauncherPanel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_side(uiAppLauncherPanel, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(uiAppLauncherPanel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    uiAppLauncher_Body = lv_obj_create(uiAppLauncher_BodyBase);
-    lv_obj_set_size(uiAppLauncher_Body, SCREEN_WIDTH + 100, 140);
+    uiAppLauncher_Body = lv_obj_create(uiAppLauncherPanel);
+    lv_obj_set_size(uiAppLauncher, LV_PCT(100), LV_PCT(98));
+    // lv_obj_set_size(uiAppLauncher_Body, SCREEN_WIDTH + 100, 140);
+    lv_obj_set_y(uiAppLauncher, 30);
     lv_obj_set_align(uiAppLauncher_Body, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(uiAppLauncher_Body, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_SCROLLABLE); /// Flags
     lv_obj_set_scroll_dir(uiAppLauncher_Body, LV_DIR_HOR);
@@ -451,8 +459,17 @@ void ui_init(void)
                                               false, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
 
-    Lisaui_launcher();
+    lisaui_launcher();
     lv_disp_load_scr(uiAppLauncher);
 
+#if 0
     lisaui_apps_init();
+#else
+    app_ocr_scan_init();
+    app_demo_init();
+    app_dictionary_init();
+    app_audio_player_init();
+    app_spelling_init();
+    app_setting_init();
+#endif
 }

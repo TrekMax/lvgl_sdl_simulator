@@ -37,8 +37,11 @@ enum ui_app_id_t {
     UI_APP_ID_SETTING,
     UI_APP_ID_DIALOGUE,
 
-    UI_APP_ID_DEMO,
     UI_APP_ID_SKETCHPAD,
+    UI_APP_ID_DEMO,
+    UI_APP_ID_DEMO1,
+    UI_APP_ID_DEMO2,
+    UI_APP_ID_DEMO3,
     
     UI_APP_ID_NONE,
     UI_APP_ID_LAUNCHER,
