@@ -13,8 +13,8 @@
 
 static const char *TAG = "app_common";
 
-lisaui_err_t _lisaui_set_style_container(lv_obj_t *obj, lv_color_t bg_color, lv_opa_t bg_opa, lv_color_t border_color,
-                                         lv_coord_t border_width, lv_coord_t radius)
+lisaui_err_t _lisaui_set_style_container(lv_obj_t *obj, lv_color_t bg_color, 
+    lv_opa_t bg_opa, lv_color_t border_color, lv_coord_t border_width, lv_coord_t radius)
 {
     if (obj == NULL) {
         return LISAUI_ERR_INVALID_PARAM;
@@ -26,6 +26,19 @@ lisaui_err_t _lisaui_set_style_container(lv_obj_t *obj, lv_color_t bg_color, lv_
     lv_obj_set_style_local_border_color(obj, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, border_color);
     lv_obj_set_style_local_border_width(obj, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, border_width);
     lv_obj_set_style_local_pad_all(obj, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, 0);
+#else
+    lv_obj_set_style_bg_color(obj, bg_color, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_bg_opa(obj, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, bg_opa);
+    // lv_obj_set_style_radius(obj, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, radius);
+    // lv_obj_set_style_border_color(obj, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, border_color);
+    // lv_obj_set_style_border_width(obj, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, border_width);
+    // lv_obj_set_style_pad_all(obj, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, 0);
+    
+    lv_obj_set_style_bg_opa(obj, bg_opa, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_border_side(ui_StatusBar, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(obj, border_width, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(obj, radius, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_all(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 #endif
     return LISAUI_ERR_OK;
 }

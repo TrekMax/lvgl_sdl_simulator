@@ -151,11 +151,44 @@ lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
     // lisaui_app_show_info(app);
     lisaui_launcher_add_app_icon(g_icon_panel, app);
 }
+#define LAUNCHER_ICON_ROW_NUM 4
+
 
 lisaui_err_t app_launcher_create(void *parent)
 {
     LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
     g_app_launcher = lv_obj_create(parent); // launcher 页面根容器
+    _lisaui_set_style_container(g_app_launcher, lv_color_hex(0x3f0000), 255, lv_color_hex(0x000000), 0, 0);
+    lv_obj_set_size(g_app_launcher, LV_PCT(100), LV_PCT(100));
+
+    int icon_panel_width = lv_obj_get_width(g_app_launcher)/(LAUNCHER_ICON_ROW_NUM+1);
+
+    static lv_style_t style;
+    lv_style_init(&style);
+    lv_style_set_flex_flow(&style, LV_FLEX_FLOW_ROW_WRAP);
+    // lv_style_set_flex_main_place(&style, LV_FLEX_ALIGN_SPACE_EVENLY);
+    lv_style_set_layout(&style, LV_LAYOUT_FLEX);
+
+    lv_obj_t * m_icon_container = lv_obj_create(g_app_launcher);
+    lv_obj_set_size(m_icon_container,  LV_PCT(100), LV_PCT(80));
+    // lv_obj_center(m_icon_container);
+    // lv_obj_add_style(m_icon_container, &style, 0);
+    lv_obj_align(m_icon_container, LV_ALIGN_CENTER, 0, 5);
+    lv_obj_set_flex_flow(m_icon_container, LV_FLEX_FLOW_ROW);
+    _lisaui_set_style_container(m_icon_container, lv_color_hex(0x003f00), 255, lv_color_hex(0x000000), 0, 0);
+
+    uint32_t i;
+    for(i = 0; i < 15; i++) {
+        lv_obj_t * obj = lv_obj_create(m_icon_container);
+        lv_obj_align(obj, LV_ALIGN_CENTER, 0, 5);
+        // lv_obj_set_size(obj, icon_panel_width, LV_SIZE_CONTENT);
+        lv_obj_set_size(obj, icon_panel_width, icon_panel_width);
+
+        lv_obj_t * label = lv_label_create(obj);
+        lv_label_set_text_fmt(label, "%"LV_PRIu32, i);
+        lv_obj_center(label);
+    }
+    g_icon_panel = m_icon_container;
 #if 0
     g_app_launcher = lv_obj_create(parent, parent); // launcher 页面根容器
     _lisaui_set_style_container(g_app_launcher, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
