@@ -48,7 +48,7 @@ set(ASSETS_SOURCES
 # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld链接顺序)
 set(SYSTEM_APP_SOURCES
     app_sys/app_launcher.c
-    # app/app_taskbar.c
+    app_sys/app_taskbar.c
 )
 set(USER_APP_SOURCES
     # app/app_ocr.c

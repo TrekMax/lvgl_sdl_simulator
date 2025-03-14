@@ -75,7 +75,7 @@ extern "C" {
 #define LISAUI_DBUS_APP_EXIT     "app_exit"
 #define RES_PERFIX_PATH(res)     "app/pendict/" res
 
-#define LISAUI_STATUS_BAR_HEIGHT 30
+#define LISAUI_STATUS_BAR_HEIGHT 40
 
 lisaui_err_t _lisaui_set_style_container(lv_obj_t *obj, lv_color_t bg_color, lv_opa_t bg_opa, lv_color_t border_color,
                                          lv_coord_t border_width, lv_coord_t radius);

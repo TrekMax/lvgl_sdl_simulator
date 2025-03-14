@@ -31,7 +31,7 @@ void lisaui_ui_init(void)
     // LISAUI_USE_APP(setting);
     // LISAUI_USE_APP(voice);
 
-    // LISAUI_USE_APP(taskbar);
+    LISAUI_USE_APP(taskbar);
     LISAUI_USE_APP(launcher);
 
     lisaui_app_manager_init();
