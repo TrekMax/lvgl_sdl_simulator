@@ -32,11 +32,11 @@ void lisaui_ui_init(void)
     // LISAUI_USE_APP(voice);
 
     // LISAUI_USE_APP(taskbar);
-    // LISAUI_USE_APP(launcher);
+    LISAUI_USE_APP(launcher);
 
-    // lisaui_app_manager_init();
+    lisaui_app_manager_init();
     // lisaui_app_enter(UI_APP_ID_DICTIONARY);
-    // lisaui_app_show_all_info();
+    lisaui_app_show_all_info();
 
     LISAUI_LOGI(TAG, "UI init done");
     LISAUI_LOGI(TAG, "[%d:%s] init done", __LINE__, __func__);

@@ -19,7 +19,10 @@ extern "C" {
 
 #define CONFIG_LOG_ENABLE 1
 #define CONFIG_LOG_COLORS 1
-#define CONFIG_LOG_LEVEL 4
+
+#ifndef CONFIG_LOG_ENABLE
+    #define CONFIG_LOG_LEVEL 4
+#endif
 
 
 #ifdef __cplusplus

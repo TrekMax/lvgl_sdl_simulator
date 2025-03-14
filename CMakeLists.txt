@@ -28,6 +28,10 @@ include_directories(
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 
+# 使用-ffile-prefix-map来减少调试信息中的路径长度，从而固定 ROM 占用
+get_filename_component(ROOT_PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR}/ ABSOLUTE)
+add_compile_options("-ffile-prefix-map=${ROOT_PROJECT_DIR}=.")
+
 # add_subdirectory(components/lv_lib_rlottie)
 add_subdirectory(components/lvgl)
 add_subdirectory(components/lv_drivers)

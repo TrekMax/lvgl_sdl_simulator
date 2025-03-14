@@ -34,10 +34,10 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-// #define LOG_LEVEL         LOG_VERBOSE
-// #define CONFIG_LOG_COLORS 1
-// #define CONFIG_LOG_ENABLE 1
-// #define CLOG_ENABLE       1
+#define CONFIG_LOG_LEVEL         LOG_DEBUG
+#define CONFIG_LOG_COLORS 1
+#define CONFIG_LOG_ENABLE 1
+#define CLOG_ENABLE       1
 
 #include "utils_log.h"
 

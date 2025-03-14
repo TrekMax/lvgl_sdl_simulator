@@ -9,13 +9,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "lisaui_app_common.h"
-#include "lisaui_app_manager.h"
+#include "../common/lisaui_app_common.h"
+#include "../common/lisaui_app_manager.h"
+#include "../common/lisaui_dbus.h"
+#include "../common/lisaui_type.h"
 
 #include "../assets/assets_res.h" 
 #include "app_taskbar.h"
-#include "lisaui_dbus.h"
-#include "lisaui_type.h"
 
 #include "app_launcher.h"
 #include <stdbool.h>
@@ -31,7 +31,7 @@ static const char *TAG = "app_launcher";
 #define LISAUI_LAUNCHER_ICON_SHOW_COUNT  5
 
 #define LISAUI_LAUNCHER_ICON_WIDTH 72//(LISAUI_LAUNCHER_ICON_PANEL_WIDTH / LISAUI_LAUNCHER_ICON_SHOW_COUNT + 20)
-
+#if 0
 static void icon_event_click_handler(lv_obj_t *obj, lv_event_t e)
 {
     if (e == LV_EVENT_CLICKED) {
@@ -100,21 +100,6 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_panel, struct lisaui_app_t *app
 
 }
 
-static lv_obj_t *g_icon_panel = NULL;
-
-lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
-{
-    if (g_icon_panel == NULL) {
-        LISAUI_LOGE(TAG, "g_icon_panel is NULL");
-        return LISAUI_ERR_FAIL;
-    }
-    if (app == NULL) {
-        LISAUI_LOGE(TAG, "app is NULL");
-        return LISAUI_ERR_FAIL;
-    }
-    // lisaui_app_show_info(app);
-    lisaui_launcher_add_app_icon(g_icon_panel, app);
-}
 
 #if CONFIG_LISAUI_DBUS_ENABLE
 static void _lisaui_bus_event_app_open_handler_cb(void *data)
@@ -142,10 +127,36 @@ static void _lisaui_bus_event_app_update_handler_cb(void *data)
     lisaui_launcher_update_app(NULL);
 }
 #endif
+#else
+void lisaui_launcher_add_app_icon(lv_obj_t *icon_panel, struct lisaui_app_t *app)
+{
+
+}
+
+#endif
 
 static lv_obj_t *g_app_launcher = NULL;
+static lv_obj_t *g_icon_panel = NULL;
+
+lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
+{
+    if (g_icon_panel == NULL) {
+        LISAUI_LOGE(TAG, "g_icon_panel is NULL");
+        return LISAUI_ERR_FAIL;
+    }
+    if (app == NULL) {
+        LISAUI_LOGE(TAG, "app is NULL");
+        return LISAUI_ERR_FAIL;
+    }
+    // lisaui_app_show_info(app);
+    lisaui_launcher_add_app_icon(g_icon_panel, app);
+}
+
 lisaui_err_t app_launcher_create(void *parent)
 {
+    LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
+    g_app_launcher = lv_obj_create(parent); // launcher 页面根容器
+#if 0
     g_app_launcher = lv_obj_create(parent, parent); // launcher 页面根容器
     _lisaui_set_style_container(g_app_launcher, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
     lv_obj_set_size(g_app_launcher, LISAUI_LV_HOR_PCT(100), LISAUI_LV_HOR_PCT(100));
@@ -164,7 +175,7 @@ lisaui_err_t app_launcher_create(void *parent)
     // lv_page_set_scrollbar_mode(g_icon_panel, LV_SCROLLBAR_MODE_DRAG);
     lv_obj_set_drag_parent(g_icon_panel, true); // 设置为可拖动
     _lisaui_set_style_container(g_icon_panel, lv_color_hex(0x000000), 120, lv_color_hex(0x000000), 0, 0);
-
+#endif
 #if CONFIG_LISAUI_DBUS_ENABLE
     lisaui_dbus_t *_app_manager_bus;
     if (lisaui_get_app_manager_bus(&_app_manager_bus) != LISAUI_ERR_OK) {
