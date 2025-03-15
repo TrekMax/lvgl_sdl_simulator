@@ -81,7 +81,13 @@ struct lisaui_app_manager_t {
     int unhidden_count;
 };
 
-#define LISAUI_APP_SECTION __attribute__((used, section(".lisaui_apps")))
+#ifdef __APPLE__
+    // macOS 的 Mach-O 格式要求段和节名称
+    #define LISAUI_APP_SECTION __attribute__((used, section("__DATA,.lisaui_apps")))
+#else
+    // Linux 或其他平台的 ELF 格式
+    #define LISAUI_APP_SECTION __attribute__((used, section(".lisaui_apps")))
+#endif
 
 #define REGISTER_LISAUI_APP(name, p_app, init_func)                             \
     LISAUI_APP_SECTION                                                         \

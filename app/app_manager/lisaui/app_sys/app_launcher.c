@@ -131,6 +131,7 @@ lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
     // lisaui_launcher_add_app_icon(g_icon_panel, app);
     // lisaui_launcher_add_app_icon(g_icon_panel, app);
     // lisaui_launcher_add_app_icon(g_icon_panel, app);
+    return LISAUI_ERR_OK;
 }
 #define LAUNCHER_ICON_ROW_NUM 4
 lisaui_err_t app_launcher_create(void *parent)

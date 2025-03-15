@@ -88,11 +88,6 @@ static void hide_menu()
     // lv_obj_set_hidden(menu, true);
     lv_obj_add_flag(menu, LV_OBJ_FLAG_HIDDEN);
 }
-void menu_lv_group_focus_cb(struct _lv_group_t *)
-{
-    LISAUI_LOGI(TAG, "focus cb\r\n");
-}
-
 
 static void btn_event_cb(lv_event_t *e)
 {
@@ -203,6 +198,7 @@ lv_obj_t *lisaui_explain_menu_create(lv_obj_t *parent)
     lv_label_set_text(label2, "It is a circularly scrolling text. ");
     lv_obj_align(label2, LV_ALIGN_CENTER, 0, 50);
 #endif
+    return menu;
 }
 
 static lv_obj_t *img_gif = NULL;

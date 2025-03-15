@@ -98,8 +98,15 @@ add_library(lisaui
     ${UTILS_SOURCES}
 )
 
-target_link_libraries(
-    lisaui
-    PRIVATE
-    -T${CMAKE_CURRENT_SOURCE_DIR}/lisaui_apps.ld
-)
+set(LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/lisaui_apps.ld)
+
+if (APPLE)
+    set(CMAKE_EXE_LINKER_FLAGS "-Wl,-map,${LINKER_SCRIPT}")
+else()
+    # set(CMAKE_EXE_LINKER_FLAGS "-T ${LINKER_SCRIPT}")
+    target_link_libraries(
+        lisaui
+        PRIVATE
+        -T ${LINKER_SCRIPT}
+    )
+endif()

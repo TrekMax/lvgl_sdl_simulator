@@ -328,13 +328,42 @@ lisaui_err_t lisaui_app_manager_enter_view(lisaui_view_page_t *page)
     return LISAUI_ERR_OK;
 }
 
-extern const app_entry_t __lisaui_apps_start[];
-extern const app_entry_t __lisaui_apps_end[];
+#ifdef __APPLE__
+    #include <mach-o/getsect.h>
+    #include <mach-o/dyld.h>  // 包含 _dyld_get_image_header 的头文件
+    extern const app_entry_t  ___start___DATA_lisaui_apps;
+    extern const app_entry_t  __stop___DATA_lisaui_apps;
+    #define LISAUI_APP_LISTS_START &(___start___DATA_lisaui_apps)
+    #define LISAUI_APP_LISTS_END   &(___stop___DATA_lisaui_apps)
+#else
+    extern const app_entry_t __lisaui_apps_start[];
+    extern const app_entry_t __lisaui_apps_end[];
+    #define __LISAUI_APP_LISTS_START __lisaui_apps_start
+    #define __LISAUI_APP_LISTS_END   __lisaui_apps_end
+#endif
+
+lisaui_err_t lisaui_app_manager_init_app(const app_entry_t *app, int app_count)
+{
+    if (app == NULL) {
+        LISAUI_LOGE(TAG, "app is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    for (int i = 0; i < app_count; i++) {
+        if (app[i].app_init_func) {
+            LISAUI_LOGI(TAG, "Initializing app(%s)", app[i].app_name);
+            if (app[i].app_init_func() == LISAUI_ERR_OK) {
+                LISAUI_LOGV(TAG, "app(%s) init success", app[i].app_name);
+            }
+        }
+    }
+    return LISAUI_ERR_OK;
+}
 
 lisaui_err_t lisaui_app_manager_init(void)
 {
-    LISAUI_LOGD(TAG, "Initializing \r\n\tlisaui_apps[%p:%p - %ld]", __lisaui_apps_start, __lisaui_apps_end,
-                (__lisaui_apps_end - __lisaui_apps_start));
+    // LISAUI_LOGD(TAG, "Initializing \r\n\tlisaui_apps[%p:%p - %ld]",
+    //         __LISAUI_APP_LISTS_START, __LISAUI_APP_LISTS_END,
+    //         (__LISAUI_APP_LISTS_START - __LISAUI_APP_LISTS_END));
     m_app_manager.current_appid = UI_APP_ID_NONE;
     m_app_manager.registered_count = 0;
     m_app_manager.unhidden_count = 0;
@@ -352,20 +381,29 @@ lisaui_err_t lisaui_app_manager_init(void)
     // view_manager 必须在 app_init 之前初始化
     lisaui_view_manager_init();
 
-    for (const app_entry_t *app = __lisaui_apps_start; app < __lisaui_apps_end; app++) {
-        if (app->app_init_func) {
-            LISAUI_LOGI(TAG, "Initializing app(%s)", app->app_name);
-            if (app->app_init_func() == LISAUI_ERR_OK) {
-                LISAUI_LOGV(TAG, "app(%s) init success", app->app_name);
-                // if (app->app->create) {
-                //     if (app->app->create(NULL) != LISAUI_ERR_OK) {
-                //         LISAUI_LOGE(TAG, "app(%s) create failed", app->app_name);
-                //         return LISAUI_ERR_FAIL;
-                //     }
-                // }
-            }
-        }
+#ifdef __APPLE__
+    // 获取当前可执行文件的 Mach-O 头
+    // const struct mach_header *header = _dyld_get_image_header(0);
+    const struct mach_header_64 *header = (const struct mach_header_64 *)_dyld_get_image_header(0);
+    unsigned long size;
+    // 获取 __DATA 段的 .lisaui_apps 节的数据
+    app_entry_t *apps = (app_entry_t *)getsectiondata(
+        header,  // 当前可执行文件的 Mach-O 头
+        "__DATA",             // 段名称
+        ".lisaui_apps",       // 节名称
+        &size                // 输出参数，返回节的大小
+    );
+    if (apps != NULL) {
+        size_t count = size / sizeof(app_entry_t);
+        lisaui_app_manager_init_app(apps, count);
     }
+#else
+    if (__LISAUI_APP_LISTS_START != NULL) {
+        size_t count = (__LISAUI_APP_LISTS_END - __LISAUI_APP_LISTS_START);
+        lisaui_app_manager_init_app(__LISAUI_APP_LISTS_START, count);
+    }
+#endif
+
 #if CONFIG_LISAUI_DBUS_ENABLE
     lisaui_dbus_publish(m_app_manager.dbus, LISAUI_DBUS_APP_UPDATE, NULL);
 #endif
