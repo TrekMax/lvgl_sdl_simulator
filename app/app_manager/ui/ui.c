@@ -10,9 +10,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "ui.h"
-#include "app/app_common.h"
-#include "common/lisaui_app_common.h"
-#include "common/lisaui_app_manager.h"
+#include "app_user/app_common.h"
+#include "app_common/lisaui_app_common.h"
+#include "app_framework/lisaui_app_manager.h"
 static const char *TAG = "UI";
 
 void lisaui_ui_init(void)
@@ -24,10 +24,10 @@ void lisaui_ui_init(void)
     //     lv_theme_get_font_small(), lv_theme_get_font_normal(), lv_theme_get_font_subtitle(), lv_theme_get_font_title());
     // lv_theme_set_act(theme);
 
-    // LISAUI_USE_APP(demo);
+    LISAUI_USE_APP(demo);
     // LISAUI_USE_APP(ocr);
     // LISAUI_USE_APP(audio_player);
-    // LISAUI_USE_APP(dictionary);
+    LISAUI_USE_APP(dictionary);
     // LISAUI_USE_APP(setting);
     // LISAUI_USE_APP(voice);
 

@@ -9,10 +9,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "../common/lisaui_app_common.h"
-#include "../common/lisaui_app_manager.h"
-#include "../common/assets/assets_res_taskbar.h"
-#include "../common/lisaui_type.h"
+#include "../app_common/lisaui_app_common.h"
+#include "../app_common/lisaui_type.h"
+
+#include "../app_framework/lisaui_app_manager.h"
+
+#include "assets/assets_res.h"
 
 #include "app_taskbar.h"
 #include <time.h>
@@ -272,10 +274,14 @@ void * app_taskbar_get_page(void)
 }
 
 static struct app_icon_t app_icon_res = {
+#if CONFIG_LISAUI_FONT_LANGUAGE_ZH_CN_ENABLE
+    .title = "任务栏",
+#else
     .title = "taskbar",
+#endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = (const uint8_t *)&ui_img_icon_scanner_png,
+    .icon = (const uint8_t *)&ui_img_icon_taskbar_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 

@@ -1,28 +1,27 @@
 /**
- * @file app_launcher.h
+ * @file app_setting.h
  * @author Tianshuang Ke (dske@listenai.com)
- * @brief 
+ * @brief
  * @version 0.1
- * @date 2025-02-25
- * 
+ * @date 2025-01-22
+ *
  * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
- * 
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef __LISAUI_APP_LAUNCHER_H__
-#define __LISAUI_APP_LAUNCHER_H__
+#ifndef __APP_SETTING_H__
+#define __APP_SETTING_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "../app_common/lisaui_type.h"
 #include "../app_common/lisaui_app_common.h"
 
-lisaui_err_t app_launcher_init(void);
+int app_setting_init(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __LISAUI_APP_LAUNCHER_H__ */
+#endif // __APP_SETTING_H__

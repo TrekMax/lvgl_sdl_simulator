@@ -9,12 +9,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "../common/lisaui_app_common.h"
-#include "../common/lisaui_app_manager.h"
-#include "../common/lisaui_dbus.h"
-#include "../common/lisaui_type.h"
+#include "../app_common/lisaui_app_common.h"
+#include "../app_common/lisaui_type.h"
+#include "../app_framework/lisaui_app_manager.h"
+#include "../app_framework/lisaui_dbus.h"
 
-#include "../assets/assets_res.h" 
+#include "assets/assets_res.h" 
 #include "app_taskbar.h"
 
 #include "app_launcher.h"
@@ -128,8 +128,64 @@ static void _lisaui_bus_event_app_update_handler_cb(void *data)
 }
 #endif
 #else
-void lisaui_launcher_add_app_icon(lv_obj_t *icon_panel, struct lisaui_app_t *app)
+void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t *app)
 {
+
+    if (icon_container == NULL || app == NULL) {
+        LISAUI_LOGE(TAG, "icon_panel or app is NULL");
+        return;
+    }
+    if (app->hidden_icon) {
+        return;
+    }
+
+
+    // uint32_t i;
+    // for(i = 0; i < 15; i++) {
+    //     lv_obj_t * obj = lv_obj_create(m_icon_container);
+    //     lv_obj_align(obj, LV_ALIGN_CENTER, 0, 5);
+    //     // lv_obj_set_size(obj, icon_panel_width, LV_SIZE_CONTENT);
+    //     lv_obj_set_size(obj, icon_panel_width, icon_panel_width);
+
+    //     lv_obj_t * label = lv_label_create(obj);
+    //     lv_label_set_text_fmt(label, "%"LV_PRIu32, i);
+    //     lv_obj_center(label);
+    // }
+    lv_obj_t * icon_panel = lv_obj_create(icon_container);
+    lv_obj_align(icon_panel, LV_ALIGN_CENTER, 0, 5);
+
+    // lv_obj_set_style_local_bg_color(icon_panel, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x00000));
+    int hidden_icon_count = lisaui_app_get_registered_count() - lisaui_app_get_unhidden_count();
+    int icon_panel_index = (app->info.uuid);
+
+    int icon_panel_width = lisaui_app_get_registered_count() * (LISAUI_LAUNCHER_ICON_WIDTH  + LISAUI_LAUNCHER_ICON_SPACING);
+    icon_panel_width = icon_panel_width < LV_HOR_RES ? LV_HOR_RES+200 : icon_panel_width;
+    int icon_offset_x = (icon_panel_index-hidden_icon_count) * (LISAUI_LAUNCHER_ICON_WIDTH  + LISAUI_LAUNCHER_ICON_SPACING) + LISAUI_LAUNCHER_ICON_MARGIN;
+    
+    lv_obj_set_width(icon_panel, icon_panel_width); // 更新 icon_panel 宽度
+    
+    lv_obj_t *m_app_icon = lv_img_create(icon_panel);
+    if (app->icon->zoom) {
+        lv_img_set_zoom(m_app_icon, app->icon->zoom);
+    }
+    m_app_icon->user_data = app;
+    
+    // lv_obj_align(m_app_icon, icon_panel, LV_ALIGN_IN_LEFT_MID, 0, LISAUI_LAUNCHER_ICON_MARGIN);
+    lv_img_set_src(m_app_icon, app->icon->icon);
+    // lv_obj_set_click(m_app_icon, true);       // 设置为可点击
+    // lv_obj_set_drag_parent(m_app_icon, true); // 设置为可拖动
+    // lv_obj_set_event_cb(m_app_icon, icon_event_click_handler);
+    lv_obj_set_x(m_app_icon, icon_offset_x);
+    LISAUI_LOGV(TAG, "hidden_icon_count: %d | index:%d icon_offset_x: %d, icon_panel_width: %d", 
+            hidden_icon_count, icon_panel_index, icon_offset_x, icon_panel_width);
+
+    // m_app_title
+    lv_obj_t *m_app_title = lv_label_create(icon_panel);
+    // _lisaui_lv_obj_set_default_style(m_app_title);
+    // lv_obj_set_style_local_text_font(m_app_title, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, &lv_font_chinese_18);
+    // lv_obj_align(m_app_title, m_app_icon, LV_ALIGN_OUT_BOTTOM_MID, 0, 16);
+
+    lv_label_set_text(m_app_title, app->icon->title);
 
 }
 
@@ -148,7 +204,7 @@ lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
         LISAUI_LOGE(TAG, "app is NULL");
         return LISAUI_ERR_FAIL;
     }
-    // lisaui_app_show_info(app);
+    lisaui_app_show_info(app);
     lisaui_launcher_add_app_icon(g_icon_panel, app);
 }
 #define LAUNCHER_ICON_ROW_NUM 4
@@ -177,17 +233,6 @@ lisaui_err_t app_launcher_create(void *parent)
     lv_obj_set_flex_flow(m_icon_container, LV_FLEX_FLOW_ROW);
     _lisaui_set_style_container(m_icon_container, lv_color_hex(0x003f00), 255, lv_color_hex(0x000000), 0, 0);
 
-    uint32_t i;
-    for(i = 0; i < 15; i++) {
-        lv_obj_t * obj = lv_obj_create(m_icon_container);
-        lv_obj_align(obj, LV_ALIGN_CENTER, 0, 5);
-        // lv_obj_set_size(obj, icon_panel_width, LV_SIZE_CONTENT);
-        lv_obj_set_size(obj, icon_panel_width, icon_panel_width);
-
-        lv_obj_t * label = lv_label_create(obj);
-        lv_label_set_text_fmt(label, "%"LV_PRIu32, i);
-        lv_obj_center(label);
-    }
     g_icon_panel = m_icon_container;
 #if 0
     g_app_launcher = lv_obj_create(parent, parent); // launcher 页面根容器
@@ -246,10 +291,14 @@ void *app_launcher_get_page(void)
 }
 
 static struct app_icon_t app_icon_res = {
+#if CONFIG_LISAUI_FONT_LANGUAGE_ZH_CN_ENABLE
     .title = "启动器",
+#else
+    .title = "Launcher",
+#endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = (const uint8_t *)&ui_img_icon_scanner_png,
+    .icon = (const uint8_t *)&ui_img_icon_launcher_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 
