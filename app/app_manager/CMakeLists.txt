@@ -11,7 +11,7 @@ file(GLOB_RECURSE SRC_FILES
 
 target_sources(${target_name} PRIVATE ${SRC_FILES})
 
-add_subdirectory(ui)
+add_subdirectory(lisaui)
 
 target_link_libraries(
     ${target_name}

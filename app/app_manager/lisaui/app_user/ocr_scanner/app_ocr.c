@@ -10,13 +10,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_ocr.h"
-#include "../app_common/lisaui_app_common.h"
-#include "assets/assets_res.h"
-#include "app_common.h"
+#include "../app_common.h"
 
 static const char *TAG = "app_ocr";
 lv_obj_t *g_app_ocr = NULL;
-
+#if 0
 static void event_handler(lv_obj_t *obj, lv_event_t event)
 {
     if (event == LV_EVENT_CLICKED) {
@@ -33,15 +31,15 @@ static void app_ocr_bg_task_handle_cb(lv_task_t *task)
 {
     LISAUI_LOGI(TAG, "bg task tick");
 }
-
+#endif
 lisaui_err_t app_ocr_create(void *parent)
 {
     if (g_app_ocr != NULL) {
         return LISAUI_ERR_OK;
     }
-    g_app_ocr = lv_obj_create(parent, parent);
+    g_app_ocr = lv_obj_create(parent);
     _lisaui_set_style_container(g_app_ocr, lv_color_hex(0x000F00), 255, lv_color_hex(0x000000), 0, 0);
-
+#if 0
     lv_obj_t *label = lv_label_create(g_app_ocr, NULL);
     lv_label_set_text(label, "Hello ocr!");
     // lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 0);
@@ -67,7 +65,7 @@ lisaui_err_t app_ocr_create(void *parent)
     // lv_label_set_text(label, "Open App Dictionary");
 
     lv_task_create(app_ocr_bg_task_handle_cb, 500, LV_TASK_PRIO_LOW, NULL);
-
+    #endif
     LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }
@@ -96,7 +94,11 @@ void *app_ocr_get_page(void)
 }
 
 static struct app_icon_t app_icon_res = {
+    #if CONFIG_LISAUI_FONT_LANGUAGE_ZH_CN_ENABLE
     .title = "扫描",
+#else
+    .title = "Scanner",
+#endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
     .icon = (const uint8_t *)&ui_img_icon_scanner_png,

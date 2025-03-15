@@ -93,6 +93,7 @@ static void _lisaui_taskbar_create_battery(lv_obj_t *parent)
     battery_icon = lv_img_create(parent);
     lv_img_set_src(battery_icon, _lisaui_taskbar_battery_icon[0]);
     lv_obj_align_to(battery_icon, battery_label, LV_ALIGN_OUT_LEFT_MID, 0, 0);
+    // lv_img_set_zoom(battery_icon, 255*1.2);
     lv_timer_t * timer = lv_timer_create(_lisaui_taskbar_battery_update_cb, 500,  battery_icon);
 }
 static void _lisaui_app_enter_handler_cb(void* data)

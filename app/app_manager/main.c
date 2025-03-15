@@ -13,7 +13,8 @@
 #include <SDL2/SDL.h>
 #include "lvgl/lvgl.h"
 #include "lv_drivers/sdl/sdl.h"
-#include "ui/ui.h"
+
+#include "lisaui/ui.h"
 
 #include "version.h"
 #include "config.h"

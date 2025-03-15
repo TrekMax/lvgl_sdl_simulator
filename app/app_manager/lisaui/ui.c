@@ -25,7 +25,7 @@ void lisaui_ui_init(void)
     // lv_theme_set_act(theme);
 
     LISAUI_USE_APP(demo);
-    // LISAUI_USE_APP(ocr);
+    LISAUI_USE_APP(ocr);
     // LISAUI_USE_APP(audio_player);
     LISAUI_USE_APP(dictionary);
     // LISAUI_USE_APP(setting);

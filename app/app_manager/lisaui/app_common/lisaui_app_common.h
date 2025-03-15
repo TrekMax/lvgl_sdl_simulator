@@ -35,6 +35,8 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
+#define CONFIG_LISAUI_FONT_LANGUAGE_ZH_CN_ENABLE 1
+
 #define CONFIG_LOG_LEVEL         LOG_DEBUG
 #define CONFIG_LOG_COLORS 1
 #define CONFIG_LOG_ENABLE 1
@@ -67,6 +69,12 @@ extern "C" {
 #define LISAUI_LV_COLOR_WHITE lv_color_hex(0xFFFFFF)
 #define LISAUI_LV_COLOR_BLACK lv_color_hex(0x000000)
 
+#define LISAUI_LV_COLOR_BG_BLACK            lv_color_hex(0x212429)
+#define LISAUI_LV_COLOR_BG_ICON_BLACK       lv_color_hex(0x1f1f1f)
+#define LISAUI_LV_COLOR_BG_ICON_GRAY        lv_color_hex(0x181818)
+#define LISAUI_LV_COLOR_BG_ICON_GRAY_LIGHT  lv_color_hex(0x2f2f2f)
+#define LISAUI_LV_COLOR_BG_ICON_GRAY_DARK   lv_color_hex(0x0f0f0f)
+
 #define lisaui_malloc malloc
 #define lisaui_free   free
 
@@ -74,7 +82,7 @@ extern "C" {
 #define LISAUI_DBUS_APP_LAUNCHER "app_launcher"
 #define LISAUI_DBUS_APP_ENTER    "app_enter"
 #define LISAUI_DBUS_APP_EXIT     "app_exit"
-#define RES_PERFIX_PATH(res)     "app/pendict/" res
+#define RES_PERFIX_PATH(res)     "app/app_manager/lisaui/" res
 
 #define LISAUI_STATUS_BAR_HEIGHT 40
 

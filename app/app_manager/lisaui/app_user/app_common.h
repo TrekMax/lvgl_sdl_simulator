@@ -16,6 +16,9 @@
 extern "C" {
 #endif
 
+#include "../app_common/lisaui_app_common.h"
+#include "assets/assets_res.h"
+
 enum lisaui_app_id_t {
     UI_APP_ID_LAUNCHER = 0,
     UI_APP_ID_TASKBAR = 1,

@@ -15,6 +15,7 @@
 #include "lv_drivers/sdl/sdl.h"
 #include "ui/ui.h"
 
+#include "../include/config.h"
 #include "version.h"
 #include "config.h"
 #include "utils_log.h"

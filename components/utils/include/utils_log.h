@@ -64,6 +64,10 @@ typedef enum _tisilicon_log_level
 #define CONFIG_LOG_LEVEL LOG_LEVEL
 #endif
 
+#ifndef CONFIG_LOG_LEVEL
+#define CONFIG_LOG_LEVEL LOG_INFO
+#endif
+
 #ifdef LOG_KERNEL
 #define LOG_PRINTF printk
 #else

@@ -25,13 +25,13 @@
 #define WIFIBT_EN   0
 #define BT_EN       0
 
-extern lv_ft_info_t ttf_main_s;
-extern lv_ft_info_t ttf_main_m;
-extern lv_ft_info_t ttf_main_l;
+// extern lv_ft_info_t ttf_main_s;
+// extern lv_ft_info_t ttf_main_m;
+// extern lv_ft_info_t ttf_main_l;
 
-extern lv_style_t style_txt_s;
-extern lv_style_t style_txt_m;
-extern lv_style_t style_txt_l;
+// extern lv_style_t style_txt_s;
+// extern lv_style_t style_txt_m;
+// extern lv_style_t style_txt_l;
 
 int app_disp_rotation(void);
 

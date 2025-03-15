@@ -5,7 +5,8 @@ SET(APP_COMMON_SOURCES
     app_common/lisaui_app_common.c
     app_common/lisaui_asset_manager.c
 
-    app_common/assets/fonts/lv_font_chinese_18.c
+    # app_common/assets/fonts/lv_font_chinese_18.c
+    app_common/assets/fonts/lv_font_chinese_18_old.c
 )
 
 SET(APP_FRAMEWORK_SOURCES
@@ -19,7 +20,6 @@ if (CONFIG_LISAUI_DBUS_ENABLE)
         )
 endif()
 
-# FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld链接顺序)
 set(APP_SYSTEM_SOURCES
     app_sys/assets/icons/icon_img_app_launcher_png.c
     app_sys/assets/icons/icon_img_app_taskbar_png.c
@@ -34,6 +34,8 @@ set(APP_SYSTEM_SOURCES
     app_sys/assets/taskbar_icon/ui_img__status_charging_3_png.c
     app_sys/assets/taskbar_icon/ui_img__status_charging_4_png.c
     app_sys/assets/taskbar_icon/ui_img__status_charging_5_png.c
+
+    # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld 链接顺序)
     app_sys/app_launcher.c
     app_sys/app_taskbar.c
 )
@@ -46,7 +48,8 @@ set(APP_USER_SOURCES
     app_user/assets/icons/icon_img_app_setting_png.c
     app_user/assets/icons/icon_img_app_voice_png.c
 
-    # app_user/app_ocr.c
+    # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld 链接顺序)
+    app_user/ocr_scanner/app_ocr.c
     app_user/dictionary/app_dictionary.c
     app_user/demo/app_demo.c
     # app_user/app_audio_player.c
