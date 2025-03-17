@@ -118,9 +118,9 @@ static lv_obj_t *g_icon_panel = NULL;
 
 lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
 {
-    if (g_icon_panel == NULL) {
-        LISAUI_LOGE(TAG, "g_icon_panel is NULL");
-        return LISAUI_ERR_FAIL;
+    if (g_icon_panel == NULL | app == NULL) {
+        LISAUI_LOGE(TAG, "g_icon_panel or app is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
     }
     if (app == NULL) {
         LISAUI_LOGE(TAG, "app is NULL");
