@@ -9,13 +9,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "../app_common/lisaui_app_common.h"
-#include "../app_common/lisaui_type.h"
-#include "../app_framework/lisaui_app_manager.h"
-#include "../app_framework/lisaui_dbus.h"
+#include "../../app_common/lisaui_app_common.h"
+#include "../../app_common/lisaui_type.h"
+#include "../../app_framework/lisaui_app_manager.h"
+#include "../../app_framework/lisaui_dbus.h"
 
-#include "assets/assets_res.h"
-#include "app_taskbar.h"
+#include "../assets/assets_res.h"
+// #include "../app_taskbar.h"
 
 #include "app_launcher.h"
 #include <stdbool.h>
@@ -45,7 +45,7 @@ static void icon_event_click_handler(lv_event_t *event)
 
 #if CONFIG_LISAUI_DBUS_ENABLE
         lisaui_dbus_t *_app_manager_bus;
-        if (lisaui_get_app_manager_bus(&_app_manager_bus) != LISAUI_ERR_OK) {
+        if (lisaui_app_manager_get_bus(&_app_manager_bus) != LISAUI_ERR_OK) {
             LISAUI_LOGE(TAG, "Failed to get app manager bus");
             return;
         }
@@ -116,6 +116,39 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
 static lv_obj_t *g_app_launcher = NULL;
 static lv_obj_t *g_icon_panel = NULL;
 
+lisaui_err_t lisaui_launcher_register_app(struct lisaui_app_t *app)
+{
+    if (g_icon_panel == NULL | app == NULL) {
+        LISAUI_LOGE(TAG, "g_icon_panel or app is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    // LISAUI_LOGD(TAG, "--->app: %s", app->icon->title);
+    // lisaui_app_show_info(app);
+    lisaui_launcher_add_app_icon(g_icon_panel, app);
+}
+lisaui_err_t lisaui_launcher_update_app_icon(void)
+{
+    if (g_icon_panel == NULL) {
+        LISAUI_LOGE(TAG, "g_icon_panel is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    lv_obj_clean(g_icon_panel);
+    for (int i = 0; i < lisaui_app_manager_get_registered_count(); i++) {
+        struct lisaui_app_t *app = NULL;
+        if (lisaui_app_get_by_uuid(i, &app) != LISAUI_ERR_OK) {
+            // LISAUI_LOGE(TAG, "Failed to get app by uuid: %d", i);
+            // return LISAUI_ERR_FAIL;
+            continue;
+        }
+        if (app == NULL) {
+            // LISAUI_LOGE(TAG, "app is NULL");
+            continue;
+            // return LISAUI_ERR_INVALID_PARAM;
+        }
+        lisaui_launcher_add_app_icon(g_icon_panel, app);
+    }
+    return LISAUI_ERR_OK;
+}
 lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
 {
     if (g_icon_panel == NULL | app == NULL) {
@@ -166,7 +199,7 @@ lisaui_err_t app_launcher_create(void *parent)
 
 #if CONFIG_LISAUI_DBUS_ENABLE
     lisaui_dbus_t *_app_manager_bus;
-    if (lisaui_get_app_manager_bus(&_app_manager_bus) != LISAUI_ERR_OK) {
+    if (lisaui_app_manager_get_bus(&_app_manager_bus) != LISAUI_ERR_OK) {
         LISAUI_LOGE(TAG, "Failed to get app manager bus");
         return LISAUI_ERR_FAIL;
     }
@@ -208,7 +241,7 @@ static struct app_icon_t app_icon_res = {
 #endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = (const uint8_t *)&ui_img_icon_launcher_png,
+    .icon = &ui_img_icon_launcher_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 
@@ -234,9 +267,10 @@ lisaui_err_t app_launcher_init(void)
 {
     lisaui_app_register(&app_launcher);
     lisaui_app_enter(UI_APP_ID_LAUNCHER);
-    lisaui_app_set_app_register_hook(lisaui_launcher_update_app);
+    lisaui_app_manager_set_register_app_hook(lisaui_launcher_register_app);
+    lisaui_app_manager_set_unregister_app_hook(lisaui_launcher_update_app);
 
     return LISAUI_ERR_OK;
 }
 
-REGISTER_LISAUI_APP(launcher, &app_launcher, app_launcher_init);
+LISAUI_REGISTER_APP(launcher, &app_launcher, app_launcher_init);

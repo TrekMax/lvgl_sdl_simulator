@@ -14,13 +14,13 @@
 #include "../assets/assets_res.h"
 #include "../../utils/lv_img_utils.h"
 
+#define RES_APP_ICON_PERFIX_PATH "lisaui/app/dictionary/"
 static lv_img_dsc_t img_gif5;
-INCBIN(img_gif5, RES_PERFIX_PATH("app_user/assets/gif/00b44af.gif"));
+INCBIN(img_gif5, RES_PERFIX_PATH("lisaui/app/assets/gif/00b44af.gif"));
 
 static lv_img_dsc_t img_favorite;
 static lv_img_dsc_t img_book;
 static lv_img_dsc_t img_voice;
-#define RES_APP_ICON_PERFIX_PATH "app_user/dictionary/"
 INCBIN(img_favorite, RES_PERFIX_PATH(RES_APP_ICON_PERFIX_PATH "assets/icons/favorite.png"));
 INCBIN(img_book, RES_PERFIX_PATH(RES_APP_ICON_PERFIX_PATH "assets/icons/books.png"));
 INCBIN(img_voice, RES_PERFIX_PATH(RES_APP_ICON_PERFIX_PATH "assets/icons/voice.png"));
@@ -468,7 +468,7 @@ static struct app_icon_t app_icon_res = {
 
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = (const uint8_t *)&ui_img_icon_fav_png,
+    .icon = &ui_img_icon_fav_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 
@@ -494,4 +494,4 @@ lisaui_err_t app_dictionary_init(void)
     return LISAUI_ERR_OK;
 }
 
-REGISTER_LISAUI_APP(dictionary, &app_dictionary, app_dictionary_init);
+LISAUI_REGISTER_APP(dictionary, &app_dictionary, app_dictionary_init);

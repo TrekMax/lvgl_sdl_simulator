@@ -38,7 +38,7 @@ lisaui_err_t app_ocr_create(void *parent)
         return LISAUI_ERR_OK;
     }
     g_app_ocr = lv_obj_create(parent);
-    _lisaui_set_style_container(g_app_ocr, lv_color_hex(0x000F00), 255, lv_color_hex(0x000000), 0, 0);
+    _lisaui_set_style_container(g_app_ocr, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 #if 0
     lv_obj_t *label = lv_label_create(g_app_ocr, NULL);
     lv_label_set_text(label, "Hello ocr!");
@@ -101,7 +101,7 @@ static struct app_icon_t app_icon_res = {
 #endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = (const uint8_t *)&ui_img_icon_scanner_png,
+    .icon = &ui_img_icon_scanner_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 
@@ -127,4 +127,4 @@ lisaui_err_t app_ocr_init(void)
     return LISAUI_ERR_OK;
 }
 
-REGISTER_LISAUI_APP(ocr, &app_ocr, app_ocr_init);
+LISAUI_REGISTER_APP(ocr, &app_ocr, app_ocr_init);

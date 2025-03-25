@@ -16,8 +16,6 @@
 extern "C" {
 #endif
 
-
-#include "lisaui_type.h"
 #include "lisaui_app_common.h"
 
 

@@ -16,6 +16,14 @@
 extern "C" {
 #endif
 
+LV_IMG_DECLARE(ui_img_icon_scanner_png);
+LV_IMG_DECLARE(ui_img_icon_fav_png);
+LV_IMG_DECLARE(ui_img_icon_composition_png);
+LV_IMG_DECLARE(ui_img_icon_practice_png);
+LV_IMG_DECLARE(ui_img_icon_setting_png);
+LV_IMG_DECLARE(ui_img_icon_voice_png);
+LV_IMG_DECLARE(icon_img_app_store_png);
+
 LV_IMG_DECLARE(ui_img_icon_launcher_png);
 LV_IMG_DECLARE(ui_img_icon_taskbar_png);
 

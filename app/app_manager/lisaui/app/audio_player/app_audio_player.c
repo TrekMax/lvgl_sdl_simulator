@@ -10,9 +10,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_audio_player.h"
-#include "../app_common/lisaui_app_common.h"
+#include "../../app_common/lisaui_app_common.h"
 #include "../assets/assets_res.h"
-#include "app_common.h"
+#include "../app_common.h"
 
 static const char *TAG = "app_audio_player";
 lv_obj_t *g_audio_player = NULL;
@@ -60,7 +60,7 @@ static struct app_icon_t app_icon_res = {
     // .title = "Audio Player",
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = (const uint8_t *)&ui_img_icon_composition_png,
+    .icon = &ui_img_icon_composition_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 
@@ -86,4 +86,4 @@ lisaui_err_t app_audio_player_init(void)
     return LISAUI_ERR_OK;
 }
 
-REGISTER_LISAUI_APP(audio_player, &app_audio_player, app_audio_player_init);
+LISAUI_REGISTER_APP(audio_player, &app_audio_player, app_audio_player_init);

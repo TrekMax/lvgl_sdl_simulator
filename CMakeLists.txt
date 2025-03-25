@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(GenerateVersionHeader)
 
 project(demo C)
@@ -8,6 +8,11 @@ add_compile_options(-g)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_BUILD_TYPE Debug)
+
+
+# 使用-ffile-prefix-map来减少调试信息中的路径长度，从而固定 ROM 占用
+get_filename_component(ROOT_PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR}/ ABSOLUTE)
+add_compile_options("-ffile-prefix-map=${ROOT_PROJECT_DIR}=.")
 
 find_package(SDL2 REQUIRED SDL2)
 # find_package(freetype REQUIRED freetype)
@@ -27,10 +32,6 @@ include_directories(
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-
-# 使用-ffile-prefix-map来减少调试信息中的路径长度，从而固定 ROM 占用
-get_filename_component(ROOT_PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR}/ ABSOLUTE)
-add_compile_options("-ffile-prefix-map=${ROOT_PROJECT_DIR}=.")
 
 # add_subdirectory(components/lv_lib_rlottie)
 add_subdirectory(components/lvgl)

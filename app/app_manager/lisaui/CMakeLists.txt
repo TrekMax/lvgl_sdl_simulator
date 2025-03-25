@@ -21,40 +21,42 @@ if (CONFIG_LISAUI_DBUS_ENABLE)
 endif()
 
 set(APP_SYSTEM_SOURCES
-    app_sys/assets/icons/icon_img_app_launcher_png.c
-    app_sys/assets/icons/icon_img_app_taskbar_png.c
-    app_sys/assets/taskbar_icon/ui_img__status_battery_1_png.c
-    app_sys/assets/taskbar_icon/ui_img__status_battery_2_png.c
-    app_sys/assets/taskbar_icon/ui_img__status_battery_3_png.c
-    app_sys/assets/taskbar_icon/ui_img__status_battery_4_png.c
-    app_sys/assets/taskbar_icon/ui_img__status_battery_5_png.c
+    app/assets/icons/icon_img_app_launcher_png.c
+    app/assets/icons/icon_img_app_taskbar_png.c
+    app/assets/taskbar_icon/ui_img__status_battery_1_png.c
+    app/assets/taskbar_icon/ui_img__status_battery_2_png.c
+    app/assets/taskbar_icon/ui_img__status_battery_3_png.c
+    app/assets/taskbar_icon/ui_img__status_battery_4_png.c
+    app/assets/taskbar_icon/ui_img__status_battery_5_png.c
 
-    app_sys/assets/taskbar_icon/ui_img__status_charging_1_png.c
-    app_sys/assets/taskbar_icon/ui_img__status_charging_2_png.c
-    app_sys/assets/taskbar_icon/ui_img__status_charging_3_png.c
-    app_sys/assets/taskbar_icon/ui_img__status_charging_4_png.c
-    app_sys/assets/taskbar_icon/ui_img__status_charging_5_png.c
+    app/assets/taskbar_icon/ui_img__status_charging_1_png.c
+    app/assets/taskbar_icon/ui_img__status_charging_2_png.c
+    app/assets/taskbar_icon/ui_img__status_charging_3_png.c
+    app/assets/taskbar_icon/ui_img__status_charging_4_png.c
+    app/assets/taskbar_icon/ui_img__status_charging_5_png.c
 
     # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld 链接顺序)
-    app_sys/app_launcher.c
-    app_sys/app_taskbar.c
+    app/launcher/app_launcher.c
+    app/taskbar/app_taskbar.c
 )
 
 set(APP_USER_SOURCES
-    app_user/assets/icons/icon_img_app_composition_png.c
-    app_user/assets/icons/icon_img_app_fav_png.c
-    app_user/assets/icons/icon_img_app_practice_png.c
-    app_user/assets/icons/icon_img_app_scanner_png.c
-    app_user/assets/icons/icon_img_app_setting_png.c
-    app_user/assets/icons/icon_img_app_voice_png.c
+    app/assets/icons/icon_img_app_composition_png.c
+    app/assets/icons/icon_img_app_fav_png.c
+    app/assets/icons/icon_img_app_practice_png.c
+    app/assets/icons/icon_img_app_scanner_png.c
+    app/assets/icons/icon_img_app_setting_png.c
+    app/assets/icons/icon_img_app_voice_png.c
+    app/assets/icons/icon_img_app_store_png.c
 
     # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld 链接顺序)
-    app_user/ocr_scanner/app_ocr.c
-    app_user/dictionary/app_dictionary.c
-    app_user/demo/app_demo.c
-    # app_user/app_audio_player.c
-    # app_user/app_voice.c
-    # app_user/app_setting.c
+    app/app_template/app_template.c
+    app/ocr_scanner/app_ocr.c
+    app/dictionary/app_dictionary.c
+    app/demo/app_demo.c
+    # app_user/audio_player/app_audio_player.c
+    # app_user/voice/app_voice.c
+    app/setting/app_setting.c
 )
 
 set(EXT_LIB_SOURCE

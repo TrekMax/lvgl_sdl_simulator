@@ -15,91 +15,112 @@
 
 static const char *TAG = "app_view_manager";
 
-static struct _lisaui_view_stack_t view_stack = {0};
-
-lisaui_err_t lisaui_view_manager_init(void)
+lisaui_err_t lisaui_view_manager_init(lisaui_view_stack_t *view_stack)
 {
-    view_stack.capacity = LISAUI_VIEW_MANAGER_MAX_CAPACITY;
-    view_stack.size = 0;
-    // view_stack.pages = NULL;
-    view_stack.head = NULL;
-    view_stack.tail = NULL;
-    // view_stack.current = NULL;
+    // view_stack->capacity = LISAUI_VIEW_MANAGER_MAX_CAPACITY;
+    view_stack->size = 0;
+    // view_stack->pages = NULL;
+    view_stack->head = NULL;
+    view_stack->tail = NULL;
+    // view_stack->current = NULL;
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_view_manager_push(lisaui_view_page_t *page)
+lisaui_err_t lisaui_view_manager_push(lisaui_view_stack_t *view_stack, lisaui_view_page_t *page)
 {
     if (page == NULL) {
         LISAUI_LOGW(TAG, "Invalid page pointer");
         return LISAUI_ERR_NO_MEMORY;
     }
 
-    if (view_stack.size >= view_stack.capacity) {
+    if (view_stack->size >= view_stack->capacity) {
         LISAUI_LOGW(TAG, "view stack is full");
         return LISAUI_ERR_NO_MEMORY;
     }
-    if (view_stack.size == 0) {
-        view_stack.head = page;
-        view_stack.tail = page;
+    if (view_stack->size == 0) {
+        view_stack->head = page;
+        view_stack->tail = page;
     }
     else {
-        view_stack.tail->next = page;
-        view_stack.tail = page;
+        view_stack->tail->next = page;
+        view_stack->tail = page;
     }
 
-    view_stack.tail->next = NULL;
-    view_stack.size++;
+    view_stack->tail->next = NULL;
+    view_stack->size++;
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_view_manager_pop(lisaui_view_page_t **page)
+lisaui_err_t lisaui_view_manager_pop(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page)
 {
-    if (view_stack.size == 0) {
+    if (view_stack->size == 0) {
         LISAUI_LOGW(TAG, "view stack is empty");
         return LISAUI_ERR_NO_MEMORY;
     }
 
-    if (view_stack.size == 1) {
-        *page = view_stack.head;
-        view_stack.head = NULL;
-        view_stack.tail = NULL;
+    if (view_stack->size == 1) {
+        *page = view_stack->head;
+        view_stack->head = NULL;
+        view_stack->tail = NULL;
     } else {
-        *page = view_stack.tail;
-        lisaui_view_page_t *p = view_stack.head;
-        while (p->next != view_stack.tail) {
+        *page = view_stack->tail;
+        lisaui_view_page_t *p = view_stack->head;
+        while (p->next != view_stack->tail) {
             p = p->next;
         }
-        view_stack.tail = p;
-        view_stack.tail->next = NULL;
+        view_stack->tail = p;
+        view_stack->tail->next = NULL;
     }
 
-    view_stack.size--;
+    view_stack->size--;
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_view_manger_get_current(lisaui_view_page_t **page)
+lisaui_err_t lisaui_view_manager_get_current(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page)
 {
-    if (view_stack.size == 0) {
+    if (view_stack->size == 0) {
         LISAUI_LOGW(TAG, "view stack is empty");
         return LISAUI_ERR_NO_MEMORY;
     }
-    *page = view_stack.tail;
+    *page = view_stack->tail;
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_view_manger_print_usage(void)
+lisaui_err_t lisaui_view_manager_print_usage(lisaui_view_stack_t *view_stack)
 {
-    LISAUI_LOGI(TAG, "view stack usage: %d/%d", view_stack.size, view_stack.capacity);
-    LISAUI_LOGI(TAG, "\thead: %p", view_stack.head);
-    // LISAUI_LOGI(TAG, "view stack current: %p", view_stack.current);
-    void *p = view_stack.head;
+    LISAUI_LOGD(TAG, "--------------------------------------------------------");
+    LISAUI_LOGD(TAG, "view stack usage: %d/%d", view_stack->size, view_stack->capacity);
+    LISAUI_LOGD(TAG, "\thead: %p", view_stack->head);
+    // LISAUI_LOGD(TAG, "view stack current: %p", view_stack.current);
+    void *p = view_stack->head;
+    int depth = 0;
     while (p!=NULL) {
+        depth++;
         lisaui_view_page_t *page = (lisaui_view_page_t *)p;
-        // LISAUI_LOGI(TAG, "\t\tpage: %p, page->prev: %p, page->next: %p", page, page->prev, page->next);
-        LISAUI_LOGI(TAG, "\tpage: %p, page->next: %p", page, page->next);
+        // LISAUI_LOGD(TAG, "\t\tpage: %p, page->prev: %p, page->next: %p", page, page->prev, page->next);
+        LISAUI_LOGD(TAG, "\t[%d]page: %p, page->next: %p", depth, page, page->next);
         p = page->next;
     }
-    LISAUI_LOGI(TAG, "\ttail: %p", view_stack.tail);
+    LISAUI_LOGD(TAG, "\ttail: %p", view_stack->tail);
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_view_manager_clean(lisaui_view_stack_t *view_stack)
+{
+    lisaui_view_page_t *page = NULL;
+    while (view_stack->size > 0) {
+        lisaui_view_manager_pop(view_stack, &page);
+        lisaui_free(page);
+        page = NULL;
+    }
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_view_manager_deinit(lisaui_view_stack_t *view_stack)
+{
+    lisaui_view_manager_clean(view_stack);
+    view_stack->size = 0;
+    view_stack->head = NULL;
+    view_stack->tail = NULL;
     return LISAUI_ERR_OK;
 }

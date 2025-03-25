@@ -16,9 +16,6 @@
 extern "C" {
 #endif
 
-// #include "lisaui_type.h"
-// #include "lisaui_app_common.h"
-
 #include "ext_lib/lv_gif.h"
 
 #ifdef __cplusplus

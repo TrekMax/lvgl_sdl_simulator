@@ -21,12 +21,9 @@ extern "C" {
 
 #define LISAUI_VIEW_MANAGER_MAX_CAPACITY 10
 
-// typedef lisaui_err_t lisaui_view_err_t;
-typedef struct _lisaui_view_page_t lisaui_view_page_t;
-typedef lv_obj_t lisaui_view_t;
-
 struct _lisaui_view_page_t {
     int app_id; // 页面栈归属的 app id, 用于在不同 app 之间 view 切换
+    int page_id;
     lisaui_view_t *root;
 
     // 页面栈生命周期
@@ -49,15 +46,16 @@ struct _lisaui_view_stack_t {
     // lisaui_view_page_t *current;
     lisaui_view_page_t *head;
     lisaui_view_page_t *tail;
-};
+} ;
 
-lisaui_err_t lisaui_view_manger_get_current(lisaui_view_page_t **page);
-lisaui_err_t lisaui_view_manager_pop(lisaui_view_page_t **page);
-lisaui_err_t lisaui_view_manager_push(lisaui_view_page_t *page);
-lisaui_err_t lisaui_view_manager_init(void);
+lisaui_err_t lisaui_view_manager_init(lisaui_view_stack_t *view_stack);
+lisaui_err_t lisaui_view_manager_clean(lisaui_view_stack_t *view_stack);
+lisaui_err_t lisaui_view_manager_deinit(lisaui_view_stack_t *view_stack);
 
-
-lisaui_err_t lisaui_view_manger_print_usage(void);
+lisaui_err_t lisaui_view_manager_get_current(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page);
+lisaui_err_t lisaui_view_manager_pop(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page);
+lisaui_err_t lisaui_view_manager_push(lisaui_view_stack_t *view_stack, lisaui_view_page_t *page);
+lisaui_err_t lisaui_view_manager_print_usage(lisaui_view_stack_t *view_stack);
 
 #ifdef __cplusplus
 }

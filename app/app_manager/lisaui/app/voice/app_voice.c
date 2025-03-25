@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_voice.h"
-#include "../app_common/lisaui_app_common.h"
+#include "../../app_common/lisaui_app_common.h"
 #include "../assets/assets_res.h"
 
 static const char *TAG = "app_voice";
@@ -125,7 +125,7 @@ static struct app_icon_t app_icon_res = {
     .title = "语音",
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = (const uint8_t *)&ui_img_icon_voice_png,
+    .icon = &ui_img_icon_voice_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 
@@ -151,4 +151,4 @@ lisaui_err_t app_voice_init(void)
     return LISAUI_ERR_OK;
 }
 
-REGISTER_LISAUI_APP(voice, &app_voice, app_voice_init);
+LISAUI_REGISTER_APP(voice, &app_voice, app_voice_init);

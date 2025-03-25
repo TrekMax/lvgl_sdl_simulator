@@ -1,5 +1,5 @@
 /**
- * @file app_setting.h
+ * @file app_template.h
  * @author Tianshuang Ke (dske@listenai.com)
  * @brief
  * @version 0.1
@@ -9,19 +9,19 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef __APP_SETTING_H__
-#define __APP_SETTING_H__
+#ifndef __APP_TEMPLATE_H__
+#define __APP_TEMPLATE_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "../app_common/lisaui_app_common.h"
+#include "../../app_common/lisaui_app_common.h"
 
-int app_setting_init(void);
+int app_template_init(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __APP_SETTING_H__
+#endif // __APP_TEMPLATE_H__

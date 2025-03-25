@@ -9,6 +9,8 @@ file(GLOB_RECURSE SRC_FILES
     # mouse_cursor_icon.c
 )
 
+add_definitions(-DCONFIG_LVGL_SIMULATOR=1)
+add_definitions(-D__LVGL_SIMULATOR__)
 target_sources(${target_name} PRIVATE ${SRC_FILES})
 
 add_subdirectory(lisaui)

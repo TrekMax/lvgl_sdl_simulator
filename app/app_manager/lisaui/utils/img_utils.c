@@ -12,11 +12,14 @@
 #include "img_utils.h"
 #include <string.h>
 #ifdef __ZEPHYR__
-	#include <zephyr/kernel.h>
-	#include "lvgl.h"
+    #include <zephyr/kernel.h>
+    #include "lvgl.h"
+#elif defined(__LVGL_SIMULATOR__)
+    #include "lvgl/lvgl.h"
 #else
-	#include "lvgl/lvgl.h"
+    #include "lvgl.h"
 #endif
+
 #define LOG_INF LV_LOG_USER
 // #include <stdio.h>
 // #define LOG_INF printf

@@ -22,6 +22,7 @@ typedef struct {
     lv_task_t * task;
     lv_img_dsc_t imgdsc;
     uint32_t last_call;
+    bool repeat;
 }lv_gif_ext_t;
 
 /**********************
@@ -61,6 +62,7 @@ lv_obj_t * lv_gif_create_from_file(lv_obj_t * parent, const char * path)
     ext->imgdsc.header.h = ext->gif->height;
     ext->imgdsc.header.w = ext->gif->width;
     ext->last_call = lv_tick_get();
+    ext->repeat = false;
 
     lv_img_set_src(img, &ext->imgdsc);
 
@@ -88,6 +90,7 @@ lv_obj_t * lv_gif_create_from_data(lv_obj_t * parent, const void * data)
     ext->imgdsc.header.h = ext->gif->height;
     ext->imgdsc.header.w = ext->gif->width;
     ext->last_call = lv_tick_get();
+    ext->repeat = false;
 
     lv_img_set_src(img, &ext->imgdsc);
 
@@ -101,6 +104,41 @@ void lv_gif_restart(lv_obj_t * gif)
     lv_gif_ext_t * ext = lv_obj_get_ext_attr(gif);
     lv_task_set_prio(ext->task, LV_TASK_PRIO_HIGH);
     gd_rewind(ext->gif);
+}
+
+void lv_gif_repeat(lv_obj_t *gif, bool enable)
+{
+    if (gif == NULL) {
+        return;
+    }
+    lv_gif_ext_t * ext = lv_obj_get_ext_attr(gif);
+    if (ext) {
+        ext->repeat = enable;
+    }
+}
+
+void lv_gif_pause(lv_obj_t * obj)
+{
+    lv_gif_ext_t * ext = lv_obj_get_ext_attr(obj);
+    lv_task_set_prio(ext->task, LV_TASK_PRIO_OFF);
+}
+
+void lv_gif_resume(lv_obj_t * obj)
+{
+    lv_gif_ext_t * ext = lv_obj_get_ext_attr(obj);
+    lv_task_set_prio(ext->task, LV_TASK_PRIO_HIGH);
+}
+
+int lv_gif_get_frame_count(lv_obj_t * obj)
+{
+    lv_gif_ext_t * ext = lv_obj_get_ext_attr(obj);
+    
+}
+
+int lv_gif_get_repeat_count(lv_obj_t * obj)
+{
+    lv_gif_ext_t * ext = lv_obj_get_ext_attr(obj);
+    return ext->gif->loop_count;
 }
 
 /**********************
@@ -119,30 +157,34 @@ static void next_frame_task_cb(lv_task_t * t)
     int has_next = gd_get_frame(ext->gif);
     if(has_next == 0) {
         /*It was the last repeat*/
-        if(ext->gif->loop_count == 1) {
-            lv_res_t res = lv_signal_send(img, LV_SIGNAL_LEAVE, NULL);
-            if(res != LV_RES_OK) return;
-
-            res = lv_event_send(img, LV_EVENT_LEAVE, NULL);
-            if(res != LV_RES_OK) return;
+        if (ext->repeat){
+            gd_rewind(ext->gif);
         } else {
-            
-             if(ext->gif->loop_count == 0) {
+            if(ext->gif->loop_count == 1) {
                 lv_res_t res = lv_signal_send(img, LV_SIGNAL_LEAVE, NULL);
                 if(res != LV_RES_OK) return;
-
+                
                 res = lv_event_send(img, LV_EVENT_LEAVE, NULL);
                 if(res != LV_RES_OK) return;
-            }
+            } else {
+                
+                if(ext->gif->loop_count == 0) {
+                    lv_res_t res = lv_signal_send(img, LV_SIGNAL_LEAVE, NULL);
+                    if(res != LV_RES_OK) return;
 
-            if(ext->gif->loop_count > 1) {
-                ext->gif->loop_count--;
-                gd_rewind(ext->gif);
+                    res = lv_event_send(img, LV_EVENT_LEAVE, NULL);
+                    if(res != LV_RES_OK) return;
+                }
+
+                if(ext->gif->loop_count > 1) {
+                    ext->gif->loop_count--;
+                    gd_rewind(ext->gif);
+                }
             }
         }
     }
 
-    gd_render_frame(ext->gif, ext->imgdsc.data);
+    gd_render_frame(ext->gif,(uint8_t *) ext->imgdsc.data);
 
     lv_img_cache_invalidate_src(lv_img_get_src(img));
     lv_obj_invalidate(img);
