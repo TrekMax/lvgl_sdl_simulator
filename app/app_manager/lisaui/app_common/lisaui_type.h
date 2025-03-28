@@ -17,6 +17,22 @@ extern "C" {
 #endif
 #include <stdint.h>
 
+#if defined(__LVGL_SIMULATOR__)
+    #ifndef LV_CONF_PATH
+        #define LV_CONF_PATH ../../../include/lv_conf.h
+    #endif
+#endif
+
+#ifdef __ZEPHYR__
+    #include <zephyr/kernel.h>
+    #include "lvgl.h"
+#elif defined(__LVGL_SIMULATOR__)
+    #include "lvgl/lvgl.h"
+#else
+    #include "lvgl.h"
+#endif
+
+
 #define LISAUI_ERR_OK   (0)
 #define LISAUI_ERR_FAIL (-1)
 
@@ -39,25 +55,27 @@ extern "C" {
 #define LISAUI_ERR_APP_NOT_INIT             (-1010)
 
 #define LISAUI_ERR_APP_LOCKED               (-1011)
+#define LISAUI_ERR_APP_ALREADY_IN           (-1012)
 
-typedef int lisaui_err_t;
 
-// typedef lisaui_err_t lisaui_view_err_t;
-typedef struct _lisaui_view_page_t lisaui_view_page_t;
+#define LISAUI_VIEW_OBJ_T lv_obj_t
+#define LISAUI_ICON_RES_T const lv_img_dsc_t
 
 #ifndef LISAUI_VIEW_OBJ_T 
-    #define LISAUI_VIEW_OBJ_T uint32_t
+#define LISAUI_VIEW_OBJ_T uint32_t
 #endif
-
-typedef LISAUI_VIEW_OBJ_T lisaui_view_t;
-typedef struct _lisaui_view_stack_t lisaui_view_stack_t;
-
-
 #ifndef LISAUI_ICON_RES_T
     #define LISAUI_ICON_RES_T const uint8_t *
 #endif
 
+typedef int lisaui_err_t;
+typedef lisaui_err_t lisaui_view_err_t;
+
+typedef LISAUI_VIEW_OBJ_T lisaui_view_t;
 typedef LISAUI_ICON_RES_T lisaui_icon_res_t;
+typedef struct _lisaui_view_stack_t lisaui_view_stack_t;
+typedef struct _lisaui_view_page_t lisaui_view_page_t;
+
 #ifdef __cplusplus
 }
 #endif

@@ -16,8 +16,7 @@
 extern "C" {
 #endif
 
-#include "lvgl/lvgl.h"
-
+#include "incbin.h"
 #include "app_common/lisaui_app_common.h"
 #include "app_framework/lisaui_app_manager.h"
 

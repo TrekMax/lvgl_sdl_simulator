@@ -19,7 +19,7 @@ extern "C" {
 #include "../app_common/lisaui_type.h"
 #include "../app_common/lisaui_app_common.h"
 
-#define LISAUI_VIEW_MANAGER_MAX_CAPACITY 10
+#define LISAUI_VIEW_MANAGER_MAX_CAPACITY 20
 
 struct _lisaui_view_page_t {
     int app_id; // 页面栈归属的 app id, 用于在不同 app 之间 view 切换

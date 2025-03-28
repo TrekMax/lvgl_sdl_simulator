@@ -26,6 +26,7 @@ LV_IMG_DECLARE(icon_img_app_store_png);
 
 LV_IMG_DECLARE(ui_img_icon_launcher_png);
 LV_IMG_DECLARE(ui_img_icon_taskbar_png);
+LV_IMG_DECLARE(icon_img_app_thermo_png);
 
 LV_IMG_DECLARE(ui_img__status_battery_1_png);
 LV_IMG_DECLARE(ui_img__status_battery_2_png);

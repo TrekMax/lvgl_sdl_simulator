@@ -25,9 +25,8 @@ extern "C" {
  * @return lisaui_err_t 
  */
 lisaui_err_t lisaui_asset_manager_init(void);
-// lisaui_err_t lisaui_asset_manager_deinit(void);
-
 void* lisaui_asset_manager_get_asset(const char *path);
+// lisaui_err_t lisaui_asset_manager_deinit(void);
 
 
 #ifdef __cplusplus

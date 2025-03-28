@@ -31,6 +31,7 @@ enum lisaui_app_id_t {
     UI_APP_ID_OCR_PAGE_TIPS,
     UI_APP_ID_OCR_PAGE_SCANNER_TRANSLATOR,
 
+    UI_APP_ID_THERMOGRAPHY,
     UI_APP_ID_DICTIONARY,
     UI_APP_ID_AUDIO_PLAYER,
     UI_APP_ID_SPELLING,
@@ -59,22 +60,7 @@ typedef enum _lisaui_textarea_mode_t {
     LISAUI_TEXT_MODE_NORMAL, // 默认
 } lisaui_textarea_mode_t;
 
-#define LISAUI_APP_INIT_CHECK(app_id, obj, err, ret)                                                                   \
-    if (obj == NULL) {                                                                                                 \
-        struct lisaui_app_t *app = lisaui_app_manager_get_app(app_id);                                                 \
-        if (app == NULL) {                                                                                             \
-            LISAUI_LOGE(TAG, "[%s] %d not registered", __FUNCTION__, app_id);                                          \
-            return err;                                                                                                \
-        }                                                                                                              \
-        if (lisaui_app_enter(app_id) != LISAUI_ERR_OK) {                                                               \
-            LISAUI_LOGE(TAG, "[%s] %s not init", __FUNCTION__, app->info.name);                                        \
-            return err;                                                                                                \
-        }                                                                                                              \
-        obj = app->get_root_view();                                                                                    \
-        if (obj == NULL) {                                                                                             \
-            return err;                                                                                                \
-        }                                                                                                              \
-    }
+
 #ifdef __cplusplus
 }
 #endif

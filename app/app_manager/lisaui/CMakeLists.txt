@@ -21,8 +21,6 @@ if (CONFIG_LISAUI_DBUS_ENABLE)
 endif()
 
 set(APP_SYSTEM_SOURCES
-    app/assets/icons/icon_img_app_launcher_png.c
-    app/assets/icons/icon_img_app_taskbar_png.c
     app/assets/taskbar_icon/ui_img__status_battery_1_png.c
     app/assets/taskbar_icon/ui_img__status_battery_2_png.c
     app/assets/taskbar_icon/ui_img__status_battery_3_png.c
@@ -41,6 +39,8 @@ set(APP_SYSTEM_SOURCES
 )
 
 set(APP_USER_SOURCES
+    app/assets/icons/icon_img_app_launcher_png.c
+    app/assets/icons/icon_img_app_taskbar_png.c
     app/assets/icons/icon_img_app_composition_png.c
     app/assets/icons/icon_img_app_fav_png.c
     app/assets/icons/icon_img_app_practice_png.c
@@ -48,9 +48,11 @@ set(APP_USER_SOURCES
     app/assets/icons/icon_img_app_setting_png.c
     app/assets/icons/icon_img_app_voice_png.c
     app/assets/icons/icon_img_app_store_png.c
+    app/assets/icons/icon_img_app_thermo_png.c
 
     # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld 链接顺序)
     app/app_template/app_template.c
+    app/thermography/app_thermography.c
     app/ocr_scanner/app_ocr.c
     app/dictionary/app_dictionary.c
     app/demo/app_demo.c

@@ -65,11 +65,13 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
     }
 
     lv_obj_t *icon_panel = lv_obj_create(icon_container);
-    lv_obj_center(icon_panel);
-    lv_obj_set_height(icon_panel, LV_PCT(80));
+    // lv_obj_center(icon_panel);
+    lv_obj_set_height(icon_panel, LV_PCT(100));
+    // lv_obj_align(icon_panel, LV_ALIGN_CENTER, 0, LV_DPX(20));
     // lv_obj_set_height(icon_panel, LV_SIZE_CONTENT);
-    // lv_obj_align(icon_panel, LV_ALIGN_CENTER, 0, 0);
-    _lisaui_set_style_container(icon_panel, lv_color_hex(0x1f1f1f), 255, lv_color_hex(0x000000), 0, 0);
+    // lv_obj_align(icon_panel, LV_ALIGN_CENTER, 0, 50);
+    // lv_obj_set_y(icon_panel, 10);
+    _lisaui_set_style_container(icon_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 #if 0
     lv_obj_t * obj;
     lv_obj_t * label;
@@ -100,8 +102,8 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
     }
 
     lv_obj_t *m_app_title = lv_label_create(icon_panel);
-    lv_obj_align_to(m_app_title, m_app_icon, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPX(20));
     lv_label_set_text(m_app_title, app->icon->title);
+    lv_obj_align(m_app_title, LV_ALIGN_BOTTOM_MID, 0, -LV_DPX(10));
 
     lv_obj_set_style_text_color(m_app_title, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(m_app_title, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -123,8 +125,9 @@ lisaui_err_t lisaui_launcher_register_app(struct lisaui_app_t *app)
         return LISAUI_ERR_INVALID_PARAM;
     }
     // LISAUI_LOGD(TAG, "--->app: %s", app->icon->title);
-    // lisaui_app_show_info(app);
+    // lisaui_app_manager_show_app_info(app);
     lisaui_launcher_add_app_icon(g_icon_panel, app);
+    return LISAUI_ERR_OK;
 }
 lisaui_err_t lisaui_launcher_update_app_icon(void)
 {
@@ -135,7 +138,7 @@ lisaui_err_t lisaui_launcher_update_app_icon(void)
     lv_obj_clean(g_icon_panel);
     for (int i = 0; i < lisaui_app_manager_get_registered_count(); i++) {
         struct lisaui_app_t *app = NULL;
-        if (lisaui_app_get_by_uuid(i, &app) != LISAUI_ERR_OK) {
+        if (lisaui_app_manager_get_app_by_uuid(i, &app) != LISAUI_ERR_OK) {
             // LISAUI_LOGE(TAG, "Failed to get app by uuid: %d", i);
             // return LISAUI_ERR_FAIL;
             continue;
@@ -159,11 +162,8 @@ lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
         LISAUI_LOGE(TAG, "app is NULL");
         return LISAUI_ERR_FAIL;
     }
-    lisaui_app_show_info(app);
+    lisaui_app_manager_show_app_info(app);
     lisaui_launcher_add_app_icon(g_icon_panel, app);
-    // lisaui_launcher_add_app_icon(g_icon_panel, app);
-    // lisaui_launcher_add_app_icon(g_icon_panel, app);
-    // lisaui_launcher_add_app_icon(g_icon_panel, app);
     return LISAUI_ERR_OK;
 }
 #define LAUNCHER_ICON_ROW_NUM 4
@@ -174,28 +174,25 @@ lisaui_err_t app_launcher_create(void *parent)
     _lisaui_set_style_container(g_app_launcher, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
     lv_obj_set_size(g_app_launcher, LV_PCT(100), LV_PCT(100));
 
-    static lv_style_t style;
-    lv_style_init(&style);
-    lv_style_set_flex_flow(&style, LV_FLEX_FLOW_ROW_WRAP);
-    lv_style_set_flex_main_place(&style, LV_FLEX_ALIGN_SPACE_EVENLY);
-    lv_style_set_layout(&style, LV_LAYOUT_FLEX);
+    // static lv_style_t style;
+    // lv_style_init(&style);
+    // lv_style_set_flex_flow(&style, LV_FLEX_FLOW_ROW_WRAP);
+    // lv_style_set_flex_main_place(&style, LV_FLEX_ALIGN_SPACE_EVENLY);
+    // lv_style_set_layout(&style, LV_LAYOUT_FLEX);
     
-    lv_obj_t *m_icon_container = lv_obj_create(g_app_launcher);
-    lv_obj_set_size(m_icon_container, LV_PCT(100), LV_PCT(60));
-    lv_obj_set_y(m_icon_container, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
+    g_icon_panel = lv_obj_create(g_app_launcher);
+    lv_obj_set_size(g_icon_panel, LV_PCT(100), LV_PCT(70));
+    lv_obj_set_y(g_icon_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT+10));
     // lv_obj_set_height(m_icon_container, LV_PCT(60));
     // lv_obj_set_width(m_icon_container, LV_PCT(100));
-    _lisaui_set_style_container(m_icon_container, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+    _lisaui_set_style_container(g_icon_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
     
-    lv_obj_align(m_icon_container, LV_ALIGN_CENTER, 0, 5);
-    lv_obj_set_flex_flow(m_icon_container, LV_FLEX_FLOW_ROW);
-    lv_obj_center(m_icon_container);
-
-    // lv_obj_set_style_base_dir(m_icon_container, LV_BASE_DIR_NEUTRAL, 0);
-    // lv_obj_add_style(m_icon_container, &style, 0);
-    // lv_obj_align(m_icon_container, LV_ALIGN_TOP_MID, 0, 5);
-
-    g_icon_panel = m_icon_container;
+    // lv_obj_align(m_icon_container, LV_ALIGN_CENTER, 0, 5);
+    lv_obj_set_flex_flow(g_icon_panel, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(g_icon_panel, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    // lv_obj_center(g_icon_panel);
+    lv_obj_set_scrollbar_mode(g_icon_panel, LV_SCROLLBAR_MODE_OFF);
+    // lv_obj_set_scroll_dir(page, LV_DIR_TOP | LV_DIR_BOTTOM); // 仅允许上下滑动
 
 #if CONFIG_LISAUI_DBUS_ENABLE
     lisaui_dbus_t *_app_manager_bus;

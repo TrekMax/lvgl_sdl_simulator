@@ -20,17 +20,6 @@
 #include "utils_log.h"
 #include <stdio.h>
 
-#ifdef SDL_HOR_RES
-#undef SDL_HOR_RES
-#define SDL_HOR_RES 800
-#endif
-
-#ifdef SDL_VER_RES
-#undef SDL_VER_RES
-#define SDL_VER_RES 480
-#endif
-
-
 /*********************
  *      DEFINES
  *********************/
@@ -107,7 +96,6 @@ int main(int argc, char **argv)
     hal_init();
 
     ui_init();
-    // lv_demo_physics();
 
     while(1) {
         /* Periodically call the lv_task handler.
@@ -152,6 +140,8 @@ static void hal_init(void)
     indev_drv.type = LV_INDEV_TYPE_POINTER;
     indev_drv.read_cb = sdl_mouse_read;
     lv_indev_drv_register(&indev_drv);
+
+    LOGI(TAG, "SDL_HOR_RES: %d, SDL_VER_RES: %d", SDL_HOR_RES, SDL_VER_RES);
 }
 
 /**

@@ -14,7 +14,6 @@
 #include "lvgl/lvgl.h"
 #include "lv_drivers/sdl/sdl.h"
 #include "ui/ui.h"
-// #include "lv_demo_physics.h"
 
 #include "version.h"
 #include "config.h"
@@ -97,7 +96,6 @@ int main(int argc, char **argv)
     hal_init();
 
     ui_init();
-    // lv_demo_physics();
 
     while(1) {
         /* Periodically call the lv_task handler.

@@ -278,7 +278,7 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
 
     lv_obj_t *uiDictionary_pinyinBtn = lv_btn_create(img_container);
     lv_obj_set_size(uiDictionary_pinyinBtn, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_align_to(uiDictionary_pinyinBtn, img_gif, LV_ALIGN_OUT_TOP_RIGHT, 60, 40);
+    lv_obj_align_to(uiDictionary_pinyinBtn, img_gif, LV_ALIGN_OUT_TOP_RIGHT, 40, 40);
 
     lv_obj_t *uiDictionary_pinyin = lv_label_create(uiDictionary_pinyinBtn);
     lv_label_set_text(uiDictionary_pinyin, "读作堉 yù");
@@ -346,7 +346,7 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
 
     // _lisaui_set_style_container(explain_container, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
     // // lv_obj_set_size(explain_container, SCREEN_WIDTH - 100, 100);
-    // lv_obj_set_width(explain_container, LV_PCT(100));
+    lv_obj_set_width(explain_container, LV_PCT(100));
     // lv_obj_set_height(explain_container, LV_SIZE_CONTENT);
     // lv_obj_set_scrollbar_mode(explain_container, LV_SCROLL_SNAP_NONE);
 
@@ -367,7 +367,7 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
         lv_obj_set_style_text_color(ui_BtnTranslate, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
 
         ui_explain_dict_text = lv_label_create(explain_container);
-        lv_obj_set_width(ui_explain_dict_text, LV_PCT(96));
+        lv_obj_set_width(ui_explain_dict_text, LV_PCT(100));
         lv_obj_set_height(ui_explain_dict_text, LV_SIZE_CONTENT);
         lv_label_set_text(ui_explain_dict_text, explain_list[i].description);
         lv_label_set_long_mode(ui_explain_dict_text, LV_LABEL_LONG_WRAP);     /*Circular scroll*/

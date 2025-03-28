@@ -31,9 +31,6 @@ extern "C" {
     #include "lvgl.h"
 #endif
 
-#define LISAUI_VIEW_OBJ_T lv_obj_t
-#define LISAUI_ICON_RES_T const lv_img_dsc_t
-
 #include "lisaui_type.h"
 
 #include "../app/app_common.h"
@@ -114,7 +111,8 @@ extern "C" {
 #define LISAUI_DBUS_APP_EXIT     "app_exit"
 #define RES_PERFIX_PATH(res)     "app/app_manager/" res
 
-#define LISAUI_STATUS_BAR_HEIGHT 30
+#define LISAUI_STATUS_BAR_HEIGHT 40
+#define CONFIG_LISAUI_EXEC_HOOK_ENABLE 1
 
 #if defined(__LVGL_SIMULATOR__)
 #define LVGL_UI_LOCK()                                                          \
@@ -148,12 +146,12 @@ extern SemaphoreHandle_t lvgl_mutex;
 
 
 lisaui_err_t _lisaui_set_style_container(lv_obj_t *obj, lv_color_t bg_color, lv_opa_t bg_opa, lv_color_t border_color,
-                                         lv_coord_t border_width, lv_coord_t radius);
+    lv_coord_t border_width, lv_coord_t radius);
 lisaui_err_t _lisaui_lv_obj_set_default_style(lv_obj_t *obj);
 lisaui_err_t _lisaui_lv_obj_set_btn_custom_style(lv_obj_t *obj);
 
 
-lisaui_err_t lisaui_app_create_toast(const char* message);
+lisaui_err_t lisaui_popup_toast(const char* message);
 // void lisaui_memory_monitor(lv_task_t *param);
 
 #ifdef __cplusplus

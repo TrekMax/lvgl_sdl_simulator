@@ -24,6 +24,11 @@ extern "C" {
     #define CONFIG_LOG_LEVEL 4
 #endif
 
+#define SDL_HOR_RES     (600)//560
+#define SDL_VER_RES     (240)//180
+
+#define LV_COLOR_DEPTH	16
+
 
 #ifdef __cplusplus
 }

@@ -20,6 +20,16 @@
 #include "utils_log.h"
 #include <stdio.h>
 
+#ifdef SDL_HOR_RES
+#undef SDL_HOR_RES
+#define SDL_HOR_RES     320
+#endif
+
+#ifdef SDL_VER_RES
+#undef SDL_VER_RES
+#define SDL_VER_RES     240
+#endif
+
 /*********************
  *      DEFINES
  *********************/

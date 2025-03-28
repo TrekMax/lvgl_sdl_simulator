@@ -22,3 +22,8 @@ target_link_libraries(
     lv_drivers
     ui
 )
+
+# 设置可执行文件输出目录
+set_target_properties(${target_name} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${SDK_PATH}/dist
+)

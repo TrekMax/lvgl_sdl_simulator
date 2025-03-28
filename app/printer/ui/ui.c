@@ -566,7 +566,7 @@ void printer_in_Animation( lv_obj_t *TargetObject, int delay)
 {
 ui_anim_user_data_t *PropertyAnimation_0_user_data = lv_mem_alloc(sizeof(ui_anim_user_data_t));
 PropertyAnimation_0_user_data->target = TargetObject;
-PropertyAnimation_0_user_data->imgset = ui_imgset_printer_in_;
+PropertyAnimation_0_user_data->imgset = (lv_img_dsc_t **)ui_imgset_printer_in_;
 PropertyAnimation_0_user_data->imgset_size = sizeof(ui_imgset_printer_in_)/(sizeof(lv_img_dsc_t*));
 PropertyAnimation_0_user_data->val = -1;
 lv_anim_t PropertyAnimation_0;

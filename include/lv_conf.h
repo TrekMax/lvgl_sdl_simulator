@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 
+#include "config.h"
 /*Helper*/
 #define __LVGL_V8_3 (8 == 8 && 3 == 3)
 
@@ -27,8 +28,9 @@
  *====================*/
 
 /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
-#define LV_COLOR_DEPTH	16
-// #define LV_COLOR_DEPTH	32
+#ifndef LV_COLOR_DEPTH
+#define LV_COLOR_DEPTH	32
+#endif
 
 /*Swap the 2 bytes of RGB565 color. Useful if the display has an 8-bit interface (e.g. SPI)*/
 #define LV_COLOR_16_SWAP 0

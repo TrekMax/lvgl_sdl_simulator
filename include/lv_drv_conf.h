@@ -99,8 +99,12 @@
 #define SDL_HOR_RES     320//*2
 #define SDL_VER_RES     170//*2
 #else
-#define SDL_HOR_RES     560//600
-#define SDL_VER_RES     280//400
+#ifndef SDL_HOR_RES
+    #define SDL_HOR_RES     800
+#endif
+#ifndef SDL_VER_RES
+    #define SDL_VER_RES     400
+#endif
 #endif
 /* Scale window by this factor (useful when simulating small screens) */
 #  define SDL_ZOOM        1

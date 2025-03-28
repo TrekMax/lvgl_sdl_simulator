@@ -8,7 +8,7 @@
                         "type": "lldb",
                         "request": "launch",
                         "name": "Debug",
-                        "program": "${workspaceFolder}/build/app/pendict/pendict",
+                        "program": "${workspaceFolder}/dist/app_manager",
                         "args": [],
                         "cwd": "${workspaceFolder}"
                 }

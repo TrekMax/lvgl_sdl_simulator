@@ -26,16 +26,18 @@ static const char *TAG = "app_manager";
 static struct lisaui_app_manager_t m_app_manager = {
     .dbus = NULL,
     .apps = {NULL},
-    .manager_view_stack = {
-        .capacity = LISAUI_VIEW_MANAGER_MAX_CAPACITY,
-        .size = 0,
-        .head = NULL,
-        .tail = NULL,
-    },
+    .manager_view_stack =
+        {
+            .capacity = LISAUI_VIEW_MANAGER_MAX_CAPACITY,
+            .size = 0,
+            .head = NULL,
+            .tail = NULL,
+        },
     .current_appid = UI_APP_ID_NONE,
     .previous_appid = UI_APP_ID_NONE,
     .registered_count = 0,
     .unhidden_count = 0,
+    .lock_app_view = false,
 };
 
 static int lisaui_app_check_id(const int app_id)
@@ -123,30 +125,14 @@ static int lisaui_app_id_find_uuid(const int app_id, int *uuid)
 
 static lisaui_app_manager_hook_t m_app_register_hook = NULL;
 static lisaui_app_manager_hook_t m_app_unregister_hook = NULL;
-
-lisaui_err_t lisaui_app_manager_set_register_app_hook(lisaui_app_manager_hook_t hook)
-{
-    if (hook == NULL) {
-        LISAUI_LOGE(TAG, "[ui] hook is NULL");
-        return LISAUI_ERR_INVALID_PARAM;
-    }
-    m_app_register_hook = hook;
-    return LISAUI_ERR_OK;
-}
-
-lisaui_err_t lisaui_app_manager_set_unregister_app_hook(lisaui_app_manager_hook_t hook)
-{
-    if (hook == NULL) {
-        LISAUI_LOGE(TAG, "[ui] hook is NULL");
-        return LISAUI_ERR_INVALID_PARAM;
-    }
-    m_app_unregister_hook = hook;
-    return LISAUI_ERR_OK;
-}
+static lisaui_app_manager_hook_t m_app_enter_hook = NULL;
+static lisaui_app_manager_hook_t m_app_exit_hook = NULL;
+static lisaui_app_manager_hook_t m_app_close_hook = NULL;
 
 int lisaui_app_register(struct lisaui_app_t *app)
 {
     int app_id = app->info.id;
+    int ret = LISAUI_ERR_OK;
     if (lisaui_app_check_id(app_id) != LISAUI_ERR_APP_OK) {
         LISAUI_LOGE(TAG, "[ui] invalid app id: %d", app_id);
         return LISAUI_ERR_APP_ID_INVALID;
@@ -157,7 +143,8 @@ int lisaui_app_register(struct lisaui_app_t *app)
         return LISAUI_ERR_APP_UNKNOW_FAILED;
     }
     if (m_app_manager.apps[app->info.uuid] != NULL) {
-        LISAUI_LOGD(TAG, "m_app_manager.apps[app->info.uuid:%d]: %p", app->info.uuid, m_app_manager.apps[app->info.uuid]);
+        LISAUI_LOGD(TAG, "m_app_manager.apps[app->info.uuid:%d]: %p", app->info.uuid,
+                    m_app_manager.apps[app->info.uuid]);
         LISAUI_LOGW(TAG, "[ui] app already registered");
         return LISAUI_ERR_APP_ALREADY_REGISTERED;
     }
@@ -173,15 +160,21 @@ int lisaui_app_register(struct lisaui_app_t *app)
     }
 
     LISAUI_LOGD(TAG, "app(uuid:%d ID:%d:%s) register successful\r", app->info.uuid, app_id, app->icon->title);
-    if (m_app_register_hook) {
-        m_app_register_hook(app);
+
+    // #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
+    LISAUI_EXEC_HOOK(m_app_register_hook, app, ret);
+    if (ret != LISAUI_ERR_OK) {
+        LISAUI_LOGE(TAG, "TAG, [ui] app register hook failed");
+        return ret;
     }
+    // #endif
     return LISAUI_ERR_APP_OK;
 }
 
 int lisaui_app_unregister(struct lisaui_app_t *app)
 {
     int app_id = app->info.id;
+    int ret = LISAUI_ERR_OK;
     if (app_id >= UI_APP_ID_MAX) {
         LISAUI_LOGE(TAG, "[ui] invalid app id: %d", app_id);
         return LISAUI_ERR_APP_ID_INVALID;
@@ -197,9 +190,13 @@ int lisaui_app_unregister(struct lisaui_app_t *app)
         m_app_manager.unhidden_count--;
     }
     LISAUI_LOGD(TAG, "[%d:%s] app(%d:%s) unregister successful\r", __LINE__, __func__, app_id, app->icon->title);
-    if (m_app_unregister_hook) {
-        m_app_unregister_hook(app);
+    // #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
+    LISAUI_EXEC_HOOK(m_app_unregister_hook, app, ret);
+    if (ret != LISAUI_ERR_OK) {
+        LISAUI_LOGE(TAG, "TAG, [ui] app unregister hook failed");
+        return ret;
     }
+    // #endif
     return LISAUI_ERR_APP_OK;
 }
 
@@ -215,6 +212,11 @@ lisaui_err_t lisaui_app_enter(const int app_id)
         LISAUI_LOGW(TAG, "app view is locked");
         return LISAUI_ERR_APP_UNKNOW_FAILED;
     }
+    if (lisaui_app_manager_get_current_appid() == app_id) {
+        LISAUI_LOGW(TAG, "app already in");
+        return LISAUI_ERR_APP_ALREADY_IN;
+    }
+
     struct lisaui_app_t *app = m_app_manager.apps[uuid];
     if (app->get_root_view() == NULL) {
         // LISAUI_LOGW(TAG, "------------>app(%s) root view is NULL", app->icon->title);
@@ -232,6 +234,13 @@ lisaui_err_t lisaui_app_enter(const int app_id)
         LISAUI_LOGE(TAG, "TAG, [ui] app enter failed");
         return LISAUI_ERR_APP_UNKNOW_FAILED;
     }
+#if CONFIG_LISAUI_EXEC_HOOK_ENABLE
+    LISAUI_EXEC_HOOK(m_app_enter_hook, app, ret);
+    if (ret != LISAUI_ERR_OK) {
+        LISAUI_LOGE(TAG, "TAG, [ui] app enter hook failed");
+        return ret;
+    }
+#else
     lisaui_view_page_t *page = (lisaui_view_page_t *)lisaui_malloc(sizeof(lisaui_view_page_t));
     if (page == NULL) {
         LISAUI_LOGE(TAG, "TAG, [ui] malloc failed");
@@ -240,7 +249,6 @@ lisaui_err_t lisaui_app_enter(const int app_id)
     memset(page, 0, sizeof(lisaui_view_page_t));
     page->root = (lisaui_view_t *)app->get_root_view();
     page->app_id = app->info.id;
-    lisaui_app_set_current_appid(page->app_id);
     // LISAUI_LOGI(TAG, "[ui] lv_disp_load_scr page:%p page->root: %p", page, page->root);
     if (page->root == NULL) {
         LISAUI_LOGE(TAG, "TAG, [ui] view page root is NULL");
@@ -251,8 +259,11 @@ lisaui_err_t lisaui_app_enter(const int app_id)
     lisaui_view_manager_push(&m_app_manager.manager_view_stack, page);
     // lisaui_view_manager_print_usage(&m_app_manager.manager_view_stack);
     lv_disp_load_scr(page->root);
-    LISAUI_LOGI(TAG, "app(%s) enter success", app->icon->title);
     // lisaui_memory_monitor(NULL);
+#endif
+    m_app_manager.previous_appid = lisaui_app_manager_get_current_appid();
+    lisaui_app_set_current_appid(app->info.id);
+    LISAUI_LOGI(TAG, "app(%s) enter success", app->icon->title);
     return LISAUI_ERR_APP_OK;
 }
 
@@ -284,7 +295,13 @@ lisaui_err_t lisaui_app_exit(const int app_id)
             return LISAUI_ERR_APP_UNKNOW_FAILED;
         }
     }
-
+#if CONFIG_LISAUI_EXEC_HOOK_ENABLE
+    LISAUI_EXEC_HOOK(m_app_exit_hook, app, ret);
+    // if (ret != LISAUI_ERR_OK) {
+    //     LISAUI_LOGE(TAG, "TAG, [ui] app exit hook failed");
+    //     return ret;
+    // }
+#else
     // lisaui_view_manager_print_usage(&m_app_manager.manager_view_stack);
     lisaui_view_page_t *page = NULL;
     if (lisaui_view_manager_pop(&m_app_manager.manager_view_stack, &page) != LISAUI_ERR_OK) {
@@ -303,7 +320,7 @@ lisaui_err_t lisaui_app_exit(const int app_id)
         LISAUI_LOGE(TAG, "[ui] view page is NULL");
         return LISAUI_ERR_NO_MEMORY;
     }
-    lisaui_app_set_current_appid(page->app_id);
+    // lisaui_app_set_current_appid(page->app_id);
     if (page->root != NULL) {
         lv_disp_load_scr(page->root);
     } else {
@@ -311,6 +328,9 @@ lisaui_err_t lisaui_app_exit(const int app_id)
     }
     // LISAUI_LOGI(TAG, "app(%s) exit success", app->icon->title);
     // lisaui_memory_monitor(NULL);
+#endif
+    lisaui_app_set_current_appid(m_app_manager.previous_appid);
+    LISAUI_LOGI(TAG, "app(%s) exit success", app->icon->title);
     return LISAUI_ERR_APP_OK;
 }
 
@@ -345,9 +365,13 @@ lisaui_err_t lisaui_app_close(const int app_id)
             LISAUI_LOGV(TAG, "[ui] app destroy success");
         }
     }
-    // if (app->get_root_view() != NULL) {
-    //     lv_obj_del(app->get_root_view());
-    // }
+#if CONFIG_LISAUI_EXEC_HOOK_ENABLE
+    LISAUI_EXEC_HOOK(m_app_close_hook, app, ret);
+    if (ret != LISAUI_ERR_OK) {
+        LISAUI_LOGE(TAG, "TAG, [ui] app close hook failed");
+        return ret;
+    }
+#endif
     LISAUI_LOGI(TAG, "app(%s) destroy success", app->icon->title);
     // lisaui_memory_monitor(NULL);
     return LISAUI_ERR_APP_OK;
@@ -366,9 +390,9 @@ lisaui_err_t lisaui_app_manager_enter_view(lisaui_view_page_t *page)
 
 #ifdef __APPLE__
     #include <mach-o/getsect.h>
-    #include <mach-o/dyld.h>  // 包含 _dyld_get_image_header 的头文件
-    extern const app_entry_t  ___start___DATA_lisaui_apps;
-    extern const app_entry_t  __stop___DATA_lisaui_apps;
+    #include <mach-o/dyld.h> // 包含 _dyld_get_image_header 的头文件
+    extern const app_entry_t ___start___DATA_lisaui_apps;
+    extern const app_entry_t __stop___DATA_lisaui_apps;
     #define LISAUI_APP_LISTS_START &(___start___DATA_lisaui_apps)
     #define LISAUI_APP_LISTS_END   &(___stop___DATA_lisaui_apps)
 #else
@@ -386,7 +410,7 @@ lisaui_err_t lisaui_app_manager_init_app(const app_entry_t *app, int app_count)
     }
     for (int i = 0; i < app_count; i++) {
         if (app[i].app_init_func) {
-            LISAUI_LOGI(TAG, "Initializing app(%s)", app[i].app_name);
+            LISAUI_LOGV(TAG, "Initializing app(%s)", app[i].app_name);
             if (app[i].app_init_func() == LISAUI_ERR_OK) {
                 LISAUI_LOGV(TAG, "app(%s) init success", app[i].app_name);
             }
@@ -403,6 +427,7 @@ lisaui_err_t lisaui_app_manager_init(void)
     m_app_manager.current_appid = UI_APP_ID_NONE;
     m_app_manager.registered_count = 0;
     m_app_manager.unhidden_count = 0;
+    lisaui_app_manager_default_hook_init();
 #if CONFIG_LISAUI_DBUS_ENABLE
     if (m_app_manager.dbus == NULL) {
         // LISAUI_LOGW(TAG, "App manager bus already initialized");
@@ -467,7 +492,7 @@ lisaui_err_t lisaui_app_manager_get_bus(lisaui_dbus_t **dbus)
     return LISAUI_ERR_OK;
 }
 #endif
-lisaui_err_t lisaui_app_show_info(struct lisaui_app_t *app)
+lisaui_err_t lisaui_app_manager_show_app_info(struct lisaui_app_t *app)
 {
     if (app == NULL) {
         // LISAUI_LOGI(TAG, "app is NULL");
@@ -486,19 +511,18 @@ lisaui_err_t lisaui_app_show_info(struct lisaui_app_t *app)
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_app_show_all_info(void)
+lisaui_err_t lisaui_app_manager_show_all_app_info(void)
 {
     LISAUI_PRINTK("======================================================\r\n");
     LISAUI_LOGI(TAG, "Registered apps: %d", m_app_manager.registered_count);
     for (int i = 0; i < UI_APP_ID_MAX; i++) {
-        lisaui_app_show_info(m_app_manager.apps[i]);
+        lisaui_app_manager_show_app_info(m_app_manager.apps[i]);
     }
     LISAUI_PRINTK("======================================================\r\n");
     return LISAUI_ERR_OK;
 }
 
-
-lisaui_err_t lisaui_app_get_by_id(const int app_id, struct lisaui_app_t **app)
+lisaui_err_t lisaui_app_manager_get_app_by_id(const int app_id, struct lisaui_app_t **app)
 {
     if (lisaui_app_check_id(app_id) != LISAUI_ERR_APP_OK) {
         LISAUI_LOGE(TAG, "[ui] invalid app id: %d", app_id);
@@ -514,7 +538,7 @@ lisaui_err_t lisaui_app_get_by_id(const int app_id, struct lisaui_app_t **app)
     return LISAUI_ERR_APP_OK;
 }
 
-lisaui_err_t lisaui_app_get_by_uuid(const int uuid, struct lisaui_app_t **app)
+lisaui_err_t lisaui_app_manager_get_app_by_uuid(const int uuid, struct lisaui_app_t **app)
 {
     if (uuid >= LISAUI_APP_MAX) {
         LISAUI_LOGE(TAG, "[ui] invalid app uuid: %d", uuid);
@@ -542,21 +566,114 @@ struct lisaui_app_t *lisaui_app_manager_get_app(const int app_id)
 lisaui_err_t lisaui_app_manager_get_view_stack(lisaui_view_stack_t **view_stask)
 {
     *view_stask = &m_app_manager.manager_view_stack;
-    return  LISAUI_ERR_OK;
+    return LISAUI_ERR_OK;
 }
 
 lisaui_err_t lisaui_app_lock(void)
 {
     m_app_manager.lock_app_view = true;
-    return  LISAUI_ERR_OK;
+    return LISAUI_ERR_OK;
 }
 lisaui_err_t lisaui_app_unlock(void)
 {
     m_app_manager.lock_app_view = false;
-    return  LISAUI_ERR_OK;
+    return LISAUI_ERR_OK;
 }
 
 bool lisaui_app_get_lock_state(void)
 {
     return m_app_manager.lock_app_view;
+}
+
+/***************************** App manager hook *******************************/
+lisaui_err_t LISAUI_DEFINE_WEAK_FUNC lisaui_app_register_lvgl_hook(struct lisaui_app_t *app)
+{
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t LISAUI_DEFINE_WEAK_FUNC lisaui_app_unregister_lvgl_hook(struct lisaui_app_t *app)
+{
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t LISAUI_DEFINE_WEAK_FUNC lisaui_app_enter_lvgl_hook(struct lisaui_app_t *app)
+{
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t LISAUI_DEFINE_WEAK_FUNC lisaui_app_exit_lvgl_hook(struct lisaui_app_t *app)
+{
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t LISAUI_DEFINE_WEAK_FUNC lisaui_app_close_lvgl_hook(struct lisaui_app_t *app)
+{
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_app_manager_set_register_app_hook(lisaui_app_manager_hook_t hook)
+{
+    if (hook == NULL) {
+        LISAUI_LOGW(TAG, "[ui] hook is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    m_app_register_hook = hook;
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_app_manager_set_unregister_app_hook(lisaui_app_manager_hook_t hook)
+{
+    if (hook == NULL) {
+        LISAUI_LOGW(TAG, "[ui] hook is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    m_app_unregister_hook = hook;
+    return LISAUI_ERR_OK;
+}
+lisaui_err_t lisaui_app_manager_set_enter_app_hook(lisaui_app_manager_hook_t hook)
+{
+    if (hook == NULL) {
+        LISAUI_LOGW(TAG, "[ui] hook is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    m_app_enter_hook = hook;
+    return LISAUI_ERR_OK;
+}
+lisaui_err_t lisaui_app_manager_set_exit_app_hook(lisaui_app_manager_hook_t hook)
+{
+    if (hook == NULL) {
+        LISAUI_LOGW(TAG, "[ui] hook is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    m_app_exit_hook = hook;
+    return LISAUI_ERR_OK;
+}
+lisaui_err_t lisaui_app_manager_set_close_app_hook(lisaui_app_manager_hook_t hook)
+{
+    if (hook == NULL) {
+        LISAUI_LOGW(TAG, "[ui] hook is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    m_app_close_hook = hook;
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_app_manager_default_hook_init(void)
+{
+    lisaui_app_manager_set_register_app_hook(lisaui_app_register_lvgl_hook);
+    lisaui_app_manager_set_unregister_app_hook(lisaui_app_unregister_lvgl_hook);
+    lisaui_app_manager_set_enter_app_hook(lisaui_app_enter_lvgl_hook);
+    lisaui_app_manager_set_exit_app_hook(lisaui_app_exit_lvgl_hook);
+    lisaui_app_manager_set_close_app_hook(lisaui_app_close_lvgl_hook);
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_app_manager_default_hook_deinit(void)
+{
+    lisaui_app_manager_set_register_app_hook(NULL);
+    lisaui_app_manager_set_unregister_app_hook(NULL);
+    lisaui_app_manager_set_enter_app_hook(NULL);
+    lisaui_app_manager_set_exit_app_hook(NULL);
+    lisaui_app_manager_set_close_app_hook(NULL);
+    return LISAUI_ERR_OK;
 }
