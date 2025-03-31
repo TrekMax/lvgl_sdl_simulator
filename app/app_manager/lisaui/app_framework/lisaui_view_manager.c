@@ -124,3 +124,23 @@ lisaui_err_t lisaui_view_manager_deinit(lisaui_view_stack_t *view_stack)
     view_stack->tail = NULL;
     return LISAUI_ERR_OK;
 }
+
+lisaui_err_t lisaui_view_manager_get_depth(lisaui_view_stack_t *view_stack, int *depth)
+{
+    if (depth == NULL) {
+        LISAUI_LOGW(TAG, "Invalid depth pointer");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    *depth = view_stack->size;
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_view_manager_get_capacity(lisaui_view_stack_t *view_stack, int *capacity)
+{
+    if (capacity == NULL) {
+        LISAUI_LOGW(TAG, "Invalid capacity pointer");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    *capacity = view_stack->capacity;
+    return LISAUI_ERR_OK;
+}

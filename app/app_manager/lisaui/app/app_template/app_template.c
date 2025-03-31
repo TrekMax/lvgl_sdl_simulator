@@ -42,7 +42,10 @@ LISAUI_DEFINE_APP(template, UI_APP_ID_TEMPLATE, "模板", "Template", &icon_img_
         return LISAUI_ERR_OK;                                                                                          \
     }
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(template, create, void *parent, {LISAUI_APP_ENTITY_TEMPLATE});
-lisaui_err_t LISAUI_DEFINE_APP_FUNC(template, destroy, void, { return LISAUI_ERR_OK; });
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(template, destroy, void, {
+    LVGL_OBJ_SAFE_DEL(g_app_template);
+    return LISAUI_ERR_OK;
+});
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(template, enter, void, { return LISAUI_ERR_OK; });
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(template, exit, void, { return LISAUI_ERR_OK; });
 void *LISAUI_DEFINE_APP_FUNC(template, get_page, void, { return g_app_template; });

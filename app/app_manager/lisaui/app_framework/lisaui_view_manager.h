@@ -56,6 +56,8 @@ lisaui_err_t lisaui_view_manager_get_current(lisaui_view_stack_t *view_stack, li
 lisaui_err_t lisaui_view_manager_pop(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page);
 lisaui_err_t lisaui_view_manager_push(lisaui_view_stack_t *view_stack, lisaui_view_page_t *page);
 lisaui_err_t lisaui_view_manager_print_usage(lisaui_view_stack_t *view_stack);
+lisaui_err_t lisaui_view_manager_get_depth(lisaui_view_stack_t *view_stack, int *depth);
+lisaui_err_t lisaui_view_manager_get_capacity(lisaui_view_stack_t *view_stack, int *capacity);
 
 #ifdef __cplusplus
 }
