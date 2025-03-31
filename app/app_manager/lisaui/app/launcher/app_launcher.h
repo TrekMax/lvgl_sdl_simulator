@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-#include "../../app_common/lisaui_app_common.h"
+#include "lisaui_app_common.h"
 
 lisaui_err_t app_launcher_init(void);
 

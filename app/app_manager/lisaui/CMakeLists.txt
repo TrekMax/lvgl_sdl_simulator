@@ -1,11 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
+set(LISAUI_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+message(STATUS "LISAUI_BASE_DIR: ${LISAUI_BASE_DIR}")
+
 SET(APP_COMMON_SOURCES
     ui.c
     app_common/lisaui_app_common.c
     app_common/lisaui_asset_manager.c
-
-    # app_common/assets/fonts/lv_font_chinese_18.c
     app_common/assets/fonts/lv_font_chinese_18_old.c
 )
 
@@ -20,45 +21,10 @@ if (CONFIG_LISAUI_DBUS_ENABLE)
         )
 endif()
 
-set(APP_SYSTEM_SOURCES
-    app/assets/taskbar_icon/ui_img__status_battery_1_png.c
-    app/assets/taskbar_icon/ui_img__status_battery_2_png.c
-    app/assets/taskbar_icon/ui_img__status_battery_3_png.c
-    app/assets/taskbar_icon/ui_img__status_battery_4_png.c
-    app/assets/taskbar_icon/ui_img__status_battery_5_png.c
-
-    app/assets/taskbar_icon/ui_img__status_charging_1_png.c
-    app/assets/taskbar_icon/ui_img__status_charging_2_png.c
-    app/assets/taskbar_icon/ui_img__status_charging_3_png.c
-    app/assets/taskbar_icon/ui_img__status_charging_4_png.c
-    app/assets/taskbar_icon/ui_img__status_charging_5_png.c
-
-    # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld 链接顺序)
-    app/launcher/app_launcher.c
-    app/taskbar/app_taskbar.c
-)
-
 set(APP_USER_SOURCES
-    app/assets/icons/icon_img_app_launcher_png.c
-    app/assets/icons/icon_img_app_taskbar_png.c
-    app/assets/icons/icon_img_app_composition_png.c
-    app/assets/icons/icon_img_app_fav_png.c
-    app/assets/icons/icon_img_app_practice_png.c
-    app/assets/icons/icon_img_app_scanner_png.c
-    app/assets/icons/icon_img_app_setting_png.c
     app/assets/icons/icon_img_app_voice_png.c
-    app/assets/icons/icon_img_app_store_png.c
-    app/assets/icons/icon_img_app_thermo_png.c
 
-    # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld 链接顺序)
-    app/app_template/app_template.c
-    app/thermography/app_thermography.c
-    app/ocr_scanner/app_ocr.c
-    app/dictionary/app_dictionary.c
-    app/demo/app_demo.c
-    # app_user/audio_player/app_audio_player.c
-    # app_user/voice/app_voice.c
-    app/setting/app_setting.c
+    app/lvgl_demo/app_lvgl_demo.c
 )
 
 set(EXT_LIB_SOURCE
@@ -66,40 +32,30 @@ set(EXT_LIB_SOURCE
     widgets/ext_lib/lv_gif.c
     )
 
-set(UTILS_SOURCES
-    utils/img_utils.c
-    utils/lv_img_utils.c
-)
-
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/app_common
     ${CMAKE_CURRENT_BINARY_DIR}/app_framework
-    ${CMAKE_CURRENT_BINARY_DIR}/app_user
-
-    ${CMAKE_CURRENT_BINARY_DIR}/utils
     ${CMAKE_CURRENT_BINARY_DIR}/assets
-
-    # ${CMAKE_CURRENT_BINARY_DIR}/widgets
-    # ${CMAKE_CURRENT_BINARY_DIR}/widgets/ext_lib
-    
-
-    # ${CMAKE_CURRENT_BINARY_DIR}/app
-    # ${CMAKE_CURRENT_BINARY_DIR}/app/dictionary
     )
 
-add_library(lisaui
-    # ${WIDGET_SOURCES}
-    # ${ASSETS_SOURCES}
-    # ${FONTS_SOURCES}
+add_subdirectory(utils)
 
+add_subdirectory(app/taskbar)
+add_subdirectory(app/launcher)
+add_subdirectory(app/app_template)
+add_subdirectory(app/demo)
+add_subdirectory(app/ocr_scanner)
+add_subdirectory(app/audio_player)
+add_subdirectory(app/dictionary)
+add_subdirectory(app/setting)
+add_subdirectory(app/thermography)
+# add_subdirectory(app/lvgl_demo)
+
+add_library(lisaui
     ${APP_COMMON_SOURCES}
     ${APP_FRAMEWORK_SOURCES}
-    ${APP_SYSTEM_SOURCES}
     ${APP_USER_SOURCES}
-
-    # ${EXT_LIB_SOURCE}
-    ${UTILS_SOURCES}
 )
 
 set(LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/lisaui_apps.ld)
@@ -112,5 +68,18 @@ else()
         lisaui
         PRIVATE
         -T ${LINKER_SCRIPT}
+
+        utils
+        # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld 链接顺序)
+        app_taskbar
+        app_launcher
+
+        app_ocr
+        app_template
+        app_demo
+        app_dictionary
+        app_audio_player
+        app_setting
+        app_thermography
     )
 endif()

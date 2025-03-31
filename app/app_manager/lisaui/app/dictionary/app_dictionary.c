@@ -10,8 +10,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_dictionary.h"
-#include "../../app_common/lisaui_app_common.h"
-#include "../assets/assets_res.h"
+#include "app_common/lisaui_app_common.h"
+#include "assets_res.h"
 #include "../../utils/lv_img_utils.h"
 
 #define RES_APP_ICON_PERFIX_PATH "lisaui/app/dictionary/"

@@ -39,7 +39,7 @@ static const char *TAG = "LVGL";
 
 int show_info()
 {
-    printf("Hello LVGL!\n");
+    LOGI(TAG, "Hello LVGL!");
     LOGI(TAG, "===============================");
     LOGI(TAG, "Author: %s", COMMIT_AUTHOR);
     LOGI(TAG, "Email: %s", AUTHOR_EMAIL);

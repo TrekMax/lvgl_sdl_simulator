@@ -3,87 +3,47 @@
  * @author Tianshuang Ke (dske@listenai.com)
  * @brief
  * @version 0.1
- * @date 2025-03-03
+ * @date 2025-01-22
  *
  * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_audio_player.h"
-#include "../../app_common/lisaui_app_common.h"
-#include "../assets/assets_res.h"
-#include "../app_common.h"
+#include "app_common/lisaui_app_common.h"
+#include "assets/assets_res.h"
 
 static const char *TAG = "app_audio_player";
-lv_obj_t *g_audio_player = NULL;
-lisaui_err_t app_audio_player_create(void *parent)
-{
-    if (g_audio_player != NULL) {
-        return LISAUI_ERR_OK;
+static lv_obj_t *g_app_audio_player = NULL;
+
+// 声明[模板]应用需要实现的接口
+LISAUI_DECLARE_APP_FUNC(audio_player, create, destroy, enter, exit, get_page);
+// 定义[模板]应用
+LISAUI_DEFINE_APP(audio_player, UI_APP_ID_AUDIO_PLAYER, "播放器", "Audio_player", &ui_img_icon_composition_png, {});
+
+// App 模板宏原型在 common/lisaui_app_manager.h 中定义
+// 定义[模板]应用功能实现, 用于创建、销毁、进入、退出、获取页面
+#define LISAUI_APP_ENTITY_AUDIO_PLAYER                                                                                     \
+    {                                                                                                                  \
+        if (g_app_audio_player != NULL) {                                                                                  \
+            return LISAUI_ERR_OK;                                                                                      \
+        }                                                                                                              \
+        g_app_audio_player = lv_obj_create(parent);                                                                        \
+        _lisaui_set_style_container(g_app_audio_player, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);        \
+                                                                                                                       \
+        lv_obj_t *label = lv_label_create(g_app_audio_player);                                                             \
+        lv_label_set_text(label, "Hello LisaUI!");                                                                     \
+        lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);                       \
+        lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);                   \
+        lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);                                                                    \
+                                                                                                                       \
+        return LISAUI_ERR_OK;                                                                                          \
     }
-    g_audio_player = lv_obj_create(parent, parent);
-    _lisaui_set_style_container(g_audio_player, lv_color_hex(0x404040), 255, lv_color_hex(0x000000), 0, 0);
-
-    lv_obj_t *label = lv_label_create(g_audio_player, NULL);
-    lv_label_set_text(label, "Hello audio_player!");
-    lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 0);
-
-    LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, create, void *parent, {LISAUI_APP_ENTITY_AUDIO_PLAYER});
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, destroy, void, {
+    LVGL_OBJ_SAFE_DEL(g_app_audio_player);
     return LISAUI_ERR_OK;
-}
-
-lisaui_err_t app_audio_player_destroy(void)
-{
-    LISAUI_LOGI(TAG, "[%d:%s] destroy\n", __LINE__, __func__);
-    return LISAUI_ERR_OK;
-}
-
-lisaui_err_t app_audio_player_enter(void)
-{
-    LISAUI_LOGI(TAG, "[%d:%s] enter", __LINE__, __func__);
-    return LISAUI_ERR_OK;
-}
-
-lisaui_err_t app_audio_player_exit(void)
-{
-    LISAUI_LOGI(TAG, "[%d:%s] exit", __LINE__, __func__);
-    return LISAUI_ERR_OK;
-}
-
-void *app_audio_player_get_page(void)
-{
-    return g_audio_player;
-}
-
-static struct app_icon_t app_icon_res = {
-    .title = "播放器",
-    // .title = "Audio Player",
-    // .icon_width = LV_SIZE_CONTENT,
-    // .icon_height = LV_SIZE_CONTENT,
-    .icon = &ui_img_icon_composition_png,
-    .zoom = APP_ICON_ZOOM(0),
-};
-
-struct lisaui_app_t app_audio_player = {
-    .create = app_audio_player_create,
-    .destroy = app_audio_player_destroy,
-    .enter = app_audio_player_enter,
-    .exit = app_audio_player_exit,
-
-    .get_root_view = app_audio_player_get_page,
-    .info =
-        {
-            .name = "Audio Player",
-            .package_name = "com.listenai.lisaui.audio_player",
-            .id = UI_APP_ID_AUDIO_PLAYER,
-        },
-    .icon = &app_icon_res,
-};
-
-lisaui_err_t app_audio_player_init(void)
-{
-    lisaui_app_register(&app_audio_player);
-    return LISAUI_ERR_OK;
-}
-
-LISAUI_REGISTER_APP(audio_player, &app_audio_player, app_audio_player_init);
+});
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, enter, void, { return LISAUI_ERR_OK; });
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, exit, void, { return LISAUI_ERR_OK; });
+void *LISAUI_DEFINE_APP_FUNC(audio_player, get_page, void, { return g_app_audio_player; });

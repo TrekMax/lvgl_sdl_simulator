@@ -9,13 +9,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "../../app_common/lisaui_app_common.h"
-#include "../../app_common/lisaui_type.h"
-#include "../../app_framework/lisaui_app_manager.h"
-#include "../../app_framework/lisaui_dbus.h"
+#include "app_launcher.h"
+#include "app_common/lisaui_app_common.h"
+#include "assets/assets_res.h"
+#include "app_framework/lisaui_app_manager.h"
+#include "app_framework/lisaui_dbus.h"
 
-#include "../assets/assets_res.h"
-// #include "../app_taskbar.h"
 
 #include "app_launcher.h"
 #include <stdbool.h>
@@ -65,33 +64,9 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
     }
 
     lv_obj_t *icon_panel = lv_obj_create(icon_container);
-    // lv_obj_center(icon_panel);
     lv_obj_set_height(icon_panel, LV_PCT(100));
-    // lv_obj_align(icon_panel, LV_ALIGN_CENTER, 0, LV_DPX(20));
-    // lv_obj_set_height(icon_panel, LV_SIZE_CONTENT);
-    // lv_obj_align(icon_panel, LV_ALIGN_CENTER, 0, 50);
-    // lv_obj_set_y(icon_panel, 10);
     _lisaui_set_style_container(icon_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-#if 0
-    lv_obj_t * obj;
-    lv_obj_t * label;
 
-    /*Add items to the row*/
-    obj = lv_btn_create(icon_panel);
-    lv_obj_set_size(obj, 100, LV_PCT(100));
-
-    label = lv_label_create(obj);
-    lv_label_set_text_fmt(label, "Item: %"LV_PRIu32, app->info.id);
-    lv_obj_center(label);
-
-    // /*Add items to the column*/
-    // obj = lv_btn_create(cont_col);
-    // lv_obj_set_size(obj, LV_PCT(100), LV_SIZE_CONTENT);
-
-    // label = lv_label_create(obj);
-    // lv_label_set_text_fmt(label, "Item: %"LV_PRIu32, i);
-    // lv_obj_center(label);
-    #else
     lv_obj_t *m_app_icon = lv_img_create(icon_panel);
     lv_obj_align(m_app_icon, LV_ALIGN_CENTER, 0, -LV_DPX(20));
     lv_obj_add_flag(m_app_icon, LV_OBJ_FLAG_CLICKABLE);
@@ -103,7 +78,7 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
 
     lv_obj_t *m_app_title = lv_label_create(icon_panel);
     lv_label_set_text(m_app_title, app->icon->title);
-    lv_obj_align(m_app_title, LV_ALIGN_BOTTOM_MID, 0, -LV_DPX(10));
+    lv_obj_align(m_app_title, LV_ALIGN_CENTER, 0, LV_DPX(50));
 
     lv_obj_set_style_text_color(m_app_title, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(m_app_title, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -111,7 +86,6 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
     lv_obj_set_style_text_font(m_app_title, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
 #else
     lv_obj_set_style_text_font(m_app_title, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
-#endif
 #endif
 }
 

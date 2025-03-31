@@ -16,9 +16,9 @@
 extern "C" {
 #endif
 
-#include "../app_common.h"
+#include "lisaui_app_common.h"
 
-int app_ocr_init(void);
+lisaui_err_t app_ocr_init(void);
 
 #ifdef __cplusplus
 }

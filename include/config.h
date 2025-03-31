@@ -17,15 +17,12 @@ extern "C" {
 #endif
 
 
-#define CONFIG_LOG_ENABLE 1
-#define CONFIG_LOG_COLORS 1
-
 #ifndef CONFIG_LOG_ENABLE
-    #define CONFIG_LOG_LEVEL 4
+    #define CONFIG_LOG_LEVEL 5
 #endif
 
-#define SDL_HOR_RES     (600)//560
-#define SDL_VER_RES     (240)//180
+#define SDL_HOR_RES     (1024)//560
+#define SDL_VER_RES     (600)//180
 
 #define LV_COLOR_DEPTH	16
 

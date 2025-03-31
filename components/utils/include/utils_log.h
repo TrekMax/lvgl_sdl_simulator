@@ -65,7 +65,7 @@ typedef enum _tisilicon_log_level
 #endif
 
 #ifndef CONFIG_LOG_LEVEL
-#define CONFIG_LOG_LEVEL LOG_INFO
+#define CONFIG_LOG_LEVEL LOG_DEBUG
 #endif
 
 #ifdef LOG_KERNEL

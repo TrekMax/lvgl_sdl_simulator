@@ -9,14 +9,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "../../app_common/lisaui_app_common.h"
-#include "../../app_common/lisaui_type.h"
-
-#include "../../app_framework/lisaui_app_manager.h"
-
-#include "../assets/assets_res.h"
 
 #include "app_taskbar.h"
+#include "app_common/lisaui_app_common.h"
+#include "assets/assets_res.h"
+
+#include <stdio.h>
 #include <time.h>
 
 #define LISAUI_TASKBAR_TIME_UPDATE_INTERVAL 500

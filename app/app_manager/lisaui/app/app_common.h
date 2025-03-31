@@ -42,12 +42,9 @@ enum lisaui_app_id_t {
     UI_APP_ID_SETTING,
 
     UI_APP_ID_VOICE,
-    UI_APP_ID_DEMO2,
-    UI_APP_ID_DEMO3,
-
-    UI_APP_ID_BEZIER,
 
     UI_APP_ID_TEMPLATE,
+    UI_APP_ID_LVGL_DEMO,
 
     UI_APP_ID_NONE,
     UI_APP_ID_MAX,

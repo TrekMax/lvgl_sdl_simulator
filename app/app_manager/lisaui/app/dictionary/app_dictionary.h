@@ -9,3 +9,19 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifndef __APP_DICTIONARY_H__
+#define __APP_DICTIONARY_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "lisaui_app_common.h"
+
+lisaui_err_t app_dictionary_init(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // __APP_DICTIONARY_H__

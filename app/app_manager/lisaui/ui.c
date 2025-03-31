@@ -49,17 +49,18 @@ void lisaui_ui_init(void)
     // lv_theme_set_act(theme);
 
 #if CONFIG_LVGL_SIMULATOR
+    LISAUI_USE_APP(taskbar);
+    LISAUI_USE_APP(launcher);
+
     LISAUI_USE_APP(demo);
     LISAUI_USE_APP(ocr);
     LISAUI_USE_APP(template);
-    // LISAUI_USE_APP(audio_player);
+    LISAUI_USE_APP(audio_player);
     LISAUI_USE_APP(dictionary);
     LISAUI_USE_APP(setting);
     LISAUI_USE_APP(thermography);
+    LISAUI_USE_APP(lvgl_demo);
     // LISAUI_USE_APP(voice);
-
-    LISAUI_USE_APP(taskbar);
-    LISAUI_USE_APP(launcher);
 #endif
     lisaui_app_manager_init();
     // lisaui_app_manager_show_all_app_info();

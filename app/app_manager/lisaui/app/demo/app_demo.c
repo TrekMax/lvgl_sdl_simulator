@@ -10,9 +10,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_demo.h"
-#include "../../app_common/lisaui_app_common.h"
-#include "../assets/assets_res.h"
-#include "../app_common.h"
+#include "app_common/lisaui_app_common.h"
+#include "assets/assets_res.h"
 
 static const char *TAG = "app_demo";
 static lv_obj_t *g_app_demo = NULL;

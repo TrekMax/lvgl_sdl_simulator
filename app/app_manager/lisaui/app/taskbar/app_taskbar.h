@@ -16,8 +16,7 @@
 extern "C" {
 #endif
 
-#include "../../app_common/lisaui_type.h"
-#include "../../app_common/lisaui_app_common.h"
+#include "lisaui_app_common.h"
 
 lisaui_err_t lisaui_taskbar(lv_obj_t *parent);
 void lisaui_taskbar_hide(bool hide);

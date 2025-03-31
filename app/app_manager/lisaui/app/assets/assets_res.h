@@ -16,29 +16,9 @@
 extern "C" {
 #endif
 
-LV_IMG_DECLARE(ui_img_icon_scanner_png);
-LV_IMG_DECLARE(ui_img_icon_fav_png);
-LV_IMG_DECLARE(ui_img_icon_composition_png);
-LV_IMG_DECLARE(ui_img_icon_practice_png);
-LV_IMG_DECLARE(ui_img_icon_setting_png);
 LV_IMG_DECLARE(ui_img_icon_voice_png);
 LV_IMG_DECLARE(icon_img_app_store_png);
 
-LV_IMG_DECLARE(ui_img_icon_launcher_png);
-LV_IMG_DECLARE(ui_img_icon_taskbar_png);
-LV_IMG_DECLARE(icon_img_app_thermo_png);
-
-LV_IMG_DECLARE(ui_img__status_battery_1_png);
-LV_IMG_DECLARE(ui_img__status_battery_2_png);
-LV_IMG_DECLARE(ui_img__status_battery_3_png);
-LV_IMG_DECLARE(ui_img__status_battery_4_png);
-LV_IMG_DECLARE(ui_img__status_battery_5_png);
-
-LV_IMG_DECLARE(ui_img__status_charging_1_png);
-LV_IMG_DECLARE(ui_img__status_charging_2_png);
-LV_IMG_DECLARE(ui_img__status_charging_3_png);
-LV_IMG_DECLARE(ui_img__status_charging_4_png);
-LV_IMG_DECLARE(ui_img__status_charging_5_png);
 
 #ifdef __cplusplus
 } /*extern "C"*/
