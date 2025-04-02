@@ -87,7 +87,12 @@ static void back_btn_event_click_handler(lv_event_t *e)
     lv_obj_t *target = lv_event_get_target(e);
     if (event_code == LV_EVENT_CLICKED) {
         int app_id = lisaui_app_manager_get_current_appid();
-        if (app_id == UI_APP_ID_LAUNCHER) {
+        struct lisaui_app_t *app = NULL;
+        if (lisaui_app_manager_get_app_by_id(app_id, &app) != LISAUI_ERR_OK) {
+            LISAUI_LOGE(TAG, "Failed to get app by id: %d", app_id);
+            return;
+        }
+        if (app->info.type == LISAUI_APP_TYPE_LAUNCHER) {
             lisaui_popup_toast("Can't exit or close launcher");
             return;
         }

@@ -233,7 +233,7 @@ struct lisaui_app_t app_launcher = {
             .name = "launcher",
             .package_name = "com.listenai.lisaui.launcher",
             .id = UI_APP_ID_LAUNCHER,
-            .type = LISAUI_APP_TYPE_SYSTEM,
+            .type = LISAUI_APP_TYPE_LAUNCHER,
         },
     .icon = &app_icon_res,
     .hidden_icon = true,

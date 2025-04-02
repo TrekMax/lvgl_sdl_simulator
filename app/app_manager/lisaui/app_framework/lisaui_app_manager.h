@@ -38,9 +38,10 @@ struct app_icon_t {
 //     LISAUI_APP_TYPE_SYSTEM, // 系统应用,会自动创建并启用
 // } lisaui_app_type_t;
 
-#define LISAUI_APP_TYPE_NORMAL (0)
-#define LISAUI_APP_TYPE_USER   (1)
-#define LISAUI_APP_TYPE_SYSTEM (2)
+#define LISAUI_APP_TYPE_NORMAL      (0)
+#define LISAUI_APP_TYPE_USER        (1)
+#define LISAUI_APP_TYPE_SYSTEM      (2)
+#define LISAUI_APP_TYPE_LAUNCHER    (3)
 struct app_info_t {
     const char *name;
     const char *package_name;

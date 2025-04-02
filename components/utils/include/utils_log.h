@@ -77,10 +77,26 @@ typedef enum _tisilicon_log_level
 #if defined(_WIN32) || defined(_WIN64)
     /* Windows code */
 #elif defined(__linux__)
-    /* Linux code */
+    // /* Linux code */
     #include <time.h>
-    #define read_cycle() (uint64_t)clock()
-    #define LOG_FORMAT(letter, format) LOG_COLOR_##letter #letter " (%lu) %s: " format LOG_RESET_COLOR "\n"
+    #include <sys/time.h>
+    #include <string.h>
+    #define TIMESTAMP_MAX 30
+    static char timestamp[51];
+    static char time_string[9];
+    static struct timeval tv;
+    static char * get_timestamp(void) {
+        
+        gettimeofday(&tv, NULL);
+        struct tm *tm = localtime(&tv.tv_sec);
+        memset(timestamp, 0, TIMESTAMP_MAX);
+
+        strftime(time_string, sizeof(time_string), "%H:%M:%S", tm);
+        snprintf(timestamp, TIMESTAMP_MAX, "%s.%03ld", time_string, tv.tv_usec / 1000);
+        return timestamp;
+    }
+    #define read_cycle() get_timestamp()
+    #define LOG_FORMAT(letter, format) LOG_COLOR_##letter #letter " (%s) %s: " format LOG_RESET_COLOR "\n"
 #elif defined(__APPLE__)
     /* Mac OS code */
     #include <time.h>

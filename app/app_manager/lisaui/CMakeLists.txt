@@ -85,6 +85,8 @@ else()
         endif()
     endforeach()
 
+    message(STATUS "APP_LIBRARIES: ${APP_LIBRARIES}")
+
     target_link_libraries(lisaui PRIVATE
     -T ${LINKER_SCRIPT}
     ${APP_LIBRARIES})

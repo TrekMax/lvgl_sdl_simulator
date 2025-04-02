@@ -54,7 +54,7 @@ lisaui_err_t lisaui_view_manager_push(lisaui_view_stack_t *view_stack, lisaui_vi
 lisaui_err_t lisaui_view_manager_pop(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page)
 {
     if (view_stack->size == 0) {
-        LISAUI_LOGW(TAG, "view stack is empty");
+        LISAUI_LOGW(TAG, "pop: view stack is empty");
         return LISAUI_ERR_NO_MEMORY;
     }
 
@@ -79,7 +79,7 @@ lisaui_err_t lisaui_view_manager_pop(lisaui_view_stack_t *view_stack, lisaui_vie
 lisaui_err_t lisaui_view_manager_get_current(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page)
 {
     if (view_stack->size == 0) {
-        LISAUI_LOGW(TAG, "view stack is empty");
+        LISAUI_LOGW(TAG, "get_current view stack is empty");
         return LISAUI_ERR_NO_MEMORY;
     }
     *page = view_stack->tail;
