@@ -189,14 +189,17 @@ struct lisaui_app_manager_t {
  * @note 目前只支持 APP 注册、注销、进入、退出、关闭时的 hook, 且只支持一个 hook
  *
  */
-typedef lisaui_err_t (*lisaui_app_manager_hook_t)(struct lisaui_app_t *app);
-lisaui_err_t lisaui_app_manager_set_register_app_hook(lisaui_app_manager_hook_t hook);
-lisaui_err_t lisaui_app_manager_set_unregister_app_hook(lisaui_app_manager_hook_t hook);
-lisaui_err_t lisaui_app_manager_set_enter_app_hook(lisaui_app_manager_hook_t hook);
-lisaui_err_t lisaui_app_manager_set_exit_app_hook(lisaui_app_manager_hook_t hook);
-lisaui_err_t lisaui_app_manager_set_close_app_hook(lisaui_app_manager_hook_t hook);
+typedef lisaui_err_t (*lisaui_app_manager_app_hook_t)(struct lisaui_app_t *app);
+lisaui_err_t lisaui_app_manager_set_register_app_hook(lisaui_app_manager_app_hook_t hook);
+lisaui_err_t lisaui_app_manager_set_unregister_app_hook(lisaui_app_manager_app_hook_t hook);
+lisaui_err_t lisaui_app_manager_set_enter_app_hook(lisaui_app_manager_app_hook_t hook);
+lisaui_err_t lisaui_app_manager_set_exit_app_hook(lisaui_app_manager_app_hook_t hook);
+lisaui_err_t lisaui_app_manager_set_close_app_hook(lisaui_app_manager_app_hook_t hook);
 lisaui_err_t lisaui_app_manager_default_hook_init(void);
 lisaui_err_t lisaui_app_manager_default_hook_deinit(void);
+
+typedef lisaui_err_t (*lisaui_app_manager_hook_t)(struct lisaui_app_manager_t *app_manager);
+lisaui_err_t lisaui_app_manager_set_hook(lisaui_app_manager_hook_t hook);
 
 lisaui_err_t lisaui_app_register(struct lisaui_app_t *app);
 lisaui_err_t lisaui_app_unregister(struct lisaui_app_t *app);

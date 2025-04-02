@@ -143,13 +143,18 @@ lisaui_err_t app_setting_create(void *parent)
     font_normal = LV_FONT_DEFAULT;
     lv_obj_add_event_cb(uiAppSetting_SliderBacklight, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(uiAppSetting_SliderVolume, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
-    LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
+    LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }
 
 lisaui_err_t app_setting_destroy(void)
 {
-    LISAUI_LOGI(TAG, "[%d:%s] destroy\n", __LINE__, __func__);
+    LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
+    uiAppSetting_LabelBacklight = NULL;
+    uiAppSetting_LabelVolume = NULL;
+    uiAppSetting_SliderBacklight = NULL;
+    uiAppSetting_SliderVolume = NULL;
+    LVGL_OBJ_SAFE_DEL(g_app_setting);
     return LISAUI_ERR_OK;
 }
 

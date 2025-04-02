@@ -15,8 +15,6 @@
 #include "app_framework/lisaui_app_manager.h"
 #include "app_framework/lisaui_dbus.h"
 
-
-#include "app_launcher.h"
 #include <stdbool.h>
 
 static const char *TAG = "app_launcher";
@@ -109,7 +107,8 @@ lisaui_err_t lisaui_launcher_register_app(struct lisaui_app_t *app)
     lisaui_launcher_add_app_icon(g_icon_panel, app);
     return LISAUI_ERR_OK;
 }
-lisaui_err_t lisaui_launcher_update_app_icon(void)
+
+lisaui_err_t lisaui_launcher_update_app_icon(struct lisaui_app_manager_t *app_manager)
 {
     if (g_icon_panel == NULL) {
         LISAUI_LOGE(TAG, "g_icon_panel is NULL");
@@ -159,14 +158,14 @@ lisaui_err_t app_launcher_create(void *parent)
     // lv_style_set_flex_flow(&style, LV_FLEX_FLOW_ROW_WRAP);
     // lv_style_set_flex_main_place(&style, LV_FLEX_ALIGN_SPACE_EVENLY);
     // lv_style_set_layout(&style, LV_LAYOUT_FLEX);
-    
+
     g_icon_panel = lv_obj_create(g_app_launcher);
     lv_obj_set_size(g_icon_panel, LV_PCT(100), LV_PCT(70));
-    lv_obj_set_y(g_icon_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT+10));
+    lv_obj_set_y(g_icon_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT + 10));
     // lv_obj_set_height(m_icon_container, LV_PCT(60));
     // lv_obj_set_width(m_icon_container, LV_PCT(100));
     _lisaui_set_style_container(g_icon_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-    
+
     // lv_obj_align(m_icon_container, LV_ALIGN_CENTER, 0, 5);
     lv_obj_set_flex_flow(g_icon_panel, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(g_icon_panel, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
@@ -246,6 +245,7 @@ lisaui_err_t app_launcher_init(void)
     lisaui_app_enter(UI_APP_ID_LAUNCHER);
     lisaui_app_manager_set_register_app_hook(lisaui_launcher_register_app);
     lisaui_app_manager_set_unregister_app_hook(lisaui_launcher_update_app);
+    lisaui_app_manager_set_hook(lisaui_launcher_update_app_icon);
 
     return LISAUI_ERR_OK;
 }

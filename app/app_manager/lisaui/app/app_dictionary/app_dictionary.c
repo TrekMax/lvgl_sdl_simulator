@@ -14,7 +14,7 @@
 #include "assets_res.h"
 #include "../../utils/lv_img_utils.h"
 
-#define RES_APP_ICON_PERFIX_PATH "lisaui/app/dictionary/"
+#define RES_APP_ICON_PERFIX_PATH "lisaui/app/app_dictionary/"
 static lv_img_dsc_t img_gif5;
 INCBIN(img_gif5, RES_PERFIX_PATH(RES_APP_ICON_PERFIX_PATH "assets/gif/00b44af.gif"));
 
