@@ -17,6 +17,7 @@ extern "C" {
 #endif
 
 
+LV_IMG_DECLARE(icon_img_app_default_png);
 LV_IMG_DECLARE(ui_img_icon_launcher_png);
 
 

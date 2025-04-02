@@ -152,7 +152,7 @@ lisaui_err_t _lisaui_lv_obj_set_btn_custom_style(lv_obj_t *obj);
 
 
 lisaui_err_t lisaui_popup_toast(const char* message);
-// void lisaui_memory_monitor(lv_task_t *param);
+void lisaui_memory_monitor(void *param);
 
 #ifdef __cplusplus
 }

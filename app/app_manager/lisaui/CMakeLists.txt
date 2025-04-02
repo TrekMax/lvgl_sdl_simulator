@@ -5,9 +5,6 @@ message(STATUS "LISAUI_BASE_DIR: ${LISAUI_BASE_DIR}")
 
 SET(APP_COMMON_SOURCES
     ui.c
-    app_common/lisaui_app_common.c
-    app_common/lisaui_asset_manager.c
-    app_common/assets/fonts/lv_font_chinese_18_old.c
 )
 
 SET(APP_FRAMEWORK_SOURCES
@@ -22,9 +19,6 @@ if (CONFIG_LISAUI_DBUS_ENABLE)
 endif()
 
 set(APP_USER_SOURCES
-    app/assets/icons/icon_img_app_voice_png.c
-
-    app/lvgl_demo/app_lvgl_demo.c
 )
 
 set(EXT_LIB_SOURCE
@@ -34,12 +28,14 @@ set(EXT_LIB_SOURCE
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}/app_common
+    # ${CMAKE_CURRENT_BINARY_DIR}/app_common
     ${CMAKE_CURRENT_BINARY_DIR}/app_framework
     ${CMAKE_CURRENT_BINARY_DIR}/assets
     )
 
 add_subdirectory(utils)
+add_subdirectory(app_common)
+# add_subdirectory(app_framework)
 
 add_subdirectory(app/taskbar)
 add_subdirectory(app/launcher)
@@ -48,9 +44,10 @@ add_subdirectory(app/demo)
 add_subdirectory(app/ocr_scanner)
 add_subdirectory(app/audio_player)
 add_subdirectory(app/dictionary)
-add_subdirectory(app/setting)
 add_subdirectory(app/thermography)
-# add_subdirectory(app/lvgl_demo)
+add_subdirectory(app/voice)
+add_subdirectory(app/lvgl_demo)
+add_subdirectory(app/setting)
 
 add_library(lisaui
     ${APP_COMMON_SOURCES}
@@ -69,6 +66,8 @@ else()
         PRIVATE
         -T ${LINKER_SCRIPT}
 
+        app_common
+        # app_framework
         utils
         # FIXME: App 在 launcher 显示的顺序与这里的顺序有关(ld 链接顺序)
         app_taskbar
@@ -79,7 +78,9 @@ else()
         app_demo
         app_dictionary
         app_audio_player
-        app_setting
         app_thermography
+        app_lvgl_demo
+        app_voice
+        app_setting
     )
 endif()

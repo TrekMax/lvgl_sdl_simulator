@@ -19,5 +19,7 @@ target_include_directories(app_template PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
 )
 
-# 如果需要链接其他库，可以在这里添加
-# target_link_libraries(app_template PRIVATE ...)
+target_link_libraries(app_template PRIVATE 
+    lvgl
+    app_common
+    )

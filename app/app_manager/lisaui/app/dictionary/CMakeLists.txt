@@ -23,4 +23,5 @@ target_include_directories(app_dictionary PRIVATE
 target_link_libraries(app_dictionary PRIVATE 
     lvgl
     utils
+    app_common
     )

@@ -162,31 +162,3 @@ static int tick_thread(void *data)
 
     return 0;
 }
-#if 0
-/**
- * Print the memory usage periodically
- * @param param
- */
-static void memory_monitor(lv_task_t *param)
-{
-    (void)param; /*Unused*/
-
-    lv_mem_monitor_t mon;
-    lv_mem_monitor(&mon);
-    // printf("used: %6d (%3d %%), frag: %3d %%, biggest free: %6d\n", (int)mon.total_size - mon.free_size,
-    // mon.used_pct,
-    //        mon.frag_pct, (int)mon.free_biggest_size);
-    printf("------------Memory usage------------\n");
-    printf("\tTotal size              : %0.3lfKB(%d Byte)\n", mon.total_size / 1024.0, mon.total_size);
-    printf("\tFree count              : %d\n", mon.free_cnt);
-    printf("\tFree size               : %d\n", mon.free_size);
-    printf("\tFree biggest size       : %d\n", mon.free_biggest_size);
-    printf("\tUsed count              : %d\n", mon.used_cnt);
-    printf("\tMax used                : %0.3lfKB(%d Byte)\n", mon.max_used / 1024.0, mon.max_used);
-    printf("\tUsed percentage         : %d\n", mon.used_pct);
-    printf("\tFragmentation percentage: %d\n", mon.frag_pct);
-    printf("\n");
-
-    lisaui_view_manger_print_usage();
-}
-#endif

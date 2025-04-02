@@ -21,7 +21,7 @@ static void event_handler(lv_obj_t *obj, lv_event_t event)
 {
     if (event == LV_EVENT_CLICKED) {
         LISAUI_LOGI(TAG, "Clicked");
-        // memory_monitor(NULL);
+        // lisaui_memory_monitor(NULL);
         lisaui_app_close(UI_APP_ID_DICTIONARY);
 
     } else if (event == LV_EVENT_VALUE_CHANGED) {
@@ -68,13 +68,13 @@ lisaui_err_t app_ocr_create(void *parent)
 
     lv_task_create(app_ocr_bg_task_handle_cb, 500, LV_TASK_PRIO_LOW, NULL);
     #endif
-    LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
+    LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }
 
 lisaui_err_t app_ocr_destroy(void)
 {
-    LISAUI_LOGI(TAG, "[%d:%s] destroy\n", __LINE__, __func__);
+    LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }
 

@@ -151,9 +151,9 @@ int lisaui_app_register(struct lisaui_app_t *app)
     m_app_manager.apps[app->info.uuid] = app;
     m_app_manager.registered_count++;
 
-    if (app->icon->icon == NULL) {
-        app->hidden_icon = true;
-    }
+    // if (app->icon->icon == NULL) {
+    //     app->hidden_icon = true;
+    // }
 
     if (app->hidden_icon == false) {
         m_app_manager.unhidden_count++;

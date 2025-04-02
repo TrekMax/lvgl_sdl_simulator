@@ -10,145 +10,40 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_voice.h"
-#include "../../app_common/lisaui_app_common.h"
-#include "../assets/assets_res.h"
+#include "app_common/lisaui_app_common.h"
+#include "assets/assets_res.h"
 
 static const char *TAG = "app_voice";
 static lv_obj_t *g_app_voice = NULL;
 
-/**
- * Print the memory usage periodically
- * @param param
- */
-static void memory_monitor(lv_task_t *param)
-{
-    (void)param; /*Unused*/
+// 声明[模板]应用需要实现的接口
+LISAUI_DECLARE_APP_FUNC(voice, create, destroy, enter, exit, get_page);
+// 定义[模板]应用
+LISAUI_DEFINE_APP(voice, UI_APP_ID_VOICE, "语音", "Voice", &ui_img_icon_voice_png, {});
 
-    lv_mem_monitor_t mon;
-    lv_mem_monitor(&mon);
-    // LISAUI_PRINTK("used: %6d (%3d %%), frag: %3d %%, biggest free: %6d\n", (int)mon.total_size - mon.free_size,
-    // mon.used_pct,
-    //        mon.frag_pct, (int)mon.free_biggest_size);
-    LISAUI_PRINTK("------------Memory usage------------\n");
-    LISAUI_PRINTK("\tTotal size              : %0.3lfKB(%d Byte)\n", mon.total_size / 1024.0, mon.total_size);
-    LISAUI_PRINTK("\tFree count              : %d\n", mon.free_cnt);
-    LISAUI_PRINTK("\tFree size               : %d\n", mon.free_size);
-    LISAUI_PRINTK("\tFree biggest size       : %d\n", mon.free_biggest_size);
-    LISAUI_PRINTK("\tUsed count              : %d\n", mon.used_cnt);
-    LISAUI_PRINTK("\tMax used                : %0.3lfKB(%d Byte)\n", mon.max_used / 1024.0, mon.max_used);
-    LISAUI_PRINTK("\tUsed percentage         : %d\n", mon.used_pct);
-    LISAUI_PRINTK("\tFragmentation percentage: %d\n", mon.frag_pct);
-    LISAUI_PRINTK("\n");
-
-    lisaui_view_manger_print_usage();
-}
-
-extern lisaui_err_t lisaui_taskbar_set_battery_charging(int percent);
-
-static void event_handler(lv_obj_t *obj, lv_event_t event)
-{
-    if (event == LV_EVENT_CLICKED) {
-        LISAUI_LOGI(TAG, "Clicked");
-        memory_monitor(NULL);
-        lisaui_taskbar_set_battery_charging(true);
-    } else if (event == LV_EVENT_VALUE_CHANGED) {
-        LISAUI_LOGI(TAG, "Open App ocr");
-        // lisaui_taskbar_set_battery_charging(false);
-        lisaui_app_enter(UI_APP_ID_OCR);
+// App 模板宏原型在 common/lisaui_app_manager.h 中定义
+// 定义[模板]应用功能实现, 用于创建、销毁、进入、退出、获取页面
+#define LISAUI_APP_ENTITY_VOICE                                                                                     \
+    {                                                                                                                  \
+        if (g_app_voice != NULL) {                                                                                  \
+            return LISAUI_ERR_OK;                                                                                      \
+        }                                                                                                              \
+        g_app_voice = lv_obj_create(parent);                                                                        \
+        _lisaui_set_style_container(g_app_voice, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);        \
+                                                                                                                       \
+        lv_obj_t *label = lv_label_create(g_app_voice);                                                             \
+        lv_label_set_text(label, "Hello LisaUI!");                                                                     \
+        lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);                       \
+        lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);                   \
+        lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);                                                                    \
+                                                                                                                       \
+        return LISAUI_ERR_OK;                                                                                          \
     }
-}
-
-void lv_ex_btn_2_test(void *parent)
-{
-    lv_obj_t *label;
-
-    lv_obj_t *btn1 = lv_btn_create(parent, NULL);
-    lv_obj_set_event_cb(btn1, event_handler);
-    lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, -160, 0);
-
-    label = lv_label_create(btn1, NULL);
-    lv_label_set_text(label, "Button");
-
-    lv_obj_t *btn2 = lv_btn_create(parent, NULL);
-    lv_obj_set_event_cb(btn2, event_handler);
-    lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 160, 0);
-    lv_btn_set_checkable(btn2, true);
-    lv_btn_toggle(btn2);
-    lv_btn_set_fit2(btn2, LV_FIT_NONE, LV_FIT_TIGHT);
-
-    label = lv_label_create(btn2, NULL);
-    lv_label_set_text(label, "Open App ocr");
-}
-
-lisaui_err_t app_voice_create(void *parent)
-{
-    if (g_app_voice != NULL) {
-        return LISAUI_ERR_OK;
-    }
-    g_app_voice = lv_obj_create(parent, parent);
-    _lisaui_set_style_container(g_app_voice, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-
-    lv_obj_t *label = lv_label_create(g_app_voice, NULL);
-    lv_label_set_text(label, "Hello demo!");
-    lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 0);
-
-    lv_ex_btn_2_test(g_app_voice);
-
-    LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(voice, create, void *parent, {LISAUI_APP_ENTITY_VOICE});
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(voice, destroy, void, {
+    LVGL_OBJ_SAFE_DEL(g_app_voice);
     return LISAUI_ERR_OK;
-}
-
-lisaui_err_t app_voice_destroy(void)
-{
-    LISAUI_LOGI(TAG, "[%d:%s] destroy\n", __LINE__, __func__);
-    return LISAUI_ERR_OK;
-}
-
-lisaui_err_t app_voice_enter(void)
-{
-    LISAUI_LOGI(TAG, "[%d:%s] enter", __LINE__, __func__);
-    return LISAUI_ERR_OK;
-}
-
-lisaui_err_t app_voice_exit(void)
-{
-    LISAUI_LOGI(TAG, "[%d:%s] exit", __LINE__, __func__);
-    return LISAUI_ERR_OK;
-}
-
-void *app_voice_get_page(void)
-{
-    return g_app_voice;
-}
-
-static struct app_icon_t app_icon_res = {
-    .title = "语音",
-    // .icon_width = LV_SIZE_CONTENT,
-    // .icon_height = LV_SIZE_CONTENT,
-    .icon = &ui_img_icon_voice_png,
-    .zoom = APP_ICON_ZOOM(0),
-};
-
-struct lisaui_app_t app_voice = {
-    .create = app_voice_create,
-    .destroy = app_voice_destroy,
-    .enter = app_voice_enter,
-    .exit = app_voice_exit,
-
-    .get_root_view = app_voice_get_page,
-    .info =
-        {
-            .name = "Voice",
-            .package_name = "com.listenai.lisaui.voice",
-            .id = UI_APP_ID_VOICE,
-        },
-    .icon = &app_icon_res,
-};
-
-lisaui_err_t app_voice_init(void)
-{
-    lisaui_app_register(&app_voice);
-    return LISAUI_ERR_OK;
-}
-
-LISAUI_REGISTER_APP(voice, &app_voice, app_voice_init);
+});
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(voice, enter, void, { return LISAUI_ERR_OK; });
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(voice, exit, void, { return LISAUI_ERR_OK; });
+void *LISAUI_DEFINE_APP_FUNC(voice, get_page, void, { return g_app_voice; });

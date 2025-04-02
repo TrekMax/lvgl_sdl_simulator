@@ -32,7 +32,7 @@ lisaui_err_t LISAUI_DEFINE_APP_FUNC(demo, create, void *parent, {
     g_app_demo = lv_obj_create(parent);
     _lisaui_set_style_container(g_app_demo, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
-    LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
+    LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
     return LISAUI_ERR_OK;
 });
 

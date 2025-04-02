@@ -10,8 +10,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_lvgl_demo.h"
-#include "../../app_common/lisaui_app_common.h"
-#include "../assets/assets_res.h"
+#include "app_common/lisaui_app_common.h"
+#include "assets/assets_res.h"
 
 static const char *TAG = "app_lvgl_demo";
 static lv_obj_t *g_app_lvgl_demo = NULL;
@@ -19,7 +19,7 @@ static lv_obj_t *g_app_lvgl_demo = NULL;
 // 声明[模板]应用需要实现的接口
 LISAUI_DECLARE_APP_FUNC(lvgl_demo, create, destroy, enter, exit, get_page);
 // 定义[模板]应用
-LISAUI_DEFINE_APP(lvgl_demo, UI_APP_ID_LVGL_DEMO, "LVGL 演示", "Lvgl_demo", &icon_img_app_store_png, {});
+LISAUI_DEFINE_APP(lvgl_demo, UI_APP_ID_LVGL_DEMO, "LVGL 演示", "Lvgl_demo", NULL, {});
 
 // App 模板宏原型在 common/lisaui_app_manager.h 中定义
 // 定义[模板]应用功能实现, 用于创建、销毁、进入、退出、获取页面

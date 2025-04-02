@@ -59,7 +59,13 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
         LISAUI_LOGE(TAG, "icon_panel or app is NULL");
         return;
     }
+    if (app->icon->icon == NULL) {
+        app->icon->icon = &icon_img_app_default_png;
+        LISAUI_LOGI(TAG, "app icon is NULL, use default icon");
+    }
+
     if (app->hidden_icon) {
+        LISAUI_LOGD(TAG, "app: %s is hidden", app->icon->title);
         return;
     }
 
@@ -143,7 +149,7 @@ lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
 #define LAUNCHER_ICON_ROW_NUM 4
 lisaui_err_t app_launcher_create(void *parent)
 {
-    LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
+    LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
     g_app_launcher = lv_obj_create(parent); // launcher 页面根容器
     _lisaui_set_style_container(g_app_launcher, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
     lv_obj_set_size(g_app_launcher, LV_PCT(100), LV_PCT(100));
@@ -183,7 +189,7 @@ lisaui_err_t app_launcher_create(void *parent)
 
 lisaui_err_t app_launcher_destroy(void)
 {
-    LISAUI_LOGI(TAG, "[%d:%s] destroy\n", __LINE__, __func__);
+    LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }
 

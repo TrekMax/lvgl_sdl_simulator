@@ -31,7 +31,9 @@ target_include_directories(app_taskbar PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
 )
 
-# 如果需要链接其他库，可以在这里添加
+
 target_link_libraries(app_taskbar PRIVATE 
     lvgl
+    utils
+    app_common
     )

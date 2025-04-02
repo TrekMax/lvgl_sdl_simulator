@@ -9,19 +9,18 @@
  * 
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef __APP_SYS_ASSETS_RES_H__
-#define __APP_SYS_ASSETS_RES_H__
+#ifndef __APP_VOICE_RES_H__
+#define __APP_VOICE_RES_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 LV_IMG_DECLARE(ui_img_icon_voice_png);
-LV_IMG_DECLARE(icon_img_app_store_png);
 
 
 #ifdef __cplusplus
 } /*extern "C"*/
 #endif
 
-#endif /* __APP_SYS_ASSETS_RES_H__ */
+#endif /* __APP_VOICE_RES_H__ */

@@ -19,5 +19,7 @@ target_include_directories(app_demo PRIVATE
     ${LISAUI_BASE_DIR}/..
 )
 
-# 如果需要链接其他库，可以在这里添加
-# target_link_libraries(app_demo PRIVATE ...)
+target_link_libraries(app_demo PRIVATE 
+    lvgl
+    app_common
+    )

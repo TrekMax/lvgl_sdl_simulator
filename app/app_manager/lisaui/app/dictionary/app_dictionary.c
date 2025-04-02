@@ -16,7 +16,7 @@
 
 #define RES_APP_ICON_PERFIX_PATH "lisaui/app/dictionary/"
 static lv_img_dsc_t img_gif5;
-INCBIN(img_gif5, RES_PERFIX_PATH("lisaui/app/assets/gif/00b44af.gif"));
+INCBIN(img_gif5, RES_PERFIX_PATH(RES_APP_ICON_PERFIX_PATH "assets/gif/00b44af.gif"));
 
 static lv_img_dsc_t img_favorite;
 static lv_img_dsc_t img_book;
