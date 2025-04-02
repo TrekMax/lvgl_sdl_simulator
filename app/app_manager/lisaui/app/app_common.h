@@ -21,7 +21,8 @@ extern "C" {
 enum lisaui_app_id_t {
     UI_APP_ID_LAUNCHER = 0,
     UI_APP_ID_TASKBAR = 1,
-
+    
+    UI_APP_ID_LAUNCHER2,
     UI_APP_ID_DEMO,
 
     UI_APP_ID_OCR,

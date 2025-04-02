@@ -1,5 +1,5 @@
 /**
- * @file app_launcher.c
+ * @file app_launcher2.c
  * @author Tianshuang Ke (dske@listenai.com)
  * @brief
  * @version 0.1
@@ -9,7 +9,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "app_launcher.h"
+#include "app_launcher2.h"
 #include "app_common/lisaui_app_common.h"
 #include "assets/assets_res.h"
 #include "app_framework/lisaui_app_manager.h"
@@ -17,14 +17,14 @@
 
 #include <stdbool.h>
 
-static const char *TAG = "app_launcher";
+static const char *TAG = "app_launcher2";
 
-#define LISAUI_LAUNCHER_ICON_MARGIN      20
-#define LISAUI_LAUNCHER_ICON_SPACING     40
-#define LISAUI_LAUNCHER_ICON_PANEL_WIDTH LV_HOR_RES
-#define LISAUI_LAUNCHER_ICON_SHOW_COUNT  5
+#define LISAUI_LAUNCHER2_ICON_MARGIN      20
+#define LISAUI_LAUNCHER2_ICON_SPACING     40
+#define LISAUI_LAUNCHER2_ICON_PANEL_WIDTH LV_HOR_RES
+#define LISAUI_LAUNCHER2_ICON_SHOW_COUNT  5
 
-#define LISAUI_LAUNCHER_ICON_WIDTH 72 //(LISAUI_LAUNCHER_ICON_PANEL_WIDTH / LISAUI_LAUNCHER_ICON_SHOW_COUNT + 20)
+#define LISAUI_LAUNCHER2_ICON_WIDTH 72 //(LISAUI_LAUNCHER2_ICON_PANEL_WIDTH / LISAUI_LAUNCHER2_ICON_SHOW_COUNT + 20)
 static void icon_event_click_handler(lv_event_t *event)
 {
     // LISAUI_LOGI(TAG, "icon_event_click_handler");
@@ -46,12 +46,12 @@ static void icon_event_click_handler(lv_event_t *event)
             LISAUI_LOGE(TAG, "Failed to get app manager bus");
             return;
         }
-        lisaui_dbus_publish(_app_manager_bus, LISAUI_DBUS_APP_LAUNCHER, app);
+        lisaui_dbus_publish(_app_manager_bus, LISAUI_DBUS_APP_LAUNCHER2, app);
 #endif
     }
 }
 
-void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t *app)
+void lisaui_launcher2_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t *app)
 {
     if (icon_container == NULL || app == NULL) {
         LISAUI_LOGE(TAG, "icon_panel or app is NULL");
@@ -93,10 +93,10 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
 #endif
 }
 
-static lv_obj_t *g_app_launcher = NULL;
+static lv_obj_t *g_app_launcher2 = NULL;
 static lv_obj_t *g_icon_panel = NULL;
 
-lisaui_err_t lisaui_launcher_register_app(struct lisaui_app_t *app)
+lisaui_err_t lisaui_launcher2_register_app(struct lisaui_app_t *app)
 {
     if (g_icon_panel == NULL | app == NULL) {
         LISAUI_LOGE(TAG, "g_icon_panel or app is NULL");
@@ -104,11 +104,11 @@ lisaui_err_t lisaui_launcher_register_app(struct lisaui_app_t *app)
     }
     // LISAUI_LOGD(TAG, "--->app: %s", app->icon->title);
     // lisaui_app_manager_show_app_info(app);
-    lisaui_launcher_add_app_icon(g_icon_panel, app);
+    lisaui_launcher2_add_app_icon(g_icon_panel, app);
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_launcher_update_app_icon(struct lisaui_app_manager_t *app_manager)
+lisaui_err_t lisaui_launcher2_update_app_icon(struct lisaui_app_manager_t *app_manager)
 {
     if (g_icon_panel == NULL) {
         LISAUI_LOGE(TAG, "g_icon_panel is NULL");
@@ -127,11 +127,11 @@ lisaui_err_t lisaui_launcher_update_app_icon(struct lisaui_app_manager_t *app_ma
             continue;
             // return LISAUI_ERR_INVALID_PARAM;
         }
-        lisaui_launcher_add_app_icon(g_icon_panel, app);
+        lisaui_launcher2_add_app_icon(g_icon_panel, app);
     }
     return LISAUI_ERR_OK;
 }
-lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
+lisaui_err_t lisaui_launcher2_update_app(struct lisaui_app_t *app)
 {
     if (g_icon_panel == NULL | app == NULL) {
         LISAUI_LOGE(TAG, "g_icon_panel or app is NULL");
@@ -142,48 +142,16 @@ lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
         return LISAUI_ERR_FAIL;
     }
     lisaui_app_manager_show_app_info(app);
-    lisaui_launcher_add_app_icon(g_icon_panel, app);
+    lisaui_launcher2_add_app_icon(g_icon_panel, app);
     return LISAUI_ERR_OK;
 }
-#define LAUNCHER_ICON_ROW_NUM 4
-
-
-static void event_handler_app_panel(lv_event_t *e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t *obj = lv_event_get_target(e);
-    LV_UNUSED(obj);
-
-    if (event_code == LV_EVENT_GESTURE)
-    {
-        // lisaui_popup_toast("Gesture");
-        LISAUI_LOGI(TAG, "Gesture");
-        if (lv_indev_get_gesture_dir(lv_indev_get_act()) == LV_DIR_TOP) {
-            lv_indev_wait_release(lv_indev_get_act());
-        }
-    }
-    else if (event_code == LV_EVENT_CLICKED) {
-        // lisaui_popup_toast("Clicked");
-        LISAUI_LOGI(TAG, "Clicked");
-    }
-    else if (event_code == LV_EVENT_PRESSED) {
-        // lisaui_popup_toast("Pressed");
-        LISAUI_LOGI(TAG, "Pressed");
-    }
-    else if (event_code == LV_EVENT_RELEASED) {
-        // lisaui_popup_toast("Released");
-        LISAUI_LOGI(TAG, "Released");
-    }
-}
-
-lisaui_err_t app_launcher_create(void *parent)
+#define LAUNCHER2_ICON_ROW_NUM 4
+lisaui_err_t app_launcher2_create(void *parent)
 {
     LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
-    g_app_launcher = lv_obj_create(parent); // launcher 页面根容器
-    _lisaui_set_style_container(g_app_launcher, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-    lv_obj_set_size(g_app_launcher, LV_PCT(100), LV_PCT(100));
-
-    lv_obj_add_event_cb(g_app_launcher, event_handler_app_panel, LV_EVENT_ALL, NULL);
+    g_app_launcher2 = lv_obj_create(parent); // launcher2 页面根容器
+    _lisaui_set_style_container(g_app_launcher2, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+    lv_obj_set_size(g_app_launcher2, LV_PCT(100), LV_PCT(100));
 
     // static lv_style_t style;
     // lv_style_init(&style);
@@ -191,8 +159,8 @@ lisaui_err_t app_launcher_create(void *parent)
     // lv_style_set_flex_main_place(&style, LV_FLEX_ALIGN_SPACE_EVENLY);
     // lv_style_set_layout(&style, LV_LAYOUT_FLEX);
 
-    g_icon_panel = lv_obj_create(g_app_launcher);
-    lv_obj_set_size(g_icon_panel, LV_PCT(100), LV_PCT(70));
+    g_icon_panel = lv_obj_create(g_app_launcher2);
+    lv_obj_set_size(g_icon_panel, LV_PCT(100), LV_PCT(60));
     lv_obj_set_y(g_icon_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT + 10));
     // lv_obj_set_height(m_icon_container, LV_PCT(60));
     // lv_obj_set_width(m_icon_container, LV_PCT(100));
@@ -213,73 +181,82 @@ lisaui_err_t app_launcher_create(void *parent)
     }
 
     lisaui_dbus_subscribe(_app_manager_bus, LISAUI_DBUS_APP_UPDATE, _lisaui_bus_event_app_update_handler_cb);
-    lisaui_dbus_subscribe(_app_manager_bus, LISAUI_DBUS_APP_LAUNCHER, _lisaui_bus_event_app_open_handler_cb);
+    lisaui_dbus_subscribe(_app_manager_bus, LISAUI_DBUS_APP_LAUNCHER2, _lisaui_bus_event_app_open_handler_cb);
 #endif
     return LISAUI_ERR_OK;
+
+
+    // lv_obj_t *m_open_launcher_btn = lv_btn_create(g_app_launcher2);
+    // lv_obj_align(m_open_launcher_btn, LV_ALIGN_CENTER, 0, 0);
+
+    // lv_obj_t *m_open_launcher_label = lv_label_create(m_open_launcher_btn);
+    // lv_label_set_text(m_open_launcher_label, "打开启动器");
 }
 
-lisaui_err_t app_launcher_destroy(void)
+lisaui_err_t app_launcher2_destroy(void)
 {
     LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t app_launcher_enter(void)
+lisaui_err_t app_launcher2_enter(void)
 {
+    lisaui_launcher2_update_app_icon(NULL);
     LISAUI_LOGI(TAG, "[%d:%s] enter", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t app_launcher_exit(void)
+lisaui_err_t app_launcher2_exit(void)
 {
     LISAUI_LOGI(TAG, "[%d:%s] exit", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }
 
-void *app_launcher_get_page(void)
+void *app_launcher2_get_page(void)
 {
-    return g_app_launcher;
+    return g_app_launcher2;
 }
 
 static struct app_icon_t app_icon_res = {
 #if CONFIG_LISAUI_FONT_LANGUAGE_ZH_CN_ENABLE
-    .title = "启动器",
+    .title = "启动器2",
 #else
-    .title = "Launcher",
+    .title = "Launcher22",
 #endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = &ui_img_icon_launcher_png,
+    .icon = &ui_img_icon_launcher2_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 
-struct lisaui_app_t app_launcher = {
-    .create = app_launcher_create,
-    .destroy = app_launcher_destroy,
-    .enter = app_launcher_enter,
-    .exit = app_launcher_exit,
+struct lisaui_app_t app_launcher2 = {
+    .create = app_launcher2_create,
+    .destroy = app_launcher2_destroy,
+    .enter = app_launcher2_enter,
+    .exit = app_launcher2_exit,
 
-    .get_root_view = app_launcher_get_page,
+    .get_root_view = app_launcher2_get_page,
     .info =
         {
-            .name = "launcher",
-            .package_name = "com.listenai.lisaui.launcher",
-            .id = UI_APP_ID_LAUNCHER,
+            .name = "launcher2",
+            .package_name = "com.listenai.lisaui.launcher2",
+            .id = UI_APP_ID_LAUNCHER2,
             .type = LISAUI_APP_TYPE_LAUNCHER,
         },
     .icon = &app_icon_res,
-    .hidden_icon = true,
+    // .hidden_icon = true,
 };
 
-lisaui_err_t app_launcher_init(void)
+lisaui_err_t app_launcher2_init(void)
 {
-    lisaui_app_register(&app_launcher);
-    lisaui_app_manager_set_register_app_hook(lisaui_launcher_register_app);
-    lisaui_app_manager_set_unregister_app_hook(lisaui_launcher_update_app);
-    lisaui_app_manager_set_hook(lisaui_launcher_update_app_icon);
-    lisaui_app_enter(UI_APP_ID_LAUNCHER);
+    LISAUI_LOGD(TAG, "[%d:%s] init", __LINE__, __func__);
+    lisaui_app_register(&app_launcher2);
+    // lisaui_app_manager_set_register_app_hook(lisaui_launcher2_register_app);
+    // lisaui_app_manager_set_unregister_app_hook(lisaui_launcher2_update_app);
+    // lisaui_app_manager_set_hook(lisaui_launcher2_update_app_icon);
+    // lisaui_app_enter(UI_APP_ID_LAUNCHER2);
 
     return LISAUI_ERR_OK;
 }
 
-LISAUI_REGISTER_APP(launcher, &app_launcher, app_launcher_init);
+LISAUI_REGISTER_APP(launcher2, &app_launcher2, app_launcher2_init);

@@ -8,6 +8,14 @@ cmake_minimum_required(VERSION 3.20)
 # add_subdirectory(widgets)
 set(APP_SOURCES
     app_lvgl_demo.c
+
+    flex/app_flex_1.c
+    flex/app_flex_2.c
+    flex/app_flex_3.c
+    flex/app_flex_4.c
+    flex/app_flex_5.c
+    flex/app_flex_6.c
+    flex/app_flex.c
 )
 
 set(APP_UI_RESOURCES

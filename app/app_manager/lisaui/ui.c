@@ -50,6 +50,7 @@ void lisaui_ui_init(void)
 
 #if CONFIG_LVGL_SIMULATOR
     LISAUI_USE_APP(launcher);
+    LISAUI_USE_APP(launcher2);
     LISAUI_USE_APP(taskbar);
 
     LISAUI_USE_APP(demo);
@@ -67,6 +68,6 @@ void lisaui_ui_init(void)
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
 
     LISAUI_LOGI(TAG, "UI init done");
-    LISAUI_LOGI(TAG, "[%d:%s] init done", __LINE__, __func__);
+    LISAUI_LOGI(TAG, "[%s:%d] init done", __func__, __LINE__);
     LISAUI_LOGI(TAG, "[%s:%d] init done", __FILE__, __LINE__);
 }

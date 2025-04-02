@@ -21,25 +21,34 @@ LISAUI_DECLARE_APP_FUNC(lvgl_demo, create, destroy, enter, exit, get_page);
 // 定义[模板]应用
 LISAUI_DEFINE_APP(lvgl_demo, UI_APP_ID_LVGL_DEMO, "LVGL 演示", "Lvgl_demo", NULL, {});
 
+extern lv_obj_t *app_flex(lv_obj_t *parent);
+
 // App 模板宏原型在 common/lisaui_app_manager.h 中定义
 // 定义[模板]应用功能实现, 用于创建、销毁、进入、退出、获取页面
-#define LISAUI_APP_ENTITY_LVGL_DEMO                                                                                     \
-    {                                                                                                                  \
-        if (g_app_lvgl_demo != NULL) {                                                                                  \
-            return LISAUI_ERR_OK;                                                                                      \
-        }                                                                                                              \
-        g_app_lvgl_demo = lv_obj_create(parent);                                                                        \
-        _lisaui_set_style_container(g_app_lvgl_demo, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);        \
-                                                                                                                       \
-        lv_obj_t *label = lv_label_create(g_app_lvgl_demo);                                                             \
-        lv_label_set_text(label, "Hello LisaUI!");                                                                     \
-        lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);                       \
-        lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);                   \
-        lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);                                                                    \
-                                                                                                                       \
-        return LISAUI_ERR_OK;                                                                                          \
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(lvgl_demo, create, void *parent, {
+    {
+        if (g_app_lvgl_demo != NULL) {
+            return LISAUI_ERR_OK;
+        }
+        g_app_lvgl_demo = lv_obj_create(parent);
+        _lisaui_set_style_container(g_app_lvgl_demo, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+
+        lv_obj_t *label = lv_label_create(g_app_lvgl_demo);
+        lv_label_set_text(label, "Hello LisaUI!");
+        lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+
+        lv_obj_t *test_item = app_flex(g_app_lvgl_demo);
+        // _lisaui_set_style_container(test_item, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+        lv_obj_set_size(test_item, LV_PCT(100), LV_PCT(100));
+        lv_obj_set_y(test_item, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
+        lv_obj_set_scrollbar_mode(test_item, LV_SCROLLBAR_MODE_OFF);
+        lv_obj_set_scroll_dir(test_item, LV_DIR_TOP | LV_DIR_BOTTOM); // 仅允许上下滑动
+
+        return LISAUI_ERR_OK;
     }
-lisaui_err_t LISAUI_DEFINE_APP_FUNC(lvgl_demo, create, void *parent, {LISAUI_APP_ENTITY_LVGL_DEMO});
+});
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(lvgl_demo, destroy, void, {
     LVGL_OBJ_SAFE_DEL(g_app_lvgl_demo);
     return LISAUI_ERR_OK;

@@ -233,18 +233,23 @@ static void event_handler_app_panel(lv_event_t *e)
 
     if (event_code == LV_EVENT_GESTURE)
     {
+        // lisaui_popup_toast("Gesture");
+        LISAUI_LOGI(TAG, "Gesture");
         if (lv_indev_get_gesture_dir(lv_indev_get_act()) == LV_DIR_TOP) {
             lv_indev_wait_release(lv_indev_get_act());
         }
     }
     else if (event_code == LV_EVENT_CLICKED) {
-        lisaui_popup_toast("Clicked");
+        // lisaui_popup_toast("Clicked");
+        LISAUI_LOGI(TAG, "Clicked");
     }
     else if (event_code == LV_EVENT_PRESSED) {
-        lisaui_popup_toast("Pressed");
+        // lisaui_popup_toast("Pressed");
+        LISAUI_LOGI(TAG, "Pressed");
     }
     else if (event_code == LV_EVENT_RELEASED) {
-        lisaui_popup_toast("Released");
+        // lisaui_popup_toast("Released");
+        LISAUI_LOGI(TAG, "Released");
     }
 }
 
@@ -255,10 +260,8 @@ lisaui_err_t app_taskbar_create(void *parent)
     _lisaui_set_style_container(g_app_taskbar, lv_color_hex(0x000000), 0, lv_color_hex(0x000000), 0, 0);
 
     _lisaui_taskbar_create_back_btn(g_app_taskbar);
-    if (lv_obj_get_width(g_app_taskbar) < 240) {
-        LISAUI_LOGW(TAG, "taskbar width is too small");
+    if (lv_obj_get_width(g_app_taskbar) > 240) {
         _lisaui_taskbar_create_date_label(g_app_taskbar);
-        // return LISAUI_ERR_FAIL;
     }
     _lisaui_taskbar_create_time_label(g_app_taskbar);
     _lisaui_taskbar_create_battery(g_app_taskbar);
