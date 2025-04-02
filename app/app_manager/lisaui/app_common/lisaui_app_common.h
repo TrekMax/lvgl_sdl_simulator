@@ -75,7 +75,7 @@ extern "C" {
         #define LISAUI_LOGE(TAG, fmt, ...)  CLOG("E:[%s:%d]" fmt, __FILE__, __LINE__, ##__VA_ARGS__)
         #define LISAUI_LOGW(TAG, fmt, ...)  CLOG("W:" fmt, ##__VA_ARGS__)
         #define LISAUI_LOGI(TAG, fmt, ...)  CLOG("I:" fmt, ##__VA_ARGS__)
-        #define LISAUI_LOGD(TAG, fmt, ...)  CLOG("D:" fmt, ##__VA_ARGS__)
+        #define LISAUI_LOGD(TAG, fmt, ...)  CLOG("D:[%s:%d]" fmt, __FILE__, __LINE__, ##__VA_ARGS__)
         #define LISAUI_LOGV(TAG, fmt, ...)  CLOG("V:" fmt, ##__VA_ARGS__)
     #endif
 #else

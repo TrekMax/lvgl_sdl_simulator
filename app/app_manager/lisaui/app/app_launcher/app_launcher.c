@@ -63,7 +63,7 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
     }
 
     if (app->hidden_icon) {
-        LISAUI_LOGD(TAG, "app: %s is hidden", app->icon->title);
+        // LISAUI_LOGD(TAG, "app: %s icon is hidden", app->icon->title);
         return;
     }
 
@@ -242,10 +242,10 @@ struct lisaui_app_t app_launcher = {
 lisaui_err_t app_launcher_init(void)
 {
     lisaui_app_register(&app_launcher);
-    lisaui_app_enter(UI_APP_ID_LAUNCHER);
     lisaui_app_manager_set_register_app_hook(lisaui_launcher_register_app);
     lisaui_app_manager_set_unregister_app_hook(lisaui_launcher_update_app);
     lisaui_app_manager_set_hook(lisaui_launcher_update_app_icon);
+    lisaui_app_enter(UI_APP_ID_LAUNCHER);
 
     return LISAUI_ERR_OK;
 }
