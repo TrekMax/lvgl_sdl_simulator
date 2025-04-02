@@ -273,7 +273,7 @@ lisaui_err_t lisaui_app_enter(const int app_id)
     m_app_manager.previous_appid = lisaui_app_manager_get_current_appid();
     lisaui_app_set_current_appid(app->info.id);
     LISAUI_LOGI(TAG, "app(%s) enter success", app->icon->title);
-    // lisaui_memory_monitor(NULL);
+    lisaui_memory_monitor(NULL);
     LVGL_UI_UNLOCK();
     return LISAUI_ERR_APP_OK;
 }
@@ -347,7 +347,7 @@ lisaui_err_t lisaui_app_exit(const int app_id)
         LISAUI_LOGI(TAG, "[ui] view page prev is NULL");
     }
     // LISAUI_LOGI(TAG, "app(%s) exit success", app->icon->title);
-    // lisaui_memory_monitor(NULL);
+    lisaui_memory_monitor(NULL);
 #endif
     LVGL_UI_UNLOCK();
     lisaui_app_set_current_appid(m_app_manager.previous_appid);

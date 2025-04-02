@@ -282,30 +282,24 @@ lisaui_err_t lisaui_app_exit_lvgl_hook(struct lisaui_app_t *app)
 
 #endif
 
-
-/**
- * Print the memory usage periodically
- * @param param
- */
-static void memory_monitor(void *param)
+void lisaui_memory_monitor(void *param)
 {
     (void)param; /*Unused*/
 
     lv_mem_monitor_t mon;
     lv_mem_monitor(&mon);
-    // printf("used: %6d (%3d %%), frag: %3d %%, biggest free: %6d\n", (int)mon.total_size - mon.free_size,
-    // mon.used_pct,
-    //        mon.frag_pct, (int)mon.free_biggest_size);
-    printf("------------Memory usage------------\n");
-    printf("\tTotal size              : %0.3lfKB(%d Byte)\n", mon.total_size / 1024.0, mon.total_size);
-    printf("\tFree count              : %d\n", mon.free_cnt);
-    printf("\tFree size               : %d\n", mon.free_size);
-    printf("\tFree biggest size       : %d\n", mon.free_biggest_size);
-    printf("\tUsed count              : %d\n", mon.used_cnt);
-    printf("\tMax used                : %0.3lfKB(%d Byte)\n", mon.max_used / 1024.0, mon.max_used);
-    printf("\tUsed percentage         : %d\n", mon.used_pct);
-    printf("\tFragmentation percentage: %d\n", mon.frag_pct);
-    printf("\n");
+    LISAUI_PRINTK("used: %6d (%3d %%), frag: %3d %%, biggest free: %6d\n", (int)mon.total_size - mon.free_size,
+                  mon.used_pct, mon.frag_pct, (int)mon.free_biggest_size);
+    LISAUI_PRINTK("------------Memory usage------------\n");
+    LISAUI_PRINTK("\tTotal size              : %0.3lfKB(%d Byte)\n", mon.total_size / 1024.0, mon.total_size);
+    LISAUI_PRINTK("\tFree count              : %d\n", mon.free_cnt);
+    LISAUI_PRINTK("\tFree size               : %d\n", mon.free_size);
+    LISAUI_PRINTK("\tFree biggest size       : %d\n", mon.free_biggest_size);
+    LISAUI_PRINTK("\tUsed count              : %d\n", mon.used_cnt);
+    LISAUI_PRINTK("\tMax used                : %0.3lfKB(%d Byte)\n", mon.max_used / 1024.0, mon.max_used);
+    LISAUI_PRINTK("\tUsed percentage         : %d\n", mon.used_pct);
+    LISAUI_PRINTK("\tFragmentation percentage: %d\n", mon.frag_pct);
+    LISAUI_PRINTK("\n");
 
     lisaui_view_stack_t *view_stask;
     lisaui_app_manager_get_view_stack(&view_stask);
