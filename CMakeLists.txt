@@ -14,6 +14,15 @@ set(SDK_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 get_filename_component(ROOT_PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR}/ ABSOLUTE)
 add_compile_options("-ffile-prefix-map=${ROOT_PROJECT_DIR}=.")
 
+# 移除符号表中的build目录前缀
+get_filename_component(BUILD_DIR ${CMAKE_BINARY_DIR} ABSOLUTE)
+add_compile_options("-ffile-prefix-map=${BUILD_DIR}=")
+
+# 同时也处理工具链目录的路径
+if(DEFINED ENV{NUCLEI_TOOLCHAIN_PATH})
+    add_compile_options("-ffile-prefix-map=$ENV{NUCLEI_TOOLCHAIN_PATH}=/toolchain")
+endif()
+
 find_package(SDL2 REQUIRED SDL2)
 include_directories(
     ${SDL2_INCLUDE_DIRS}
