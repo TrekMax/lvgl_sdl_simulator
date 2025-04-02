@@ -52,8 +52,9 @@ extern "C" {
 
 #define CONFIG_LISAUI_FONT_LANGUAGE_ZH_CN_ENABLE 1
 
-// #define LOG_LEVEL         LOG_INFO
-#define LOG_LEVEL         LOG_DEBUG
+#define LOG_LEVEL         LOG_INFO
+// #define LOG_LEVEL         LOG_DEBUG
+// #define LOG_LEVEL         LOG_VERBOSE
 #define CONFIG_LOG_COLORS 1
 #define CONFIG_LOG_ENABLE 1
 // #define CLOG_ENABLE       1

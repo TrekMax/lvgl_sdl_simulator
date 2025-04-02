@@ -22,6 +22,7 @@ target_link_libraries(
     -lm 
     -lpthread
     -ldl
+    -lfreetype
     # lvgl
     # lv_examples
     lv_drivers

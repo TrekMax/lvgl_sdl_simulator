@@ -30,19 +30,31 @@ include_directories(
 )
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 
+find_package(Freetype REQUIRED)
+if(FREETYPE_FOUND)
+    message(STATUS "Freetype include dir: ${FREETYPE_INCLUDE_DIRS}")
+    message(STATUS "Freetype library: ${FREETYPE_LIBRARIES}")
+    include_directories(${FREETYPE_INCLUDE_DIRS})
+    string(STRIP ${FREETYPE_LIBRARIES} FREETYPE_LIBRARIES)
+else()
+    message(FATAL_ERROR "Freetype not found")
+endif()
+
 include_directories(
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/components
     ${PROJECT_SOURCE_DIR}/include/
     ${PROJECT_SOURCE_DIR}/components/utils/include/
-    /usr/include/freetype2
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+# add_subdirectory(components/freetype)
 # 添加公共组件
 add_subdirectory(components/lvgl)
 add_subdirectory(components/lv_drivers)
 add_subdirectory(components/utils)
+
+target_link_libraries(lvgl PUBLIC freetype)
 
 # 可选地添加app子目录
 if(NOT DEFINED BUILD_APP)

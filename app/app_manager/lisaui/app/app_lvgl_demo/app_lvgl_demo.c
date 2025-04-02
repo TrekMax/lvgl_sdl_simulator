@@ -33,18 +33,20 @@ lisaui_err_t LISAUI_DEFINE_APP_FUNC(lvgl_demo, create, void *parent, {
         g_app_lvgl_demo = lv_obj_create(parent);
         _lisaui_set_style_container(g_app_lvgl_demo, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
-        lv_obj_t *label = lv_label_create(g_app_lvgl_demo);
-        lv_label_set_text(label, "Hello LisaUI!");
-        lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
-        lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-        lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+        // lv_obj_t *label = lv_label_create(g_app_lvgl_demo);
+        // lv_label_set_text(label, "Hello LisaUI!");
+        // lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+        // lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+        // lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
-        lv_obj_t *test_item = app_flex(g_app_lvgl_demo);
-        // _lisaui_set_style_container(test_item, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-        lv_obj_set_size(test_item, LV_PCT(100), LV_PCT(100));
-        lv_obj_set_y(test_item, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
-        lv_obj_set_scrollbar_mode(test_item, LV_SCROLLBAR_MODE_OFF);
-        lv_obj_set_scroll_dir(test_item, LV_DIR_TOP | LV_DIR_BOTTOM); // 仅允许上下滑动
+        // lv_obj_t *test_item = app_flex(g_app_lvgl_demo);
+        // // _lisaui_set_style_container(test_item, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+        // lv_obj_set_size(test_item, LV_PCT(100), LV_PCT(100));
+        // lv_obj_set_y(test_item, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
+        // lv_obj_set_scrollbar_mode(test_item, LV_SCROLLBAR_MODE_OFF);
+        // lv_obj_set_scroll_dir(test_item, LV_DIR_TOP | LV_DIR_BOTTOM); // 仅允许上下滑动
+        extern void lv_example_freetype_1(void *parent);
+        lv_example_freetype_1(g_app_lvgl_demo);
 
         return LISAUI_ERR_OK;
     }

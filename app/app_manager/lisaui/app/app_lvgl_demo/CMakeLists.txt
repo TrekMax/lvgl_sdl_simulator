@@ -16,6 +16,8 @@ set(APP_SOURCES
     flex/app_flex_5.c
     flex/app_flex_6.c
     flex/app_flex.c
+
+    freetype/lv_example_freetype_1.c
 )
 
 set(APP_UI_RESOURCES
@@ -28,9 +30,10 @@ add_library(app_lvgl_demo STATIC
 )
 
 target_include_directories(app_lvgl_demo PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../app_common
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../..
+    ${LISAUI_BASE_DIR}/
+    ${LISAUI_BASE_DIR}/app_common
+    ${LISAUI_BASE_DIR}/..
+    ${CMAKE_CURRENT_SOURCE_DIR}/assets
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
 )
 

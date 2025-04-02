@@ -10,3 +10,6 @@
 [submodule "components/lv_drivers"]
 	path = components/lv_drivers
 	url = git@github.com:lvgl/lv_drivers.git
+[submodule "components/freetype"]
+	path = components/freetype
+	url = git@github.com:freetype/freetype.git
