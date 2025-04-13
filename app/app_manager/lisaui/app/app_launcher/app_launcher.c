@@ -98,7 +98,7 @@ static lv_obj_t *g_icon_panel = NULL;
 
 lisaui_err_t lisaui_launcher_register_app(struct lisaui_app_t *app)
 {
-    if (g_icon_panel == NULL | app == NULL) {
+    if (g_icon_panel == NULL || app == NULL) {
         LISAUI_LOGE(TAG, "g_icon_panel or app is NULL");
         return LISAUI_ERR_INVALID_PARAM;
     }
@@ -133,7 +133,7 @@ lisaui_err_t lisaui_launcher_update_app_icon(struct lisaui_app_manager_t *app_ma
 }
 lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
 {
-    if (g_icon_panel == NULL | app == NULL) {
+    if (g_icon_panel == NULL || app == NULL) {
         LISAUI_LOGE(TAG, "g_icon_panel or app is NULL");
         return LISAUI_ERR_INVALID_PARAM;
     }

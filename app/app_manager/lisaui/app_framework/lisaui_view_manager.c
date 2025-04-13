@@ -90,7 +90,7 @@ lisaui_err_t lisaui_view_manager_print_usage(lisaui_view_stack_t *view_stack)
 {
     LISAUI_LOGD(TAG, "--------------------------------------------------------");
     LISAUI_LOGD(TAG, "view stack usage: %d/%d", view_stack->size, view_stack->capacity);
-    LISAUI_LOGD(TAG, "\thead: %p", view_stack->head);
+    LISAUI_LOGD(TAG, "\thead: %p", (void *)view_stack->head);
     // LISAUI_LOGD(TAG, "view stack current: %p", view_stack.current);
     void *p = view_stack->head;
     int depth = 0;
@@ -98,10 +98,10 @@ lisaui_err_t lisaui_view_manager_print_usage(lisaui_view_stack_t *view_stack)
         depth++;
         lisaui_view_page_t *page = (lisaui_view_page_t *)p;
         // LISAUI_LOGD(TAG, "\t\tpage: %p, page->prev: %p, page->next: %p", page, page->prev, page->next);
-        LISAUI_LOGD(TAG, "\t[%d]page: %p, page->next: %p", depth, page, page->next);
+        LISAUI_LOGD(TAG, "\t[%d]page: %p, page->next: %p", depth, (void *)page, (void *)page->next);
         p = page->next;
     }
-    LISAUI_LOGD(TAG, "\ttail: %p", view_stack->tail);
+    LISAUI_LOGD(TAG, "\ttail: %p", (void *)view_stack->tail);
     return LISAUI_ERR_OK;
 }
 

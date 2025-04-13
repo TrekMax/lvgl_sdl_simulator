@@ -102,7 +102,7 @@ struct lisaui_app_manager_t {
     const app_entry_t lisaui_app_##name##_entry = {                                                                    \
         .app_name = #name,                                                                                             \
         .app_init_func = init_func,                                                                                    \
-    };
+    }
 
 #define LISAUI_USE_APP(name)                                                                                           \
     extern const app_entry_t lisaui_app_##name##_entry;                                                                \
@@ -160,11 +160,11 @@ struct lisaui_app_manager_t {
     if (obj == NULL) {                                                                                                 \
         struct lisaui_app_t *app = lisaui_app_manager_get_app(app_id);                                                 \
         if (app == NULL) {                                                                                             \
-            LISAUI_LOGE(TAG, "[%s] %d not registered", __FUNCTION__, app_id);                                          \
+            LISAUI_LOGE(TAG, "[%s] %d not registered", __func__, app_id);                                          \
             return err;                                                                                                \
         }                                                                                                              \
         if (lisaui_app_enter(app_id) != LISAUI_ERR_OK) {                                                               \
-            LISAUI_LOGE(TAG, "[%s] %s not init", __FUNCTION__, app->info.name);                                        \
+            LISAUI_LOGE(TAG, "[%s] %s not init", __func__, app->info.name);                                        \
             return err;                                                                                                \
         }                                                                                                              \
         obj = app->get_root_view();                                                                                    \

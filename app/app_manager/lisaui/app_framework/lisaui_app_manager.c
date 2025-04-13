@@ -145,7 +145,7 @@ int lisaui_app_register(struct lisaui_app_t *app)
     }
     if (m_app_manager.apps[app->info.uuid] != NULL) {
         LISAUI_LOGD(TAG, "m_app_manager.apps[app->info.uuid:%d]: %p", app->info.uuid,
-                    m_app_manager.apps[app->info.uuid]);
+                    (void *)m_app_manager.apps[app->info.uuid]);
         LISAUI_LOGW(TAG, "[ui] app already registered");
         return LISAUI_ERR_APP_ALREADY_REGISTERED;
     }
@@ -181,11 +181,11 @@ int lisaui_app_unregister(struct lisaui_app_t *app)
         return LISAUI_ERR_APP_ID_INVALID;
     }
     if (m_app_manager.apps[app->info.uuid] == NULL) {
-        LISAUI_LOGW(TAG, "[ui](%s) app not registered", __FUNCTION__);
+        LISAUI_LOGW(TAG, "[ui](%s) app not registered", __func__);
         return LISAUI_ERR_APP_NOT_REGISTERED;
     }
     m_app_manager.apps[app->info.uuid] = NULL;
-    LISAUI_LOGD(TAG, "m_app_manager.apps[app->info.uuid:%d]: %p", app->info.uuid, m_app_manager.apps[app->info.uuid]);
+    LISAUI_LOGD(TAG, "m_app_manager.apps[app->info.uuid:%d]: %p", app->info.uuid, (void *)m_app_manager.apps[app->info.uuid]);
     m_app_manager.registered_count--;
     if (app->hidden_icon == false) {
         m_app_manager.unhidden_count--;
@@ -300,7 +300,7 @@ lisaui_err_t lisaui_app_exit(const int app_id)
     }
     struct lisaui_app_t *app = m_app_manager.apps[uuid];
     if (app == NULL) {
-        LISAUI_LOGE(TAG, "[ui](%s) app(id:%d) not registered", __FUNCTION__, app_id);
+        LISAUI_LOGE(TAG, "[ui](%s) app(id:%d) not registered", __func__, app_id);
         LVGL_UI_UNLOCK();
         return LISAUI_ERR_APP_NOT_REGISTERED;
     }
@@ -378,7 +378,7 @@ lisaui_err_t lisaui_app_close(const int app_id)
     }
     struct lisaui_app_t *app = m_app_manager.apps[uuid];
     if (app == NULL) {
-        LISAUI_LOGE(TAG, "[ui](%s) app not registered", __FUNCTION__);
+        LISAUI_LOGE(TAG, "[ui](%s) app not registered", __func__);
         LVGL_UI_UNLOCK();
         return LISAUI_ERR_APP_NOT_REGISTERED;
     }
@@ -529,7 +529,7 @@ lisaui_err_t lisaui_app_manager_show_app_info(struct lisaui_app_t *app)
         return LISAUI_ERR_INVALID_PARAM;
     }
     LISAUI_LOGI(TAG, "[%s]: %s", app->info.package_name, app->info.name);
-    LISAUI_LOGI(TAG, "\t\tmemory usage: %ld", sizeof(*app));
+    LISAUI_LOGI(TAG, "\t\tmemory usage: %d", sizeof(*app));
     LISAUI_LOGI(TAG, "\t\tid:%d, uuid:%d", app->info.id, app->info.uuid);
     if (app->icon == NULL) {
         LISAUI_LOGE(TAG, "icon is NULL");

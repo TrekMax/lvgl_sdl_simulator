@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-LV_IMG_DECLARE(ui_img_icon_practice_png);
+LV_IMG_DECLARE(ui_img_icon_practice_png)
 
 
 #ifdef __cplusplus

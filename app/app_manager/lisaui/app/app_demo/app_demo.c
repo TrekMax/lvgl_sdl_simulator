@@ -34,9 +34,9 @@ lisaui_err_t LISAUI_DEFINE_APP_FUNC(demo, create, void *parent, {
 
     LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
     return LISAUI_ERR_OK;
-});
+})
 
-lisaui_err_t LISAUI_DEFINE_APP_FUNC(demo, destroy, void, { return LISAUI_ERR_OK; });
-lisaui_err_t LISAUI_DEFINE_APP_FUNC(demo, enter, void, { return LISAUI_ERR_OK; });
-lisaui_err_t LISAUI_DEFINE_APP_FUNC(demo, exit, void, { return LISAUI_ERR_OK; });
-void *LISAUI_DEFINE_APP_FUNC(demo, get_page, void, { return g_app_demo; });
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(demo, destroy, void, { return LISAUI_ERR_OK; })
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(demo, enter, void, { return LISAUI_ERR_OK; })
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(demo, exit, void, { return LISAUI_ERR_OK; })
+void *LISAUI_DEFINE_APP_FUNC(demo, get_page, void, { return g_app_demo; })

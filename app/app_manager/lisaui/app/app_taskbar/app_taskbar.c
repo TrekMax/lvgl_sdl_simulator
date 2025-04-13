@@ -276,8 +276,8 @@ lisaui_err_t app_taskbar_create(void *parent)
     }
 
     lisaui_dbus_subscribe(m_taskbar_bus, LISAUI_DBUS_APP_ENTER, _lisaui_app_enter_handler_cb);
-    return LISAUI_ERR_OK;
 #endif
+    return LISAUI_ERR_OK;
 }
 
 void lisaui_taskbar_hide(bool hide)
@@ -348,7 +348,7 @@ static struct app_icon_t app_icon_res = {
 #endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = &ui_img_icon_taskbar_png,
+    .icon = NULL,//&ui_img_icon_taskbar_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 
