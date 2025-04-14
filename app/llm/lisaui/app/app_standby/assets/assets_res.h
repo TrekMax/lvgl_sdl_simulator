@@ -17,6 +17,9 @@ extern "C" {
 #endif
 
 LV_IMG_DECLARE(icon_img_app_store_png)
+LV_IMG_DECLARE(anim_standby)
+LV_IMG_DECLARE(anim_wakeup)
+LV_IMG_DECLARE(anim_speaking2_15fps)
 
 
 #ifdef __cplusplus

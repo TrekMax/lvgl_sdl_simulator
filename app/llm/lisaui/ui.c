@@ -53,7 +53,7 @@ void lisaui_ui_init(void)
     LISAUI_USE_APP(standby);
     // LISAUI_USE_APP(launcher);
     // LISAUI_USE_APP(launcher2);
-    // LISAUI_USE_APP(taskbar);
+    LISAUI_USE_APP(taskbar);
 
     // LISAUI_USE_APP(demo);
     // LISAUI_USE_APP(ocr);

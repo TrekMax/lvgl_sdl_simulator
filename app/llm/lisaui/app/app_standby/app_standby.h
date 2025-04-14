@@ -19,6 +19,18 @@ extern "C" {
 #include "../app_common.h"
 #include "lisaui_app_common.h"
 
+/**
+ * @brief 交互表情状态
+ * 
+ */
+ typedef enum _lisaui_app_standby_emoji_type_e {
+    LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY = 0,    // 待机
+    LISAUI_APP_STANDBY_EMOJI_TYPE_RECOGNITION = 1,    // 识别
+    LISAUI_APP_STANDBY_EMOJI_TYPE_RESPONSE = 2,    // 响应
+    LISAUI_APP_STANDBY_EMOJI_TYPE_NONE,
+} lisaui_app_standby_emoji_type_e;
+
+
 lisaui_err_t app_standby_init(void);
 
 #ifdef __cplusplus

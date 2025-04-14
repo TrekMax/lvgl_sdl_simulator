@@ -17,6 +17,7 @@ extern "C" {
 #endif
 
 LV_FONT_DECLARE(lv_font_chinese_18);
+LV_FONT_DECLARE(lv_font_notosans_cs_medium_18);
 
 #define UI_TEST_STR \
     "君不见黄河之水天上来，奔流到海不复回。"\

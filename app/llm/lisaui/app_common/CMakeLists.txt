@@ -18,6 +18,7 @@ set(APP_SOURCES
 
 set(APP_UI_RESOURCES
     assets/fonts/lv_font_chinese_18.c
+    assets/fonts/lv_font_notosans_cs_medium_18.c
 )
 
 add_library(app_common STATIC

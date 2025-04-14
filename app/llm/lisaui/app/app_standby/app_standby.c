@@ -15,6 +15,8 @@
 
 static const char *TAG = "app_standby";
 static lv_obj_t *g_app_standby = NULL;
+static lv_obj_t *g_icon_emoji = NULL;
+static lv_obj_t *g_label_wakeup_tip = NULL;
 
 #if 0//CONFIG_LISAUI_APP_TEMPLATE_MACRO_ENABLE
 
@@ -52,6 +54,27 @@ void *LISAUI_DEFINE_APP_FUNC(standby, get_page, void, { return g_app_standby; })
 
 #else
 
+lisaui_err_t app_standby_set_emoji(lisaui_app_standby_emoji_type_e type)
+{
+    if (g_icon_emoji == NULL) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    switch (type) {
+        case LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY:
+            lv_gif_set_src(g_icon_emoji, &anim_standby);
+            break;
+        case LISAUI_APP_STANDBY_EMOJI_TYPE_RECOGNITION:
+            lv_gif_set_src(g_icon_emoji, &anim_wakeup);
+            break;
+        case LISAUI_APP_STANDBY_EMOJI_TYPE_RESPONSE:
+            lv_gif_set_src(g_icon_emoji, &anim_speaking2_15fps);
+            break;
+        default:
+            break;
+    }
+    return LISAUI_ERR_OK;
+}
+
 lisaui_err_t app_standby_create(void *parent)
 {
     if (g_app_standby != NULL) {
@@ -60,10 +83,22 @@ lisaui_err_t app_standby_create(void *parent)
     g_app_standby = lv_obj_create(parent);
     _lisaui_set_style_container(g_app_standby, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
-    lv_obj_t *label = lv_label_create(g_app_standby);
-    lv_label_set_text(label, "Hello LisaUI!");
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_t *label = lv_label_create(g_app_standby);
+    // lv_label_set_text(label, "Hello LisaUI!");
+    // lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    // lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    g_icon_emoji = lv_gif_create(g_app_standby);
+    lv_obj_align(g_icon_emoji, LV_ALIGN_TOP_MID, 0, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
+    app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
+
+    g_label_wakeup_tip = lv_label_create(g_app_standby);
+    lv_label_set_text(g_label_wakeup_tip, "请使用“小美小美”唤醒我");
+    // lv_obj_set_pos(g_label_wakeup_tip, lv_pct(5), lv_pct(70));
+    lv_obj_align(g_label_wakeup_tip, LV_ALIGN_BOTTOM_MID, 0, -(LV_DPX(20)));
+    lv_obj_set_style_text_font(g_label_wakeup_tip, &lv_font_notosans_cs_medium_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(g_label_wakeup_tip, lv_color_hex(0xffffff), 0);
+    lv_obj_set_style_bg_color(g_label_wakeup_tip, lv_color_black(), 0);
 
     LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
     return LISAUI_ERR_OK;
@@ -71,8 +106,10 @@ lisaui_err_t app_standby_create(void *parent)
 
 lisaui_err_t app_standby_destroy(void)
 {
+    LVGL_OBJ_SAFE_DEL(g_icon_emoji);
+    LVGL_OBJ_SAFE_DEL(g_label_wakeup_tip);
+    
     LVGL_OBJ_SAFE_DEL(g_app_standby);
-
     LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }

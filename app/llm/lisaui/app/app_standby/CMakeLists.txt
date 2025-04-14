@@ -5,6 +5,9 @@ set(APP_STANDBY_SOURCES
 
 set(APP_UI_RESOURCES
     assets/icons/icon_img_app_store_png.c
+    assets/emoji/anim_standby.c
+    assets/emoji/anim_wakeup.c
+    assets/emoji/anim_speaking2_15fps.c
 )
 
 add_library(app_standby STATIC
