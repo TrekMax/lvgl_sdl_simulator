@@ -9,6 +9,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "lisaui_app_log.h"
 #include "lisaui_type.h"
 #include "lisaui_app_common.h"
 
@@ -202,6 +203,84 @@ int lisaui_app_unregister(struct lisaui_app_t *app)
     return LISAUI_ERR_APP_OK;
 }
 
+static inline int hash_uuid(int uuid) {
+    return uuid % LISAUI_APP_HASH_SIZE;
+}
+
+void lisaui_app_manager_add_instance(struct lisaui_app_t *app) {
+    int uuid = app->info.uuid;
+
+    int h = hash_uuid(uuid);
+    int start = h;
+    while (m_app_mgr.app_hash[h].app != NULL) {
+        if (m_app_mgr.app_hash[h].key == uuid) {
+            return; // 已存在，跳过
+        }
+        h = (h + 1) % LISAUI_APP_HASH_SIZE;
+        if (h == start) break;
+    }
+
+    // 队列满了，移除最旧的
+    if (m_app_mgr.running_count >= LISAUI_APP_MAX_RUNNING) {
+        app_runtime_t *old = &m_app_mgr.running_queue[m_app_mgr.queue_front];
+        if (old->valid && old->app) {
+            lisaui_app_manager_remove_instance_by_uuid(old->app->info.uuid);
+        }
+        m_app_mgr.queue_front = (m_app_mgr.queue_front + 1) % LISAUI_APP_MAX_RUNNING;
+        m_app_mgr.running_count--;
+    }
+
+    // 插入运行队列尾部
+    m_app_mgr.running_queue[m_app_mgr.queue_rear].app = app;
+    m_app_mgr.running_queue[m_app_mgr.queue_rear].valid = 1;
+    m_app_mgr.queue_rear = (m_app_mgr.queue_rear + 1) % LISAUI_APP_MAX_RUNNING;
+    m_app_mgr.running_count++;
+
+    // 插入哈希表
+    h = hash_uuid(uuid);
+    while (m_app_mgr.app_hash[h].app != NULL) {
+        h = (h + 1) % LISAUI_APP_HASH_SIZE;
+    }
+    m_app_mgr.app_hash[h].key = uuid;
+    m_app_mgr.app_hash[h].app = app;
+}
+
+
+void lisaui_app_manager_remove_instance_by_uuid(int uuid)
+{
+    int h = hash_uuid(uuid);
+    int start = h;
+    while (m_app_mgr.app_hash[h].app != NULL) {
+        if (m_app_mgr.app_hash[h].key == uuid) {
+            m_app_mgr.app_hash[h].app = NULL;
+            break;
+        }
+        h = (h + 1) % LISAUI_APP_HASH_SIZE;
+        if (h == start) break;
+    }
+
+    for (int i = 0; i < LISAUI_APP_MAX_RUNNING; i++) {
+        if (m_app_mgr.running_queue[i].valid &&
+            m_app_mgr.running_queue[i].app->info.uuid == uuid) {
+            m_app_mgr.running_queue[i].valid = 0;
+            m_app_mgr.running_queue[i].app = NULL;
+            break;
+        }
+    }
+}
+
+void lisaui_app_manager_debug_print_queue(void) {
+    LISAUI_LOGI(TAG, "App Queue [front=%d rear=%d count=%d]:\n", 
+           m_app_mgr.queue_front, m_app_mgr.queue_rear, m_app_mgr.running_count);
+    for (int i = 0; i < LISAUI_APP_MAX_RUNNING; i++) {
+        if (m_app_mgr.running_queue[i].valid) {
+            struct lisaui_app_t *app = m_app_mgr.running_queue[i].app;
+            LISAUI_LOGI(TAG, "  [%d] id=%d uuid=%d name=%s\n", i, app->info.id, app->info.uuid, app->info.name);
+        }
+    }
+}
+
+
 lisaui_err_t lisaui_app_enter(const int app_id)
 {
     LVGL_UI_LOCK();
@@ -223,6 +302,8 @@ lisaui_err_t lisaui_app_enter(const int app_id)
     }
 
     struct lisaui_app_t *app = m_app_mgr.apps_list[uuid];
+    lisaui_app_manager_add_instance(app);
+
     if (app->get_root_view() == NULL) {
         // LISAUI_LOGW(TAG, "------------>app(%s) root view is NULL", app->icon->title);
         if (app->create(NULL) != LISAUI_ERR_APP_OK) {
@@ -232,16 +313,13 @@ lisaui_err_t lisaui_app_enter(const int app_id)
         }
         LISAUI_LOGI(TAG, "app(%s) create success", app->icon->title);
     }
-    if (app->enter == NULL) {
-        LISAUI_LOGE(TAG, "TAG, [ui] app enter is NULL");
+
+    if (app->enter == NULL || app->enter()) {
+        LISAUI_LOGE(TAG, "TAG, [ui] app enter failed");
         LVGL_UI_UNLOCK();
         return LISAUI_ERR_APP_ENTER_FAILED;
     }
-    if (app->enter()) {
-        LISAUI_LOGE(TAG, "TAG, [ui] app enter failed");
-        LVGL_UI_UNLOCK();
-        return LISAUI_ERR_APP_UNKNOW_FAILED;
-    }
+
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
     LISAUI_EXEC_HOOK(m_app_enter_hook, app, ret);
     if (ret != LISAUI_ERR_OK) {
@@ -250,35 +328,24 @@ lisaui_err_t lisaui_app_enter(const int app_id)
     }
 #else
     lisaui_view_page_t *page = (lisaui_view_page_t *)lisaui_malloc(sizeof(lisaui_view_page_t));
-    if (page == NULL) {
-        LISAUI_LOGE(TAG, "TAG, [ui] malloc failed");
+    if (!page || !(page->root = (lisaui_view_t *)app->get_root_view())) {
+        LISAUI_LOGE(TAG, "TAG, [ui] view page root is NULL or malloc failed");
         LVGL_UI_UNLOCK();
         return LISAUI_ERR_NO_MEMORY;
     }
     memset(page, 0, sizeof(lisaui_view_page_t));
-    page->root = (lisaui_view_t *)app->get_root_view();
     page->app_id = app->info.id;
-    // LISAUI_LOGI(TAG, "[ui] lv_disp_load_scr page:%p page->root: %p", page, page->root);
-    if (page->root == NULL) {
-        LISAUI_LOGE(TAG, "TAG, [ui] view page root is NULL");
-        LVGL_UI_UNLOCK();
-        return LISAUI_ERR_NO_MEMORY;
-    }
 
-    // lisaui_view_manager_print_usage(&m_app_mgr.manager_view_stack);
     lisaui_view_manager_push(&m_app_mgr.manager_view_stack, page);
-    // lisaui_view_manager_print_usage(&m_app_mgr.manager_view_stack);
     lv_disp_load_scr(page->root);
-    // lisaui_memory_monitor(NULL);
 #endif
+
     m_app_mgr.previous_appid = lisaui_app_manager_get_current_appid();
     lisaui_app_set_current_appid(app->info.id);
     LISAUI_LOGI(TAG, "app(%s) enter success", app->icon->title);
-    // lisaui_memory_monitor(NULL);
     LVGL_UI_UNLOCK();
     return LISAUI_ERR_APP_OK;
 }
-
 lisaui_err_t lisaui_app_exit(const int app_id)
 {
     LVGL_UI_LOCK();
@@ -300,59 +367,46 @@ lisaui_err_t lisaui_app_exit(const int app_id)
         return LISAUI_ERR_APP_UNKNOW_FAILED;
     }
     struct lisaui_app_t *app = m_app_mgr.apps_list[uuid];
-    if (app == NULL) {
-        LISAUI_LOGE(TAG, "[ui](%s) app(id:%d) not registered", __func__, app_id);
+    if (!app) {
+        LISAUI_LOGE(TAG, "[ui] app(id:%d) not registered", app_id);
         LVGL_UI_UNLOCK();
         return LISAUI_ERR_APP_NOT_REGISTERED;
     }
     LISAUI_LOGV(TAG, "[ui] exit app: %d, %s", app_id, app->icon->title);
-    if (app->exit) {
-        if (app->exit()) {
-            LISAUI_LOGE(TAG, "[ui] app exit failed");
-            LVGL_UI_UNLOCK();
-            return LISAUI_ERR_APP_UNKNOW_FAILED;
-        }
+    if (app->exit && app->exit()) {
+        LISAUI_LOGE(TAG, "[ui] app exit failed");
+        LVGL_UI_UNLOCK();
+        return LISAUI_ERR_APP_UNKNOW_FAILED;
     }
+
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
     LISAUI_EXEC_HOOK(m_app_exit_hook, app, ret);
-    // if (ret != LISAUI_ERR_OK) {
-    //     LISAUI_LOGE(TAG, "TAG, [ui] app exit hook failed");
-    //     return ret;
-    // }
 #else
-    // lisaui_view_manager_print_usage(&m_app_mgr.manager_view_stack);
     lisaui_view_page_t *page = NULL;
-    if (lisaui_view_manager_pop(&m_app_mgr.manager_view_stack, &page) != LISAUI_ERR_OK) {
+    if (lisaui_view_manager_pop(&m_app_mgr.manager_view_stack, &page) != LISAUI_ERR_OK || !page) {
         LISAUI_LOGE(TAG, "[ui] view page is NULL");
         LVGL_UI_UNLOCK();
         return LISAUI_ERR_NO_MEMORY;
     }
     lisaui_free(page);
     page = NULL;
-    // lisaui_view_manager_print_usage(&m_app_mgr.manager_view_stack);
 
-    if (lisaui_view_manager_get_current(&m_app_mgr.manager_view_stack, &page) != LISAUI_ERR_OK) {
-        LISAUI_LOGE(TAG, "[ui] view page is NULL");
+    if (lisaui_view_manager_get_current(&m_app_mgr.manager_view_stack, &page) != LISAUI_ERR_OK || !page) {
+        LISAUI_LOGE(TAG, "[ui] no previous view to show");
         LVGL_UI_UNLOCK();
         return LISAUI_ERR_NO_MEMORY;
     }
-    if (page == NULL) {
-        LISAUI_LOGE(TAG, "[ui] view page is NULL");
-        LVGL_UI_UNLOCK();
-        return LISAUI_ERR_NO_MEMORY;
-    }
-    // lisaui_app_set_current_appid(page->app_id);
-    if (page->root != NULL) {
+
+    if (page->root) {
         lv_disp_load_scr(page->root);
-    } else {
-        LISAUI_LOGI(TAG, "[ui] view page prev is NULL");
     }
-    // LISAUI_LOGI(TAG, "app(%s) exit success", app->icon->title);
-    // lisaui_memory_monitor(NULL);
 #endif
-    LVGL_UI_UNLOCK();
+
+    lisaui_app_manager_remove_instance_by_uuid(uuid);
+
     lisaui_app_set_current_appid(m_app_mgr.previous_appid);
     LISAUI_LOGI(TAG, "app(%s) exit success", app->icon->title);
+    LVGL_UI_UNLOCK();
     return LISAUI_ERR_APP_OK;
 }
 

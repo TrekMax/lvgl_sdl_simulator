@@ -44,8 +44,11 @@ struct app_icon_t {
 #define LISAUI_APP_TYPE_SYSTEM      (2)
 #define LISAUI_APP_TYPE_LAUNCHER    (3)
 
-#define LISAUI_APP_MAX      (30)
-#define LISAUI_APP_ID_NONE  (0)
+#define LISAUI_APP_MAX              (30) // 支持注册最大 App 数目
+#define LISAUI_APP_ID_NONE          (0)  // 默认 App ID
+
+#define LISAUI_APP_MAX_RUNNING      (5)  // 支持最多运行的 App 数目
+#define LISAUI_APP_HASH_SIZE        (19) //
 struct app_info_t {
     const char *name;
     const char *package_name;
@@ -74,6 +77,15 @@ typedef struct {
     lisaui_err_t (*app_init_func)(void);
 } app_entry_t;
 
+typedef struct _app_running_t {
+    struct lisaui_app_t *app;
+    int valid;
+} app_runtime_t;
+
+typedef struct _app_hash_slot_t {
+    int key;
+    struct lisaui_app_t *app;
+} app_hash_slot_t;
 
 struct lisaui_app_manager_t {
     struct lisaui_app_t *apps_list[LISAUI_APP_MAX]; // 已注册的 App 列表
@@ -84,6 +96,13 @@ struct lisaui_app_manager_t {
     int registered_count;
     int unhidden_count; // 未隐藏的 App icon 的数量
     bool lock_app_view;
+
+    app_runtime_t running_queue[LISAUI_APP_MAX_RUNNING];
+    int queue_front;
+    int queue_rear;
+    int running_count;
+
+    app_hash_slot_t app_hash[LISAUI_APP_HASH_SIZE];
 };
 
 #ifdef __APPLE__
@@ -230,6 +249,10 @@ int lisaui_app_manager_get_current_appid(void);
 
 struct lisaui_app_t **lisaui_app_manager_get_app_lists(void);
 struct lisaui_app_t *lisaui_app_manager_get_app(const int app_id);
+
+
+void lisaui_app_manager_remove_instance_by_uuid(int uuid);
+
 
 #ifdef __cplusplus
 } /*extern "C"*/
