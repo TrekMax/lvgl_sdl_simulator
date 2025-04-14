@@ -49,13 +49,13 @@ void lisaui_ui_init(void)
     // lv_theme_set_act(theme);
 
 #if CONFIG_LVGL_SIMULATOR
+    LISAUI_USE_APP(template);
     // LISAUI_USE_APP(launcher);
     // LISAUI_USE_APP(launcher2);
     // LISAUI_USE_APP(taskbar);
 
     // LISAUI_USE_APP(demo);
     // LISAUI_USE_APP(ocr);
-    // LISAUI_USE_APP(template);
     // LISAUI_USE_APP(audio_player);
     // LISAUI_USE_APP(dictionary);
     // LISAUI_USE_APP(setting);
@@ -65,7 +65,7 @@ void lisaui_ui_init(void)
 #endif
     lisaui_app_manager_init();
     // lisaui_app_manager_show_all_app_info();
-    // lisaui_app_enter(UI_APP_ID_TEMPLATE);
+    lisaui_app_enter(UI_APP_ID_TEMPLATE);
 
     LISAUI_LOGI(TAG, "UI init done");
     LISAUI_LOGI(TAG, "[%s:%d] init done", __func__, __LINE__);

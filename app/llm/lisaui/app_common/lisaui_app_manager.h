@@ -1,7 +1,7 @@
 /**
  * @file lisaui_app_manager.h
  * @author Tianshuang Ke (dske@listenai.com)
- * @brief 应用程序管理器头文件
+ * @brief
  * @version 0.1
  * @date 2025-02-24
  *

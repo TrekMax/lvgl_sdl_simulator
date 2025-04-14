@@ -47,10 +47,7 @@ if(APPLE)
 else()
     # target_link_options(lisaui PRIVATE -T ${LINKER_SCRIPT})
     get_property(ADDED_SUBDIRS DIRECTORY PROPERTY SUBDIRECTORIES)
-    set(APP_LIBRARIES
-        app_common
-        # utils
-    )
+    set(APP_LIBRARIES "")
 
     foreach(SUBDIR ${ADDED_SUBDIRS})
         get_filename_component(SUBDIR_NAME ${SUBDIR} NAME)
