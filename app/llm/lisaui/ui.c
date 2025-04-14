@@ -11,7 +11,7 @@
  */
 #include "ui.h"
 #include "app/app_common.h"
-#include "app_framework/lisaui_app_manager.h"
+#include "app_common/lisaui_app_manager.h"
 #include "app_common/lisaui_app_common.h"
 #if CONFIG_LVGL_SIMULATOR
 #include <pthread.h>

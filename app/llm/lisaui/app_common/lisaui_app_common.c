@@ -292,12 +292,12 @@ void lisaui_memory_monitor(void *param)
     // mon.used_pct,
     //        mon.frag_pct, (int)mon.free_biggest_size);
     LISAUI_PRINTK("------------Memory usage------------\n");
-    LISAUI_PRINTK("\tTotal size              : %0.3lfKB(%ld Byte)\n", mon.total_size / 1024.0, mon.total_size);
-    LISAUI_PRINTK("\tFree count              : %ld\n", mon.free_cnt);
-    LISAUI_PRINTK("\tFree size               : %ld\n", mon.free_size);
-    LISAUI_PRINTK("\tFree biggest size       : %ld\n", mon.free_biggest_size);
-    LISAUI_PRINTK("\tUsed count              : %ld\n", mon.used_cnt);
-    LISAUI_PRINTK("\tMax used                : %0.3lfKB(%ld Byte)\n", mon.max_used / 1024.0, mon.max_used);
+    LISAUI_PRINTK("\tTotal size              : %0.3lfKB(%d Byte)\n", mon.total_size / 1024.0, mon.total_size);
+    LISAUI_PRINTK("\tFree count              : %d\n", mon.free_cnt);
+    LISAUI_PRINTK("\tFree size               : %d\n", mon.free_size);
+    LISAUI_PRINTK("\tFree biggest size       : %d\n", mon.free_biggest_size);
+    LISAUI_PRINTK("\tUsed count              : %d\n", mon.used_cnt);
+    LISAUI_PRINTK("\tMax used                : %0.3lfKB(%d Byte)\n", mon.max_used / 1024.0, mon.max_used);
     LISAUI_PRINTK("\tUsed percentage         : %d\n", mon.used_pct);
     LISAUI_PRINTK("\tFragmentation percentage: %d\n", mon.frag_pct);
     LISAUI_PRINTK("\n");

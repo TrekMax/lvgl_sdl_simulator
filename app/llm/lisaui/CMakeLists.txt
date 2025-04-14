@@ -7,23 +7,13 @@ set(APP_COMMON_SOURCES
     ui.c
 )
 
-set(APP_FRAMEWORK_SOURCES
-    app_framework/lisaui_app_manager.c
-    app_framework/lisaui_view_manager.c
-)
-
-if(CONFIG_LISAUI_DBUS_ENABLE)
-    list(APPEND APP_FRAMEWORK_SOURCES
-        app_framework/lisaui_dbus.c
-    )
-endif()
 
 set(EXT_LIB_SOURCE
     widgets/ext_lib/gifdec.c
     widgets/ext_lib/lv_gif.c
 )
 
-# add_subdirectory(utils)
+add_subdirectory(utils)
 # add_subdirectory(app_framework)
 add_subdirectory(app_common)
 
@@ -35,7 +25,6 @@ add_library(lisaui STATIC
 
 target_include_directories(lisaui PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/app_framework
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
 )
 

@@ -9,9 +9,10 @@
  * 
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "../app_common/lisaui_app_common.h"
 #include "lisaui_view_manager.h"
-#include "../app_common/lisaui_type.h"
+#include "lisaui_type.h"
+#include "lisaui_app_log.h"
+#include "lisaui_app_common.h"
 
 static const char *TAG = "app_view_manager";
 

@@ -50,14 +50,6 @@ enum lisaui_app_id_t {
     UI_APP_ID_MAX,
 };
 
-typedef enum _lisaui_textarea_mode_t {
-    LISAUI_TEXT_MODE_APPEND = 0, // 追加
-    LISAUI_TEXT_MODE_OVERWRITE,  // 覆盖
-
-    LISAUI_TEXT_MODE_NORMAL, // 默认
-} lisaui_textarea_mode_t;
-
-
 #ifdef __cplusplus
 }
 #endif

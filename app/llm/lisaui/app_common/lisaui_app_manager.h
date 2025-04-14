@@ -19,6 +19,7 @@ extern "C" {
 #include <stdint.h>
 #include "lisaui_dbus.h"
 #include "lisaui_view_manager.h"
+#include "lisaui_type.h"
 
 #ifndef APP_ICON_ZOOM
 #define APP_ICON_ZOOM(x) ((uint16_t)((x) * 256))

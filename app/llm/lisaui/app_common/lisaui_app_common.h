@@ -31,16 +31,14 @@ extern "C" {
 #include "lvgl.h"
 #endif
 
-#include "lisaui_type.h"
-
-// #include "../app/app_common.h"
-#include "assets/assets_res.h"
 #include "incbin.h"
+#include "lisaui_type.h"
+#include "assets/assets_res.h"
 
-#include "../app_framework/lisaui_app_manager.h"
-#include "../app_framework/lisaui_view_manager.h"
-#include "../app_framework/lisaui_dbus.h"
-
+#include "lisaui_app_manager.h"
+#include "lisaui_view_manager.h"
+#include "lisaui_dbus.h"
+#include "lisaui_app_log.h"
 
 #if defined(__LVGL_SIMULATOR__)
 #else
@@ -51,40 +49,6 @@ extern "C" {
 #include <string.h>
 
 #define CONFIG_LISAUI_FONT_LANGUAGE_ZH_CN_ENABLE 1
-
-// #define LOG_LEVEL         LOG_INFO
-#define LOG_LEVEL         LOG_DEBUG
-#define CONFIG_LOG_COLORS 1
-#define CONFIG_LOG_ENABLE 1
-// #define CLOG_ENABLE       1
-
-#define LISAUI_PRINTF printf
-#if CONFIG_LOG_ENABLE
-#if defined(__LVGL_SIMULATOR__)
-#include "utils_log.h"
-#define LISAUI_PRINTK(fmt, ...) printf(fmt, ##__VA_ARGS__)
-#define LISAUI_LOGE             LOGE
-#define LISAUI_LOGW             LOGW
-#define LISAUI_LOGI             LOGI
-#define LISAUI_LOGD             LOGD
-#define LISAUI_LOGV             LOGV
-#else
-#include "log_print.h"
-#define LISAUI_PRINTK(fmt, ...)    printf(fmt, ##__VA_ARGS__)
-#define LISAUI_LOGE(TAG, fmt, ...) CLOG("E:[%s:%d]" fmt, __FILE__, __LINE__, ##__VA_ARGS__)
-#define LISAUI_LOGW(TAG, fmt, ...) CLOG("W:" fmt, ##__VA_ARGS__)
-#define LISAUI_LOGI(TAG, fmt, ...) CLOG("I:" fmt, ##__VA_ARGS__)
-#define LISAUI_LOGD(TAG, fmt, ...) CLOG("D:[%s:%d]" fmt, __FILE__, __LINE__, ##__VA_ARGS__)
-#define LISAUI_LOGV(TAG, fmt, ...) CLOG("V:" fmt, ##__VA_ARGS__)
-#endif
-#else
-#define LISAUI_PRINTK(fmt, ...)
-#define LISAUI_LOGE(TAG, fmt, ...)
-#define LISAUI_LOGW(TAG, fmt, ...)
-#define LISAUI_LOGI(TAG, fmt, ...)
-#define LISAUI_LOGD(TAG, fmt, ...)
-#define LISAUI_LOGV(TAG, fmt, ...)
-#endif
 
 #define LISAUI_LV_COLOR_RED   lv_color_hex(0xFF0000)
 #define LISAUI_LV_COLOR_GREEN lv_color_hex(0x00FF00)

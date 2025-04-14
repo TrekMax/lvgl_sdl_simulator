@@ -16,8 +16,7 @@
 extern "C" {
 #endif
 
-#include "../app_common/lisaui_type.h"
-#include "../app_common/lisaui_app_common.h"
+#include "lisaui_type.h"
 
 #define LISAUI_VIEW_MANAGER_MAX_CAPACITY 20
 
@@ -38,7 +37,7 @@ struct _lisaui_view_page_t {
     // lisaui_view_page_t *prev;
 };
 
-struct _lisaui_view_stack_t {
+typedef struct _lisaui_view_stack_t {
     int capacity;
     int size;
 
@@ -46,7 +45,7 @@ struct _lisaui_view_stack_t {
     // lisaui_view_page_t *current;
     lisaui_view_page_t *head;
     lisaui_view_page_t *tail;
-} ;
+} lisaui_view_stack_t;
 
 lisaui_err_t lisaui_view_manager_init(lisaui_view_stack_t *view_stack);
 lisaui_err_t lisaui_view_manager_clean(lisaui_view_stack_t *view_stack);

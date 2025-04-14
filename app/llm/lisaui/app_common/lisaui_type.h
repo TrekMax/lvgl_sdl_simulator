@@ -73,7 +73,7 @@ typedef lisaui_err_t lisaui_view_err_t;
 
 typedef LISAUI_VIEW_OBJ_T lisaui_view_t;
 typedef LISAUI_ICON_RES_T lisaui_icon_res_t;
-typedef struct _lisaui_view_stack_t lisaui_view_stack_t;
+// typedef struct _lisaui_view_stack_t lisaui_view_stack_t;
 typedef struct _lisaui_view_page_t lisaui_view_page_t;
 
 #ifdef __cplusplus
