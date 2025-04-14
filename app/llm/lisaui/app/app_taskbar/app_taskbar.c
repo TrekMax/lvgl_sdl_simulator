@@ -184,7 +184,9 @@ static void _lisaui_taskbar_battery_update_cb(lv_timer_t *timer)
         if (count % 10 == 0) {
             // LISAUI_LOGI(TAG, "battery charging status:%s", charging ? "true" : "false");
             battery_percent = (battery_percent + 1) % 100;
-            lv_label_set_text_fmt(battery_label, "%d%%", battery_percent);
+            if (battery_label) {
+                lv_label_set_text_fmt(battery_label, "%d%%", battery_percent);
+            }
             battery_level = battery_percent / 20;
         }
     }
@@ -195,17 +197,23 @@ static void _lisaui_taskbar_battery_update_cb(lv_timer_t *timer)
 
 static void _lisaui_taskbar_create_battery(lv_obj_t *parent)
 {
-    battery_label = lv_label_create(parent);
-    lv_label_set_text(battery_label, "100%");
-    lv_obj_align(battery_label, LV_ALIGN_RIGHT_MID, -LV_DPX(20), 0);
-    // _lisaui_lv_obj_set_default_style(battery_label);
-    lv_obj_set_style_text_color(battery_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(battery_label, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(battery_label, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
+    if (lv_obj_get_width(g_app_taskbar) > 400) {
+        battery_label = lv_label_create(parent);
+        lv_label_set_text(battery_label, "100%");
+        lv_obj_align(battery_label, LV_ALIGN_RIGHT_MID, -LV_DPX(20), 0);
+        // _lisaui_lv_obj_set_default_style(battery_label);
+        lv_obj_set_style_text_color(battery_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_text_opa(battery_label, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_text_font(battery_label, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
 
     battery_icon = lv_img_create(parent);
     lv_img_set_src(battery_icon, _lisaui_taskbar_battery_icon[0]);
-    lv_obj_align_to(battery_icon, battery_label, LV_ALIGN_OUT_LEFT_MID, 0, 0);
+    if (lv_obj_get_width(g_app_taskbar) > 400) {
+        lv_obj_align_to(battery_icon, battery_label, LV_ALIGN_OUT_LEFT_MID, 0, 0);
+    } else {
+        lv_obj_align(battery_icon, LV_ALIGN_RIGHT_MID, -LV_DPX(20), 0);
+    }
     // lv_img_set_zoom(battery_icon, 255*1.2);
     lv_timer_t *timer = lv_timer_create(_lisaui_taskbar_battery_update_cb, 500, battery_icon);
 }

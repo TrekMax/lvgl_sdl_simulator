@@ -76,13 +76,13 @@ typedef struct {
 
 
 struct lisaui_app_manager_t {
-    struct lisaui_app_t *apps[LISAUI_APP_MAX];
+    struct lisaui_app_t *apps_list[LISAUI_APP_MAX]; // 已注册的 App 列表
     lisaui_dbus_t *dbus;
     lisaui_view_stack_t manager_view_stack;
     int current_appid;
     int previous_appid;
     int registered_count;
-    int unhidden_count;
+    int unhidden_count; // 未隐藏的 App icon 的数量
     bool lock_app_view;
 };
 

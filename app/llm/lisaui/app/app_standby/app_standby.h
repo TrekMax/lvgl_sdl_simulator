@@ -32,6 +32,7 @@ extern "C" {
 
 
 lisaui_err_t app_standby_init(void);
+lisaui_err_t lisaui_app_standby_set_emoji(lisaui_app_standby_emoji_type_e type);
 
 #ifdef __cplusplus
 }

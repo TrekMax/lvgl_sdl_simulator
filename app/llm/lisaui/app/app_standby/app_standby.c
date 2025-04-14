@@ -54,11 +54,12 @@ void *LISAUI_DEFINE_APP_FUNC(standby, get_page, void, { return g_app_standby; })
 
 #else
 
-lisaui_err_t app_standby_set_emoji(lisaui_app_standby_emoji_type_e type)
+lisaui_err_t lisaui_app_standby_set_emoji(lisaui_app_standby_emoji_type_e type)
 {
     if (g_icon_emoji == NULL) {
         return LISAUI_ERR_INVALID_PARAM;
     }
+    LVGL_UI_LOCK();
     switch (type) {
         case LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY:
             lv_gif_set_src(g_icon_emoji, &anim_standby);
@@ -72,6 +73,7 @@ lisaui_err_t app_standby_set_emoji(lisaui_app_standby_emoji_type_e type)
         default:
             break;
     }
+    LVGL_UI_UNLOCK();
     return LISAUI_ERR_OK;
 }
 
@@ -90,7 +92,7 @@ lisaui_err_t app_standby_create(void *parent)
 
     g_icon_emoji = lv_gif_create(g_app_standby);
     lv_obj_align(g_icon_emoji, LV_ALIGN_TOP_MID, 0, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
-    app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
+    lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
 
     g_label_wakeup_tip = lv_label_create(g_app_standby);
     lv_label_set_text(g_label_wakeup_tip, "请使用“小美小美”唤醒我");
@@ -151,7 +153,7 @@ struct lisaui_app_t app_standby = {
             .name = "Standby",
             .package_name = "com.listenai.lisaui.standby",
             .id = UI_APP_ID_STANDBY,
-            .type = LISAUI_APP_TYPE_LAUNCHER,
+            .type = LISAUI_APP_TYPE_USER,
         },
     .icon = &app_icon_res_standby,
 };
