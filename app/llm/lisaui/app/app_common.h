@@ -21,6 +21,9 @@ extern "C" {
 enum lisaui_app_id_t {
     UI_APP_ID_NONE = LISAUI_APP_ID_NONE,
     UI_APP_ID_TEMPLATE,
+    UI_APP_ID_STANDBY,
+
+    
     UI_APP_ID_LAUNCHER,
     UI_APP_ID_TASKBAR,
     UI_APP_ID_SETTING,

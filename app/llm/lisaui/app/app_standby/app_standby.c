@@ -1,0 +1,131 @@
+/**
+ * @file app_standby.c
+ * @author Tianshuang Ke (dske@listenai.com)
+ * @brief
+ * @version 0.1
+ * @date 2025-01-22
+ *
+ * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+#include "app_standby.h"
+#include "app_common/lisaui_app_common.h"
+#include "assets/assets_res.h"
+
+static const char *TAG = "app_standby";
+static lv_obj_t *g_app_standby = NULL;
+
+#if 0//CONFIG_LISAUI_APP_TEMPLATE_MACRO_ENABLE
+
+// 声明[模板]应用需要实现的接口
+LISAUI_DECLARE_APP_FUNC(standby, create, destroy, enter, exit, get_page);
+// 定义[模板]应用
+LISAUI_DEFINE_APP(standby, UI_APP_ID_STANDBY, "模板", "Standby", &icon_img_app_store_png, {});
+
+// App 模板宏原型在 common/lisaui_app_manager.h 中定义
+// 定义[模板]应用功能实现, 用于创建、销毁、进入、退出、获取页面
+#define LISAUI_APP_ENTITY_STANDBY                                                                                     \
+    {                                                                                                                  \
+        if (g_app_standby != NULL) {                                                                                  \
+            return LISAUI_ERR_OK;                                                                                      \
+        }                                                                                                              \
+        g_app_standby = lv_obj_create(parent);                                                                        \
+        _lisaui_set_style_container(g_app_standby, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);        \
+                                                                                                                       \
+        lv_obj_t *label = lv_label_create(g_app_standby);                                                             \
+        lv_label_set_text(label, "Hello LisaUI!");                                                                     \
+        lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);                       \
+        lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);                   \
+        lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);                                                                    \
+                                                                                                                       \
+        return LISAUI_ERR_OK;                                                                                          \
+    }
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(standby, create, void *parent, {LISAUI_APP_ENTITY_STANDBY});
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(standby, destroy, void, {
+    LVGL_OBJ_SAFE_DEL(g_app_standby);
+    return LISAUI_ERR_OK;
+});
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(standby, enter, void, { return LISAUI_ERR_OK; });
+lisaui_err_t LISAUI_DEFINE_APP_FUNC(standby, exit, void, { return LISAUI_ERR_OK; });
+void *LISAUI_DEFINE_APP_FUNC(standby, get_page, void, { return g_app_standby; });
+
+#else
+
+lisaui_err_t app_standby_create(void *parent)
+{
+    if (g_app_standby != NULL) {
+        return LISAUI_ERR_OK;
+    }
+    g_app_standby = lv_obj_create(parent);
+    _lisaui_set_style_container(g_app_standby, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+
+    lv_obj_t *label = lv_label_create(g_app_standby);
+    lv_label_set_text(label, "Hello LisaUI!");
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t app_standby_destroy(void)
+{
+    LVGL_OBJ_SAFE_DEL(g_app_standby);
+
+    LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t app_standby_enter(void)
+{
+    LISAUI_LOGI(TAG, "[%d:%s] enter", __LINE__, __func__);
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t app_standby_exit(void)
+{
+    LISAUI_LOGI(TAG, "[%d:%s] exit", __LINE__, __func__);
+    return LISAUI_ERR_OK;
+}
+
+void *app_standby_get_page(void)
+{
+    return g_app_standby;
+}
+
+static struct app_icon_t app_icon_res_standby = {
+    .title = "Standby",
+    // .icon_width = LV_SIZE_CONTENT,
+    // .icon_height = LV_SIZE_CONTENT,
+    .icon = NULL,
+    .zoom = APP_ICON_ZOOM(0),
+};
+
+struct lisaui_app_t app_standby = {
+    .create = app_standby_create,
+    .destroy = app_standby_destroy,
+    .enter = app_standby_enter,
+    .exit = app_standby_exit,
+
+    .get_root_view = app_standby_get_page,
+    .info =
+        {
+            .name = "Standby",
+            .package_name = "com.listenai.lisaui.standby",
+            .id = UI_APP_ID_STANDBY,
+            .type = LISAUI_APP_TYPE_LAUNCHER,
+        },
+    .icon = &app_icon_res_standby,
+};
+
+lisaui_err_t app_standby_init(void)
+{
+    lisaui_app_register(&app_standby);
+    lisaui_app_enter(UI_APP_ID_STANDBY);
+    return LISAUI_ERR_OK;
+}
+
+LISAUI_REGISTER_APP(standby, &app_standby, app_standby_init);
+
+#endif
