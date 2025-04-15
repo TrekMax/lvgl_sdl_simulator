@@ -10,3 +10,6 @@
 [submodule "components/lv_drivers"]
 	path = components/lv_drivers
 	url = git@github.com:lvgl/lv_drivers.git
+[submodule "components/unity"]
+	path = components/unity
+	url = git@github.com:ThrowTheSwitch/Unity.git

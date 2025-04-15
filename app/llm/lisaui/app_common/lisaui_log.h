@@ -1,5 +1,5 @@
 /**
- * @file lisaui_app_log.h
+ * @file lisaui_log.h
  * @author TrekMax (QinYUN575@Foxmail.com)
  * @brief 
  * @version 0.1
@@ -28,11 +28,11 @@ extern "C" {
 #if defined(__LVGL_SIMULATOR__)
 #include "utils_log.h"
 #define LISAUI_PRINTK(fmt, ...) printf(fmt, ##__VA_ARGS__)
-#define LISAUI_LOGE             LOGE
-#define LISAUI_LOGW             LOGW
-#define LISAUI_LOGI             LOGI
-#define LISAUI_LOGD             LOGD
-#define LISAUI_LOGV             LOGV
+#define LISAUI_LOGE(TAG, fmt, ...)             LOGE(TAG,  "[%s:%d]" fmt, __FILE__, __LINE__, ##__VA_ARGS__)
+#define LISAUI_LOGW(TAG, fmt, ...)             LOGW(TAG, fmt, ##__VA_ARGS__)
+#define LISAUI_LOGI(TAG, fmt, ...)             LOGI(TAG, fmt, ##__VA_ARGS__)
+#define LISAUI_LOGD(TAG, fmt, ...)             LOGD(TAG, fmt, ##__VA_ARGS__)
+#define LISAUI_LOGV(TAG, fmt, ...)             LOGV(TAG, fmt, ##__VA_ARGS__)
 #else
 #include "log_print.h"
 #define LISAUI_PRINTK(fmt, ...)    printf(fmt, ##__VA_ARGS__)

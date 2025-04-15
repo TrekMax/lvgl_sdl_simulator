@@ -313,8 +313,13 @@ lisaui_err_t lisaui_get_taskbar_dbus(lisaui_dbus_t **dbus)
     if (_dbus_taskbar == NULL) {
         // LISAUI_LOGE(TAG, "App manager bus is NULL(App manager not initialized)");
         // return LISAUI_ERR_FAIL;
-        _dbus_taskbar = lisaui_dbus_create();
+        // _dbus_taskbar = lisaui_dbus_create();
+        _dbus_taskbar = (lisaui_dbus_t *)lisaui_malloc(sizeof(struct _lisaui_dbus_t));
         if (!_dbus_taskbar) {
+            LISAUI_LOGE(TAG, "Failed to create event bus");
+            return LISAUI_ERR_FAIL;
+        }
+        if (lisaui_dbus_create(_dbus_taskbar) != LISAUI_ERR_OK) {
             LISAUI_LOGE(TAG, "Failed to create event bus");
             return LISAUI_ERR_FAIL;
         }

@@ -11,6 +11,10 @@ file(GLOB_RECURSE SRC_FILES
 
 add_definitions(-DCONFIG_LVGL_SIMULATOR=1)
 add_definitions(-D__LVGL_SIMULATOR__)
+
+set(CONFIG_LISAUI_DBUS_ENABLE 1)
+add_definitions(-DCONFIG_LISAUI_DBUS_ENABLE=${CONFIG_LISAUI_DBUS_ENABLE})
+
 target_sources(${target_name} PRIVATE ${SRC_FILES})
 
 add_subdirectory(lisaui)
@@ -26,6 +30,7 @@ target_link_libraries(
     # lv_examples
     lv_drivers
     lisaui
+    unity
 )
 
 # 设置可执行文件输出目录

@@ -12,6 +12,12 @@
 #ifndef __LISAUI_DBUS_H__
 #define __LISAUI_DBUS_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "lisaui_type.h"
+
 #ifdef FREERTOS
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -20,7 +26,6 @@
 #include <stdbool.h>
 #endif
 
-typedef struct _lisaui_dbus_t lisaui_dbus_t;
 
 /**
  * @brief dbus_handler_t 总线事件处理函数
@@ -30,12 +35,37 @@ typedef struct _lisaui_dbus_t lisaui_dbus_t;
  * @warning 不可以在事件处理函数中调用 lisaui_dbus_publish，否则会导致死锁
  * 
  */
-typedef void (*dbus_handler_t)(void* data);
+typedef void (*lisaui_dbus_handler_t)(void* data);
 
-lisaui_dbus_t* lisaui_dbus_create();
-void lisaui_dbus_destroy(lisaui_dbus_t* bus);
-lisaui_dbus_t lisaui_dbus_subscribe(lisaui_dbus_t* bus, const char* event, dbus_handler_t handler);
-lisaui_dbus_t lisaui_dbus_unsubscribe(lisaui_dbus_t* bus, const char* event, dbus_handler_t handler);
-void lisaui_dbus_publish(lisaui_dbus_t* bus, const char* event, void* data);
+typedef struct _lisaui_dbus_node_t lisaui_dbus_node_t;
+struct _lisaui_dbus_node_t {
+    const char* event;
+    lisaui_dbus_handler_t handler;
+    lisaui_dbus_node_t* next;
+};
+
+typedef struct _lisaui_dbus_t {
+    lisaui_dbus_node_t* node;
+#ifdef FREERTOS
+    SemaphoreHandle_t mutex;
+#else
+    pthread_mutex_t mutex;
+#endif
+} lisaui_dbus_t;
+
+lisaui_err_t lisaui_dbus_create(lisaui_dbus_t* bus);
+lisaui_err_t lisaui_dbus_destroy(lisaui_dbus_t* bus);
+lisaui_err_t lisaui_dbus_subscribe(lisaui_dbus_t* bus, const char* event, lisaui_dbus_handler_t handler);
+lisaui_err_t lisaui_dbus_unsubscribe(lisaui_dbus_t* bus, const char* event, lisaui_dbus_handler_t handler);
+lisaui_err_t lisaui_dbus_publish(lisaui_dbus_t* bus, const char* event, void* data);
+
+
+#define LISAUI_DBUS_TEST (1)
+void test_lisaui_dbus_example1(void);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // __LISAUI_DBUS_H__

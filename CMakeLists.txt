@@ -43,6 +43,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(components/lvgl)
 add_subdirectory(components/lv_drivers)
 add_subdirectory(components/utils)
+add_subdirectory(components/unity)
 
 # 可选地添加app子目录
 if(NOT DEFINED BUILD_APP)

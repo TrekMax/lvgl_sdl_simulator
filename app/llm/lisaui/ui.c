@@ -11,9 +11,11 @@
  */
 #include "ui.h"
 #include "app/app_common.h"
-#include "app_common/lisaui_app_log.h"
+#include "app_common/lisaui_log.h"
 #include "lisaui_app_common.h"
 #include "app/app_standby/app_standby.h"
+
+// #include "unity.h"
 
 #if CONFIG_LVGL_SIMULATOR
 #include <pthread.h>
@@ -112,4 +114,6 @@ void lisaui_ui_init(void)
     LISAUI_LOGI(TAG, "UI init done");
     LISAUI_LOGI(TAG, "[%s:%d] init done", __func__, __LINE__);
     LISAUI_LOGI(TAG, "[%s:%d] init done", __FILE__, __LINE__);
+
+    test_lisaui_dbus_example1();
 }

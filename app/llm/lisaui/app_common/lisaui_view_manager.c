@@ -11,7 +11,7 @@
  */
 #include "lisaui_view_manager.h"
 #include "lisaui_type.h"
-#include "lisaui_app_log.h"
+#include "lisaui_log.h"
 #include "lisaui_app_common.h"
 
 static const char *TAG = "app_view_manager";

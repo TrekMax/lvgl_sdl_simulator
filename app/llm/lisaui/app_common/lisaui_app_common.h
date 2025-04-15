@@ -38,7 +38,7 @@ extern "C" {
 #include "lisaui_app_manager.h"
 #include "lisaui_view_manager.h"
 #include "lisaui_dbus.h"
-#include "lisaui_app_log.h"
+#include "lisaui_log.h"
 
 #if defined(__LVGL_SIMULATOR__)
 #else

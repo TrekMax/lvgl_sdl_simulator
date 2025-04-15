@@ -8,7 +8,7 @@
                         "type": "lldb",
                         "request": "launch",
                         "name": "Debug",
-                        "program": "${workspaceFolder}/dist/app_manager",
+                        "program": "${workspaceFolder}/dist/llm",
                         "args": [],
                         "cwd": "${workspaceFolder}"
                 }

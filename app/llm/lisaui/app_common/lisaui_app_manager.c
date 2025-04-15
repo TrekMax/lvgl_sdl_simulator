@@ -9,7 +9,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "lisaui_app_log.h"
+#include "lisaui_log.h"
 #include "lisaui_type.h"
 #include "lisaui_app_common.h"
 
@@ -513,9 +513,15 @@ lisaui_err_t lisaui_app_manager_init(void)
 #if CONFIG_LISAUI_DBUS_ENABLE
     if (m_app_mgr.dbus == NULL) {
         // LISAUI_LOGW(TAG, "App manager bus already initialized");
-        m_app_mgr.dbus = lisaui_dbus_create();
+        m_app_mgr.dbus = (lisaui_dbus_t *)lisaui_malloc(sizeof(struct _lisaui_dbus_t));
         if (!m_app_mgr.dbus) {
             LISAUI_LOGE(TAG, "Failed to create event bus");
+            return LISAUI_ERR_FAIL;
+        }
+        if (lisaui_dbus_create(m_app_mgr.dbus) != LISAUI_ERR_OK) {
+            LISAUI_LOGE(TAG, "Failed to create event bus");
+            lisaui_free(m_app_mgr.dbus);
+            m_app_mgr.dbus = NULL;
             return LISAUI_ERR_FAIL;
         }
     }
@@ -566,9 +572,15 @@ lisaui_err_t lisaui_app_manager_get_bus(lisaui_dbus_t **dbus)
     if (m_app_mgr.dbus == NULL) {
         // LISAUI_LOGE(TAG, "App manager bus is NULL(App manager not initialized)");
         // return LISAUI_ERR_FAIL;
-        m_app_mgr.dbus = lisaui_dbus_create();
+        m_app_mgr.dbus = (lisaui_dbus_t *)lisaui_malloc(sizeof(struct _lisaui_dbus_t));
         if (!m_app_mgr.dbus) {
             LISAUI_LOGE(TAG, "Failed to create event bus");
+            return LISAUI_ERR_FAIL;
+        }
+        if (lisaui_dbus_create(m_app_mgr.dbus) != LISAUI_ERR_OK) {
+            LISAUI_LOGE(TAG, "Failed to create event bus");
+            lisaui_free(m_app_mgr.dbus);
+            m_app_mgr.dbus = NULL;
             return LISAUI_ERR_FAIL;
         }
         LISAUI_LOGI(TAG, "Event bus created");

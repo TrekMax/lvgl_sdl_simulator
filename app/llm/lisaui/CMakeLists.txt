@@ -60,7 +60,9 @@ else()
 
     target_link_libraries(lisaui PRIVATE
     -T ${LINKER_SCRIPT}
-    ${APP_LIBRARIES})
+    ${APP_LIBRARIES}
+    -unity
+    )
 endif()
 
 target_compile_features(lisaui PRIVATE c_std_11)
