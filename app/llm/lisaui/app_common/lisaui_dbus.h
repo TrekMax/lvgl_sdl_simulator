@@ -27,6 +27,10 @@ extern "C" {
 #endif
 
 
+#define LISAUI_DBUS_MAX_QUEUE_SIZE 16
+#define LISAUI_DBUS_TASK_STACK_SIZE 2048
+#define LISAUI_DBUS_TASK_PRIORITY 5
+
 /**
  * @brief dbus_handler_t 总线事件处理函数
  * 
@@ -38,18 +42,37 @@ extern "C" {
 typedef void (*lisaui_dbus_handler_t)(void* data);
 
 typedef struct _lisaui_dbus_node_t lisaui_dbus_node_t;
+
+typedef struct {
+    const char* event;
+    void* data;
+} lisaui_dbus_msg_t;
+
 struct _lisaui_dbus_node_t {
     const char* event;
     lisaui_dbus_handler_t handler;
     lisaui_dbus_node_t* next;
 };
 
+typedef struct {
+    lisaui_dbus_msg_t buffer[LISAUI_DBUS_MAX_QUEUE_SIZE];
+    int head;
+    int tail;
+    int count;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+} lisaui_dbus_queue_t;
+
 typedef struct _lisaui_dbus_t {
     lisaui_dbus_node_t* node;
 #ifdef FREERTOS
     SemaphoreHandle_t mutex;
+    QueueHandle_t event_queue;
+    TaskHandle_t task_handle;
 #else
     pthread_mutex_t mutex;
+    pthread_t thread;
+    lisaui_dbus_queue_t event_queue;
 #endif
 } lisaui_dbus_t;
 
