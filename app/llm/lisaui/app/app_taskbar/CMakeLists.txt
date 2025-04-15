@@ -1,6 +1,7 @@
 # app/app_taskbar/CMakeLists.txt
 set(APP_TASKBAR_SOURCES
     app_taskbar.c
+    private_taskbar.c
 )
 
 set(APP_UI_RESOURCES

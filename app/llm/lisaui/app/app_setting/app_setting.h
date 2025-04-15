@@ -43,10 +43,6 @@ enum ui_battery_state {
     UI_BATTERY_STATE_FULL,
 };
 
-typedef int (*ui_get_battery_cb_t)(uint8_t *state, uint8_t *level);
-typedef int (*ui_set_backlight_cb_t)(const uint8_t brightness);
-typedef int (*ui_set_volume_cb_t)(const uint8_t volume);
-
 int app_setting_init(void);
 
 #ifdef __cplusplus

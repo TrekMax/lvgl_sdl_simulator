@@ -1,6 +1,7 @@
 # app/app_setting/CMakeLists.txt
 set(APP_SETTING_SOURCES
     app_setting.c
+    app_setting_view_volume_backlight.c
 )
 
 set(APP_UI_RESOURCES

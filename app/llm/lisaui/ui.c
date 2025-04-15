@@ -102,6 +102,13 @@ void lisaui_ui_init(void)
     lisaui_app_manager_init();
     // lisaui_app_manager_show_all_app_info();
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
+    lisaui_app_enter(UI_APP_ID_SETTING);
+
+    LISAUI_LOGI(TAG, "UI init done");
+    LISAUI_LOGI(TAG, "[%s:%d] init done", __func__, __LINE__);
+    LISAUI_LOGI(TAG, "[%s:%d] init done", __FILE__, __LINE__);
+
+#if 0
     lv_timer_t *timer = lv_timer_create(tset_lisaui_app_timer__cb, 1000, NULL);
     if (timer == NULL) {
         LISAUI_LOGE(TAG, "[%s] Failed to create timer", __FUNCTION__);
@@ -110,10 +117,8 @@ void lisaui_ui_init(void)
     // lv_timer_set_repeat_count(timer, LV_TIMER_REPEAT_INFINITE);
     // lv_timer_set_period(timer, 1000);
     // lv_timer_ready(timer);
-
-    LISAUI_LOGI(TAG, "UI init done");
-    LISAUI_LOGI(TAG, "[%s:%d] init done", __func__, __LINE__);
-    LISAUI_LOGI(TAG, "[%s:%d] init done", __FILE__, __LINE__);
-
+    
     test_lisaui_dbus_example1();
+#endif
+
 }
