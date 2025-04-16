@@ -11,39 +11,37 @@
  */
 #include "ls_radio_group.h"
 
-#ifdef __ZEPHYR__
-#include <zephyr/kernel.h>
-#include "lvgl.h"
-#else
-#include "lvgl/lvgl.h"
-#define LOG_INF LV_LOG_USER
-#endif
-typedef struct {
-    lv_obj_t *radio_bg;
+typedef struct _ls_radio_item_t {
+    lv_obj_t *radio_panel;
     lv_obj_t *radio;
     uint16_t radio_id;
     lv_obj_t *tip_text;
     lv_event_cb_t event_cb;
     void *user_data;
-} radio_group_t;
+} ls_radio_item_t;
 
 #define RADIO_GROUP_MAX 10
+typedef struct _ls_radio_group_t {
+    ls_radio_item_t radio_group[RADIO_GROUP_MAX];
+    uint16_t selected_index;
+    uint16_t size;
+    lv_style_t style_radio;
+    lv_style_t style_radio_chk;
+} ls_radio_group_t;
 
-static lv_style_t style_radio;
-static lv_style_t style_radio_chk;
-static radio_group_t radio_group[RADIO_GROUP_MAX];
-static uint16_t radio_group_index = 0;
-// static uint16_t active_radio_id = 0;
-// static uint16_t active_radio_id_old = 0;
+static ls_radio_group_t g_radio_group = {
+    .size = 0,
+    .selected_index = 0,
+};
 
 lv_obj_t *ls_lv_radio_group_create(lv_obj_t *parent, lv_event_cb_t event_cb, void *user_data)
 {
-    radio_group_index = 0;
-    lv_style_init(&style_radio);
-    lv_style_set_radius(&style_radio, LV_RADIUS_CIRCLE);
+    g_radio_group.size = 0;
+    lv_style_init(&g_radio_group.style_radio);
+    lv_style_set_radius(&g_radio_group.style_radio, LV_RADIUS_CIRCLE);
 
     lv_obj_t *radio_group = lv_obj_create(parent);
-    lv_obj_set_size(radio_group, lv_pct(100), lv_pct(100));
+    lv_obj_set_size(radio_group, LV_PCT(100), LV_PCT(100));
     lv_obj_set_flex_flow(radio_group, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_border_width(radio_group, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_outline_width(radio_group, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -57,72 +55,77 @@ void radio_group_bg_event_handler(lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     if (LV_EVENT_CLICKED == code) {
-        uint16_t radio_id = 0;
-        radio_id = *(uint16_t *)lv_event_get_user_data(e);
-        // TODO: 需要优化为选中与期待选择两个 id，不使用遍历方式
-        for (int i = 0; i < radio_group_index; i++) {
-            lv_obj_clear_state(radio_group[i].radio, LV_STATE_CHECKED);
-        }
-        lv_obj_add_state(radio_group[radio_id].radio, LV_STATE_CHECKED);
-        if (radio_group[radio_id].event_cb) {
-            radio_group[radio_id].event_cb(e);
+        uint16_t radio_id = *(uint16_t *)lv_event_get_user_data(e);
+        lv_lv_radio_group_set_active_id(e->target, radio_id);
+        if (g_radio_group.radio_group[radio_id].event_cb) {
+            g_radio_group.radio_group[radio_id].event_cb(e);
         }
     }
 }
 
 int lv_lv_radio_group_set_active_id(lv_obj_t *group, uint16_t id)
 {
-    if (id >= radio_group_index) {
+    if (id >= RADIO_GROUP_MAX) {
         return -1;
     }
-    for (int i = 0; i < radio_group_index; i++) {
-        lv_obj_clear_state(radio_group[i].radio, LV_STATE_CHECKED);
+    if (id == g_radio_group.selected_index) {
+        return 0;
     }
-    lv_obj_add_state(radio_group[id].radio, LV_STATE_CHECKED);
+    lv_obj_clear_state(g_radio_group.radio_group[g_radio_group.selected_index].radio, LV_STATE_CHECKED);
+    lv_obj_add_state(g_radio_group.radio_group[id].radio, LV_STATE_CHECKED);
+    g_radio_group.selected_index = id;
     return 0;
 }
 
-lv_obj_t *ls_lv_radio_group_add(lv_obj_t *group, const char *txt, const char *tips_text, lv_event_cb_t event_cb,
+lv_obj_t *ls_lv_radio_group_add(lv_obj_t *group, const char *title_text, const char *tips_text, lv_event_cb_t event_cb,
                                 void *user_data)
 {
-    lv_obj_t *parent = group;
-    lv_obj_t *radio_bg = lv_obj_create(group);
-    lv_obj_set_size(radio_bg, lv_pct(100), LV_SIZE_CONTENT);
-    lv_obj_set_style_border_width(radio_bg, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_side(radio_bg, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_set_size(radio_bg, lv_pct(100), LV_SIZE_CONTENT);
-    // lv_obj_set_flex_flow(radio_bg, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_bg_color(radio_bg, lv_color_hex(0x24242f), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_t *obj = lv_checkbox_create(radio_bg);
+    lv_obj_t *radio_panel = lv_obj_create(group);
+    lv_obj_set_size(radio_panel, LV_PCT(100), LV_SIZE_CONTENT);
+    lv_obj_set_style_border_width(radio_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_side(radio_panel, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_size(radio_panel, LV_PCT(100), LV_SIZE_CONTENT);
+    // lv_obj_set_flex_flow(radio_panel, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_bg_color(radio_panel, lv_color_hex(0x24242f), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_t *title_checkbox = lv_checkbox_create(radio_panel);
 
-    radio_group[radio_group_index].radio_bg = radio_bg;
-    radio_group[radio_group_index].radio = obj;
-    radio_group[radio_group_index].radio_id = radio_group_index;
-    radio_group[radio_group_index].event_cb = event_cb;
-    lv_obj_add_event_cb(radio_bg, radio_group_bg_event_handler, LV_EVENT_CLICKED,
-                        (void *)&radio_group[radio_group_index].radio_id);
-    lv_obj_set_style_text_color(radio_bg, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(obj, lv_color_hex(0x00ff00), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_size(obj, lv_pct(80), LV_SIZE_CONTENT);
+    uint16_t radio_group_index = g_radio_group.size;
+    if (radio_group_index >= RADIO_GROUP_MAX) {
+        return NULL;
+    }
+    ls_radio_item_t *item = &g_radio_group.radio_group[radio_group_index];
 
-    lv_checkbox_set_text(obj, txt);
-    lv_obj_add_flag(obj, LV_OBJ_FLAG_EVENT_BUBBLE);
-    lv_obj_add_style(obj, &style_radio, LV_PART_INDICATOR);
-    lv_obj_add_style(obj, &style_radio_chk, LV_PART_INDICATOR | LV_STATE_CHECKED);
-    lv_obj_clear_flag(obj, LV_OBJ_FLAG_CLICKABLE);
+    item->radio_panel = radio_panel;
+    item->radio = title_checkbox;
+    item->radio_id = radio_group_index;
+    item->event_cb = event_cb;
+    lv_obj_add_event_cb(radio_panel, radio_group_bg_event_handler, LV_EVENT_CLICKED, (void *)&item->radio_id);
+    lv_obj_set_style_text_color(radio_panel, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(title_checkbox, lv_color_hex(0x00ff00), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_size(title_checkbox, LV_PCT(80), LV_SIZE_CONTENT);
 
-    lv_obj_t *tip_text = lv_label_create(radio_bg);
+    lv_checkbox_set_text(title_checkbox, title_text);
+    lv_obj_add_flag(title_checkbox, LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_style(title_checkbox, &g_radio_group.style_radio, LV_PART_INDICATOR);
+    lv_obj_add_style(title_checkbox, &g_radio_group.style_radio_chk, LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_text_font(title_checkbox, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_clear_flag(title_checkbox, LV_OBJ_FLAG_CLICKABLE);
 
-    lv_obj_align_to(tip_text, obj, LV_ALIGN_BOTTOM_LEFT, 30, 25);
-    lv_obj_set_size(tip_text, lv_pct(80), LV_SIZE_CONTENT);
+    lv_obj_t *tip_text = lv_label_create(radio_panel);
+    lv_obj_align_to(tip_text, title_checkbox, LV_ALIGN_BOTTOM_LEFT, 30, 25);
+    lv_obj_set_size(tip_text, LV_PCT(80), LV_SIZE_CONTENT);
 
     lv_label_set_text(tip_text, tips_text);
     lv_obj_set_style_text_font(tip_text, &lv_font_notosans_cs_medium_14, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_color(tip_text, lv_color_hex(0xBCBCBC), LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    radio_group[radio_group_index].tip_text = tip_text;
-    radio_group_index++;
-    return obj;
+    item->tip_text = tip_text;
+    g_radio_group.size++;
+    if (g_radio_group.size == 1) {
+        lv_obj_add_state(title_checkbox, LV_STATE_CHECKED);
+        g_radio_group.selected_index = radio_group_index;
+    }
+    return title_checkbox;
 }
 
 void ls_lv_radio_group_example(lv_obj_t *parent)

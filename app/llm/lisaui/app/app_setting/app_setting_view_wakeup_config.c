@@ -15,11 +15,17 @@
 #include "assets/assets_res.h"
 #include "lisaui_app_common.h"
 #include "lv_img_utils.h"
-
-// #include "base/ls_radio_group.h"
 #include "widgets_common.h"
 
 static const char *TAG = "app_setting_view_wakeup_config";
+
+void radio_event_handler(lv_event_t *e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    if (LV_EVENT_CLICKED == code) {
+        uint16_t radio_id = *(uint16_t *)lv_event_get_user_data(e);
+    }
+}
 
 lv_obj_t *_lisaui_app_view_create_wakeup_config(lv_obj_t *parent)
 {
@@ -33,14 +39,13 @@ lv_obj_t *_lisaui_app_view_create_wakeup_config(lv_obj_t *parent)
     lv_obj_clear_flag(setting_home, LV_OBJ_FLAG_SCROLLABLE); /// Flags
     lv_obj_add_flag(setting_home, LV_OBJ_FLAG_EVENT_BUBBLE);
 
-    // setting_home = lv_obj_create(parent);
-    // lv_obj_remove_style_all(setting_home);
-    // lv_obj_clear_flag(setting_home, LV_OBJ_FLAG_SCROLLABLE); /// Flags
-    // // lv_obj_set_style_bg_color(setting_home, lv_color_hex(0x242430), LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_set_style_bg_color(setting_home, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_set_style_bg_opa(setting_home, 250, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_set_size(setting_home, LV_PCT(100), LV_PCT(100));
-
-    ls_lv_radio_group_example(setting_home);
+    uint8_t active = 0;
+    lv_obj_t *page = ls_lv_radio_group_create(parent, NULL, NULL);
+    ls_lv_radio_group_add(page, "按键唤醒", "通过开发板 K3 按键进行唤醒", radio_event_handler, NULL);
+    ls_lv_radio_group_add(page, "语音唤醒（单轮对话）", "通过唤醒词“小美小美”唤醒，一次唤醒一轮对话",
+                          radio_event_handler, NULL);
+    ls_lv_radio_group_add(page, "语音唤醒（多轮对话）", "通过唤醒词“小美小美”唤醒，支持多轮对话", radio_event_handler,
+                          NULL);
+    lv_lv_radio_group_set_active_id(page, active);
     return setting_home;
 }

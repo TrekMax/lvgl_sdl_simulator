@@ -44,10 +44,6 @@ lisaui_err_t app_setting_create(void *parent)
 lisaui_err_t app_setting_destroy(void)
 {
     LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
-    // uiAppSetting_LabelBacklight = NULL;
-    // uiAppSetting_LabelVolume = NULL;
-    // uiAppSetting_SliderBacklight = NULL;
-    // uiAppSetting_SliderVolume = NULL;
     LVGL_OBJ_SAFE_DEL(g_app_setting);
     return LISAUI_ERR_OK;
 }

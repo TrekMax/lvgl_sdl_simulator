@@ -26,5 +26,4 @@ target_link_libraries(app_setting PRIVATE
     lvgl
     utils
     app_common
-    # app_widget
     )
