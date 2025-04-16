@@ -33,7 +33,7 @@ extern "C" {
 
 #include "incbin.h"
 #include "lisaui_type.h"
-#include "assets/assets_res.h"
+#include "../widgets/assets/assets_res.h"
 
 #include "lisaui_app_manager.h"
 #include "lisaui_view_manager.h"

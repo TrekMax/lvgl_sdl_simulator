@@ -10,10 +10,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_setting.h"
-#include "../app_common.h"
 #include "lisaui_app_common.h"
+#include "../app_common.h"
 #include "assets/assets_res.h"
 #include "app_setting_view_volume_backlight.h"
+#include "app_setting_view_wakeup_config.h"
 
 static const char *TAG = "app_setting";
 lv_obj_t *g_app_setting = NULL;
@@ -25,12 +26,18 @@ lisaui_err_t app_setting_create(void *parent)
     }
 
     g_app_setting = lv_obj_create(NULL);
-    lv_obj_clear_flag(g_app_setting, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_clear_flag(g_app_setting, LV_OBJ_FLAG_SCROLLABLE); /// Flags
     lv_obj_set_style_bg_color(g_app_setting, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(g_app_setting, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_size(g_app_setting, LV_PCT(100), 180);
+    lv_obj_set_size(g_app_setting, LV_PCT(100), LV_PCT(100));
 
-    _lisaui_app_view_create_volume_backlight(g_app_setting);
+    lv_obj_t *g_app_panel = lv_obj_create(g_app_setting);
+    _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+    lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(100));
+    lv_obj_set_y(g_app_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
+
+    // _lisaui_app_view_create_volume_backlight(g_app_panel);
+    _lisaui_app_view_create_wakeup_config(g_app_panel);
     return LISAUI_ERR_OK;
 }
 

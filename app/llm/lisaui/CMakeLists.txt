@@ -7,14 +7,8 @@ set(APP_COMMON_SOURCES
     ui.c
 )
 
-
-set(EXT_LIB_SOURCE
-    widgets/ext_lib/gifdec.c
-    widgets/ext_lib/lv_gif.c
-)
-
 add_subdirectory(utils)
-# add_subdirectory(app_framework)
+add_subdirectory(widgets)
 add_subdirectory(app_common)
 
 add_library(lisaui STATIC
@@ -27,7 +21,6 @@ target_include_directories(lisaui PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
 )
-
 
 file(GLOB APP_DIRS "app/*")
 foreach(APP_DIR ${APP_DIRS})

@@ -11,7 +11,7 @@
  */
 #include "app_alarm.h"
 #include "app_common/lisaui_app_common.h"
-#include "assets/assets_res.h"
+// #include "assets/assets_res.h"
 
 static const char *TAG = "app_alarm";
 static lv_obj_t *g_app_alarm = NULL;

@@ -16,15 +16,9 @@ set(APP_SOURCES
     lisaui_asset_manager.c
 )
 
-set(APP_UI_RESOURCES
-    assets/fonts/lv_font_chinese_18.c
-    assets/fonts/lv_font_notosans_cs_medium_18.c
-)
-
 add_library(app_common STATIC
     ${APP_SOURCES}
     ${APP_FRAMEWORK_SOURCES}
-    ${APP_UI_RESOURCES}
 )
 
 target_include_directories(app_common PUBLIC
@@ -35,4 +29,5 @@ target_include_directories(app_common PUBLIC
 target_link_libraries(app_common PRIVATE
     lvgl
     utils
+    app_widget
     )

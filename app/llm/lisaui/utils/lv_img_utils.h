@@ -23,7 +23,25 @@
 
 #include "img_utils.h"
 
+typedef struct _lisaui_ui_res_img_png_t {
+    uint32_t res_id;
+    lv_img_dsc_t *img;
+    const uint8_t *data;
+    uint32_t size;
+} lisaui_ui_res_img_png_t;
+
+// #define UI_RES_IMG_BY_ID_PNG(name, id) \
+// 	{ \
+// 		.res_id = id, \
+// 		.img = &name##_png, \
+// 		.data = g##name##_pngData, \
+// 		.size = g##name##_pngSize, \
+// 	}
+
+
 int lv_img_png_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size);
+int lv_img_png_res_init(lisaui_ui_res_img_png_t *res_img);
+
 int lv_img_gif_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size);
 int lv_img_jpg_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size);
 
