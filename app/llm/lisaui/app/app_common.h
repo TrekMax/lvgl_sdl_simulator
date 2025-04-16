@@ -30,6 +30,8 @@ enum lisaui_app_id_t {
     UI_APP_ID_TASKBAR,
     UI_APP_ID_SETTING,
 
+    UI_APP_ID_AUDIO_PLAYER,
+
     UI_APP_ID_MAX,
 };
 

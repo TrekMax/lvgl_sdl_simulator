@@ -324,6 +324,7 @@ lisaui_err_t lisaui_app_enter(const int app_id)
     LISAUI_EXEC_HOOK(m_app_enter_hook, app, ret);
     if (ret != LISAUI_ERR_OK) {
         LISAUI_LOGE(TAG, "TAG, [ui] app enter hook failed");
+        LVGL_UI_UNLOCK();
         return ret;
     }
 #else
@@ -503,9 +504,12 @@ lisaui_err_t lisaui_app_manager_init_app(const app_entry_t *app, int app_count)
 
 lisaui_err_t lisaui_app_manager_init(void)
 {
-    // LISAUI_LOGD(TAG, "Initializing \r\n\tlisaui_apps[%p:%p - %ld]",
-    //         __LISAUI_APP_LISTS_START, __LISAUI_APP_LISTS_END,
-    //         (__LISAUI_APP_LISTS_START - __LISAUI_APP_LISTS_END));
+#ifdef __APPLE__
+#else
+    LISAUI_LOGD(TAG, "Initializing \r\n\tlisaui_apps[%p:%p (%ld)]",
+            __LISAUI_APP_LISTS_START, __LISAUI_APP_LISTS_END,
+            (__LISAUI_APP_LISTS_END - __LISAUI_APP_LISTS_START));
+#endif
     m_app_mgr.current_appid = LISAUI_APP_ID_NONE;
     m_app_mgr.registered_count = 0;
     m_app_mgr.unhidden_count = 0;
@@ -595,27 +599,27 @@ lisaui_err_t lisaui_app_manager_show_app_info(struct lisaui_app_t *app)
         // LISAUI_LOGI(TAG, "app is NULL");
         return LISAUI_ERR_INVALID_PARAM;
     }
-    LISAUI_LOGI(TAG, "[%s]: %s", app->info.package_name, app->info.name);
-    LISAUI_LOGI(TAG, "\t\tmemory usage: %ld", sizeof(*app));
-    LISAUI_LOGI(TAG, "\t\tid:%d, uuid:%d", app->info.id, app->info.uuid);
+    LISAUI_PRINTK("[%s]: %s", app->info.package_name, app->info.name);
+    LISAUI_PRINTK("\t\tmemory usage: %ld", sizeof(*app));
+    LISAUI_PRINTK("\t\tid:%d, uuid:%d", app->info.id, app->info.uuid);
     if (app->icon == NULL) {
         LISAUI_LOGE(TAG, "icon is NULL");
         return LISAUI_ERR_INVALID_PARAM;
     }
-    LISAUI_LOGI(TAG, "\t\ticon %s %dx%d zoom:%d", app->icon->title, app->icon->icon_width, app->icon->icon_height,
+    LISAUI_PRINTK("\t\ticon %s %dx%d zoom:%d", app->icon->title, app->icon->icon_width, app->icon->icon_height,
                 app->icon->zoom);
-    LISAUI_LOGI(TAG, "\t\thidden_icon: %d", app->hidden_icon);
+    LISAUI_PRINTK("\t\thidden_icon: %d", app->hidden_icon);
     return LISAUI_ERR_OK;
 }
 
 lisaui_err_t lisaui_app_manager_show_all_app_info(void)
 {
-    LISAUI_PRINTK("======================================================\r\n");
+    LISAUI_PRINTK("======================================================");
     LISAUI_LOGI(TAG, "Registered apps: %d", m_app_mgr.registered_count);
     for (int i = 0; i < LISAUI_APP_MAX; i++) {
         lisaui_app_manager_show_app_info(m_app_mgr.apps_list[i]);
     }
-    LISAUI_PRINTK("======================================================\r\n");
+    LISAUI_PRINTK("======================================================");
     return LISAUI_ERR_OK;
 }
 

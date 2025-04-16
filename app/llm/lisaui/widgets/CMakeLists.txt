@@ -4,6 +4,8 @@ set(WIDGET_UI_RESOURCES
     # assets/fonts/lv_font_chinese_18.c
     # assets/fonts/lv_font_notosans_cs_medium_18.c
     base/ls_radio_group.c
+    base/ls_lv_list.c
+    base/ls_llm_dialog.c
 )
 
 set(APP_UI_RESOURCES

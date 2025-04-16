@@ -1,12 +1,12 @@
 /**
  * @file private_taskbar.c
  * @author TrekMax (QinYUN575@Foxmail.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2025-04-15
- * 
+ *
  * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
- * 
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_taskbar.h"
@@ -14,6 +14,17 @@
 #include "lisaui_app_common.h"
 #include "assets/assets_res.h"
 #include "private_taskbar.h"
+#include "lisaui_log.h"
+#include "lv_img_utils.h"
+
+#if CONFIG_LVGL_ENV_SIMULATOR
+    #define APP_SETTING_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/app/app_taskbar/" path
+#else
+    #define APP_SETTING_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/app/app_taskbar/" path
+#endif
+
+// UI_RES_IMG_NAME(back_btn, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/icon_back.png"))
+UI_RES_IMG_NAME(icon_setting, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_launch_setting.png"))
 
 static const char *TAG = "pri_app_taskbar";
 
@@ -33,15 +44,17 @@ static void taskbar_label_time_update_cb(lv_timer_t *timer)
 {
     static bool dot_hide_flag = false;
     dot_hide_flag = !dot_hide_flag;
+#if defined(__POSIX__)
     time_t now = time(NULL);
     struct tm *tm = localtime(&now);
     char time_str[10];
     snprintf(time_str, sizeof(time_str), "%02d%s%02d %s", tm->tm_hour, dot_hide_flag ? ":" : " ", tm->tm_min,
              tm->tm_hour < 12 ? "AM" : "PM");
     lv_label_set_text(m_label_time, time_str);
+#endif
 }
 
-void _lisaui_taskbar_create_time_label(lv_obj_t *parent)
+lv_obj_t *_lisaui_taskbar_create_time_label(lv_obj_t *parent)
 {
     m_label_time = lv_label_create(parent);
     lv_label_set_text(m_label_time, "9:00 AM");
@@ -51,18 +64,22 @@ void _lisaui_taskbar_create_time_label(lv_obj_t *parent)
     lv_obj_set_style_text_opa(m_label_time, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(m_label_time, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_timer_t *timer = lv_timer_create(taskbar_label_time_update_cb, 500, m_label_time);
+
+    return m_label_time;
 }
 
 static void taskbar_label_date_update_cb(lv_timer_t *timer)
 {
+#if defined(__POSIX__)
     time_t now = time(NULL);
     struct tm *tm = localtime(&now);
     char date_str[40];
     snprintf(date_str, sizeof(date_str), "%04d-%02d-%02d", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday);
     lv_label_set_text(m_label_date, date_str);
+#endif
 }
 
-void _lisaui_taskbar_create_date_label(lv_obj_t *parent)
+lv_obj_t *_lisaui_taskbar_create_date_label(lv_obj_t *parent)
 {
     m_label_date = lv_label_create(parent);
     lv_obj_set_size(m_label_date, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
@@ -75,6 +92,8 @@ void _lisaui_taskbar_create_date_label(lv_obj_t *parent)
     lv_obj_set_style_text_font(m_label_date, &lv_font_montserrat_20, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_timer_t *timer = lv_timer_create(taskbar_label_date_update_cb, 900, m_label_date);
+
+    return m_label_date;
 }
 
 static void back_btn_event_click_handler(lv_event_t *e)
@@ -88,6 +107,15 @@ static void back_btn_event_click_handler(lv_event_t *e)
             LISAUI_LOGE(TAG, "Failed to get app by id: %d", app_id);
             return;
         }
+        if (app->info.id == UI_APP_ID_SETTING) {
+            // LISAUI_LOGI(TAG, "taskbar back app: %s", app->icon->title);
+            extern lisaui_err_t lisaui_app_setting_enter_item_panel(void);
+            lisaui_app_setting_enter_item_panel();
+        } else {
+            lisaui_app_enter(UI_APP_ID_SETTING);
+        }
+
+        #if 0
         if (app->info.type == LISAUI_APP_TYPE_LAUNCHER) {
             lisaui_popup_toast("Can't exit or close launcher");
             return;
@@ -103,13 +131,14 @@ static void back_btn_event_click_handler(lv_event_t *e)
         } else if (target == g_taskbar_btn_home) {
             lisaui_app_enter(UI_APP_ID_LAUNCHER);
         }
+        #endif
     }
 }
 
-void _lisaui_taskbar_create_back_btn(lv_obj_t *parent)
+lv_obj_t *_lisaui_taskbar_create_back_btn(lv_obj_t *parent)
 {
     g_taskbar_btn_back = lv_btn_create(parent);
-    lv_obj_set_size(g_taskbar_btn_back, LV_DPX(50), LV_DPX(LISAUI_STATUS_BAR_HEIGHT-10));
+    lv_obj_set_size(g_taskbar_btn_back, LV_DPX(50), LV_DPX(LISAUI_STATUS_BAR_HEIGHT - 10));
     lv_obj_align(g_taskbar_btn_back, LV_ALIGN_LEFT_MID, LV_DPX(4), 0);
     lv_obj_add_event_cb(g_taskbar_btn_back, back_btn_event_click_handler, LV_EVENT_CLICKED, NULL);
     lv_obj_set_style_radius(g_taskbar_btn_back, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -120,7 +149,7 @@ void _lisaui_taskbar_create_back_btn(lv_obj_t *parent)
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
     g_taskbar_btn_close = lv_btn_create(parent);
-    lv_obj_set_size(g_taskbar_btn_close, LV_DPX(50), LV_DPX(LISAUI_STATUS_BAR_HEIGHT-10));
+    lv_obj_set_size(g_taskbar_btn_close, LV_DPX(50), LV_DPX(LISAUI_STATUS_BAR_HEIGHT - 10));
     lv_obj_align_to(g_taskbar_btn_close, g_taskbar_btn_back, LV_ALIGN_OUT_RIGHT_MID, LV_DPX(2), 0);
     lv_obj_add_event_cb(g_taskbar_btn_close, back_btn_event_click_handler, LV_EVENT_CLICKED, NULL);
     lv_obj_set_style_radius(g_taskbar_btn_close, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -130,7 +159,7 @@ void _lisaui_taskbar_create_back_btn(lv_obj_t *parent)
     lv_obj_align(label_close, LV_ALIGN_CENTER, 0, 0);
 
     g_taskbar_btn_home = lv_btn_create(parent);
-    lv_obj_set_size(g_taskbar_btn_home, LV_DPX(50), LV_DPX(LISAUI_STATUS_BAR_HEIGHT-10));
+    lv_obj_set_size(g_taskbar_btn_home, LV_DPX(50), LV_DPX(LISAUI_STATUS_BAR_HEIGHT - 10));
     lv_obj_align_to(g_taskbar_btn_home, g_taskbar_btn_close, LV_ALIGN_OUT_RIGHT_MID, LV_DPX(2), 0);
     lv_obj_add_event_cb(g_taskbar_btn_home, back_btn_event_click_handler, LV_EVENT_CLICKED, NULL);
     lv_obj_set_style_radius(g_taskbar_btn_home, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -138,6 +167,8 @@ void _lisaui_taskbar_create_back_btn(lv_obj_t *parent)
     lv_obj_t *label_home = lv_label_create(g_taskbar_btn_home);
     lv_label_set_text(label_home, LV_SYMBOL_HOME);
     lv_obj_align(label_home, LV_ALIGN_CENTER, 0, 0);
+
+    return g_taskbar_btn_back;
 }
 
 static const lv_img_dsc_t *_lisaui_taskbar_battery_charging_icon[5] = {
@@ -184,7 +215,7 @@ void _lisaui_taskbar_battery_update_cb(lv_timer_t *timer)
     count++;
 }
 
-void _lisaui_taskbar_create_battery(lv_obj_t *parent)
+lv_obj_t *_lisaui_taskbar_create_battery(lv_obj_t *parent)
 {
     if (lv_obj_get_width(parent) > 400) {
         battery_label = lv_label_create(parent);
@@ -205,6 +236,65 @@ void _lisaui_taskbar_create_battery(lv_obj_t *parent)
     }
     // lv_img_set_zoom(battery_icon, 255*1.2);
     lv_timer_t *timer = lv_timer_create(_lisaui_taskbar_battery_update_cb, 500, battery_icon);
+
+    return battery_icon;
 }
 
+lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
+{
+    lv_obj_t *menu_panel = lv_obj_create(parent);
+    lv_obj_set_size(menu_panel, LV_DPX(160), LV_PCT(100));
+    lv_obj_set_style_bg_color(menu_panel, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(menu_panel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_padding_all(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_all(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_outline_width(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_align(menu_panel, LV_ALIGN_LEFT_MID, 0, 0);
+    lv_obj_clear_flag(menu_panel, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_shadow_width(menu_panel, 0, 0);
+    lv_obj_set_style_border_width(menu_panel, 0, 0);
+    lv_obj_set_style_outline_width(menu_panel, 0, 0);
 
+    // lv_obj_t *menu_btn = lv_btn_create(menu_panel);
+    // lv_obj_set_size(menu_btn, LV_DPX(40), LV_DPX(LISAUI_STATUS_BAR_HEIGHT - 10));
+    // lv_obj_align(menu_btn, LV_ALIGN_LEFT_MID, LV_DPX(4), 0);
+    // lv_obj_add_event_cb(menu_btn, back_btn_event_click_handler, LV_EVENT_CLICKED, NULL);
+    // lv_obj_set_style_radius(menu_btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_bg_color(menu_btn, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_shadow_width(menu_btn, 0, 0);
+    // lv_obj_set_style_border_width(menu_btn, 0, 0);
+    // lv_obj_set_style_outline_width(menu_btn, 0, 0);
+
+    // lv_obj_t *label = lv_label_create(menu_btn);
+    // lv_label_set_text(label, LV_SYMBOL_SETTINGS);
+    // // _lisaui_lv_obj_set_default_style(label);
+    // lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    LV_OBJ_ICON(icon_setting) = lv_img_create(menu_panel);
+    lv_img_png_src_init(UI_RES_IMG_PNG(icon_setting));
+
+    lv_img_set_src(LV_OBJ_ICON(icon_setting), &LV_IMG_DSC(icon_setting));
+    lv_obj_set_size(LV_OBJ_ICON(icon_setting), LV_DPX(40), LV_DPX(LISAUI_STATUS_BAR_HEIGHT - 10));
+    lv_obj_align(LV_OBJ_ICON(icon_setting), LV_ALIGN_LEFT_MID, LV_DPX(4), 0);
+    
+    lv_obj_add_flag(LV_OBJ_ICON(icon_setting), LV_OBJ_FLAG_CLICKABLE); /// Flags
+    lv_obj_add_event_cb(LV_OBJ_ICON(icon_setting), back_btn_event_click_handler, LV_EVENT_CLICKED, NULL);
+    
+    lv_obj_set_style_radius(LV_OBJ_ICON(icon_setting), 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(LV_OBJ_ICON(icon_setting), lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(LV_OBJ_ICON(icon_setting), 0, 0);
+    lv_obj_set_style_border_width(LV_OBJ_ICON(icon_setting), 0, 0);
+    lv_obj_set_style_outline_width(LV_OBJ_ICON(icon_setting), 0, 0);
+    lv_obj_set_style_bg_opa(LV_OBJ_ICON(icon_setting), 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_t *label2 = lv_label_create(menu_panel);
+    lv_label_set_text(label2, "唤醒设置");
+    lv_obj_set_width(label2, LV_DPX(140));
+    lv_label_set_long_mode(label2, LV_LABEL_LONG_CLIP);
+    lv_obj_set_style_text_font(label2, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_align_to(label2, LV_OBJ_ICON(icon_setting), LV_ALIGN_OUT_RIGHT_MID, LV_DPX(6), 0);
+    lv_obj_set_style_text_color(label2, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    return menu_panel;
+}

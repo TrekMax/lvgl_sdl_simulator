@@ -16,10 +16,25 @@
 extern "C" {
 #endif
 
+typedef struct _metadata_weather_t {
+    int type;   // 天气类型
+    char *city; // 城市
+    char *date; // 日期
+    char *icon_path; // 天气图标路径
+    // char *location;     // 天气位置
+    // char *time;         // 时间
+    // char *week;         // 星期
+    // char *title;        // 天气标题
+    char *temperature;       // 温度
+    char *temperature_range; // 温度范围
+    char *description;       // 天气描述
+} metadata_weather_t;
+
 #include "../app_common.h"
 #include "lisaui_app_common.h"
 
 lisaui_err_t app_weather_init(void);
+lisaui_err_t lisaui_app_weather_set_weather_view(metadata_weather_t *weather);
 
 #ifdef __cplusplus
 }

@@ -31,8 +31,6 @@ static lv_obj_t *slider_luminance;
 static lv_style_t style_setting;
 static lv_obj_t *icon_setting_btn_bg;
 
-#define APP_SETTING_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/app/app_setting/" path
-
 // UI_RES_IMG_NAME(back_btn, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/icon_back.png"))
 UI_RES_IMG_NAME(volume_min, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_volume_low.png"))
 UI_RES_IMG_NAME(volume_max, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_volume_high.png"))
@@ -125,8 +123,8 @@ lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_obj_set_pos(uiAppSetting_SliderBacklight, 22, 0);
     lv_obj_set_align(uiAppSetting_SliderBacklight, LV_ALIGN_CENTER);
     lv_slider_set_value(uiAppSetting_SliderBacklight, 100, LV_ANIM_OFF);
-    lv_slider_set_range(uiAppSetting_SliderBacklight, UI_SILDER_BACKLIGHT_BRIGHTNESS_MIN_VALUE,
-                        UI_SILDER_BACKLIGHT_BRIGHTNESS_MAX_VALUE);
+    lv_slider_set_range(uiAppSetting_SliderBacklight, UI_SLIDER_BACKLIGHT_BRIGHTNESS_MIN_VALUE,
+                        UI_SLIDER_BACKLIGHT_BRIGHTNESS_MAX_VALUE);
     lv_obj_set_style_bg_color(uiAppSetting_SliderBacklight, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiAppSetting_SliderBacklight, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
@@ -144,7 +142,7 @@ lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_obj_set_pos(uiAppSetting_SliderVolume, 22, 40);
     lv_obj_set_align(uiAppSetting_SliderVolume, LV_ALIGN_CENTER);
     lv_slider_set_value(uiAppSetting_SliderVolume, 8, LV_ANIM_OFF);
-    lv_slider_set_range(uiAppSetting_SliderVolume, UI_SILDER_VOLUME_MIN_VALUE, UI_SILDER_VOLUME_MAX_VALUE);
+    lv_slider_set_range(uiAppSetting_SliderVolume, UI_SLIDER_VOLUME_MIN_VALUE, UI_SLIDER_VOLUME_MAX_VALUE);
     lv_obj_set_style_bg_color(uiAppSetting_SliderVolume, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiAppSetting_SliderVolume, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
@@ -152,8 +150,7 @@ lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_obj_add_event_cb(uiAppSetting_SliderBacklight, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(uiAppSetting_SliderVolume, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
     LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
-
-#endif
+#else
     setting_home = lv_obj_create(parent);
     lv_obj_remove_style_all(setting_home);
     lv_obj_clear_flag(setting_home, LV_OBJ_FLAG_SCROLLABLE); /// Flags
@@ -229,52 +226,53 @@ lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     // lv_obj_add_event_cb(slider_voice, slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL); /*Assign an event function*/
 
     // 图标
-    icon_brightness_min = lv_img_create(slider_luminance);
+    LV_OBJ_ICON(brightness_min) = lv_img_create(slider_luminance);
+
     lv_img_png_src_init(UI_RES_IMG_PNG(brightness_min));
-    lv_img_set_src(icon_brightness_min, &icon_brightness_min_png);
-    lv_obj_align(icon_brightness_min, LV_ALIGN_LEFT_MID, 20, 0);
-    lv_obj_add_flag(icon_brightness_min, LV_OBJ_FLAG_CLICKABLE); /// Flags
-    lv_obj_clear_flag(icon_brightness_min, LV_OBJ_FLAG_SCROLLABLE);
-    // lv_obj_add_event_cb(icon_brightness_min, ui_event_setting, LV_EVENT_RELEASED, NULL);
-    // lv_obj_add_event_cb(icon_brightness_min, ui_event_setting, LV_EVENT_PRESSED, NULL);
-    lv_obj_add_style(icon_brightness_min, &style_setting, 0);
+    lv_img_set_src(LV_OBJ_ICON(brightness_min), &LV_IMG_DSC(brightness_min));
+
+    lv_obj_align(LV_OBJ_ICON(brightness_min), LV_ALIGN_LEFT_MID, 20, 0);
+    lv_obj_add_flag(LV_OBJ_ICON(brightness_min), LV_OBJ_FLAG_CLICKABLE); /// Flags
+    lv_obj_clear_flag(LV_OBJ_ICON(brightness_min), LV_OBJ_FLAG_SCROLLABLE);
+    // lv_obj_add_event_cb(LV_OBJ_ICON(brightness_min), ui_event_setting, LV_EVENT_RELEASED, NULL);
+    // lv_obj_add_event_cb(LV_OBJ_ICON(brightness_min), ui_event_setting, LV_EVENT_PRESSED, NULL);
+    lv_obj_add_style(LV_OBJ_ICON(brightness_min), &style_setting, 0);
     lv_style_init(&style_setting);
 
-    icon_brightness_max = lv_img_create(slider_luminance);
+    LV_OBJ_ICON(brightness_max) = lv_img_create(slider_luminance);
     lv_img_png_src_init(UI_RES_IMG_PNG(brightness_max));
     // lv_img_png_src_init(&icon_brightness_max_png, icon_brightness_max_png_data, icon_brightness_max_png_size);
-    lv_img_set_src(icon_brightness_max, &icon_brightness_max_png);
-    lv_obj_align(icon_brightness_max, LV_ALIGN_RIGHT_MID, -20, 0);
-    lv_obj_add_flag(icon_brightness_max, LV_OBJ_FLAG_CLICKABLE); /// Flags
-    lv_obj_clear_flag(icon_brightness_max, LV_OBJ_FLAG_SCROLLABLE);
-    // lv_obj_add_event_cb(icon_brightness_max, ui_event_setting, LV_EVENT_RELEASED, NULL);
-    // lv_obj_add_event_cb(icon_brightness_max, ui_event_setting, LV_EVENT_PRESSED, NULL);
-    lv_obj_add_style(icon_brightness_max, &style_setting, 0);
+    lv_img_set_src(LV_OBJ_ICON(brightness_max), &LV_IMG_DSC(brightness_max));
+    lv_obj_align(LV_OBJ_ICON(brightness_max), LV_ALIGN_RIGHT_MID, -20, 0);
+    lv_obj_add_flag(LV_OBJ_ICON(brightness_max), LV_OBJ_FLAG_CLICKABLE); /// Flags
+    lv_obj_clear_flag(LV_OBJ_ICON(brightness_max), LV_OBJ_FLAG_SCROLLABLE);
+    // lv_obj_add_event_cb(lv_obj_icon_brightness_max, ui_event_setting, LV_EVENT_RELEASED, NULL);
+    // lv_obj_add_event_cb(lv_obj_icon_brightness_max, ui_event_setting, LV_EVENT_PRESSED, NULL);
+    lv_obj_add_style(LV_OBJ_ICON(brightness_max), &style_setting, 0);
     lv_style_init(&style_setting);
     lv_style_set_opa(&style_setting, LV_OPA_80);
-    lv_obj_refresh_style(icon_brightness_max, 0, 0);
+    lv_obj_refresh_style(LV_OBJ_ICON(brightness_max), 0, 0);
 
-    icon_volume_min = lv_img_create(slider_voice);
+    LV_OBJ_ICON(volume_min) = lv_img_create(slider_voice);
     lv_img_png_src_init(UI_RES_IMG_PNG(volume_min));
-    // lv_img_png_src_init(&icon_volume_min_png, icon_volume_min_png_data, icon_volume_min_png_size);
-    lv_img_set_src(icon_volume_min, &icon_volume_min_png);
-    lv_obj_align(icon_volume_min, LV_ALIGN_LEFT_MID, 20, 0);
-    lv_obj_add_flag(icon_volume_min, LV_OBJ_FLAG_CLICKABLE); /// Flags
-    lv_obj_clear_flag(icon_volume_min, LV_OBJ_FLAG_SCROLLABLE);
-    // lv_obj_add_event_cb(icon_volume_min, ui_event_setting, LV_EVENT_RELEASED, NULL);
-    // lv_obj_add_event_cb(icon_volume_min, ui_event_setting, LV_EVENT_PRESSED, NULL);
-    lv_obj_add_style(icon_volume_min, &style_setting, 0);
+    lv_img_set_src(LV_OBJ_ICON(volume_min), &LV_IMG_DSC(volume_min));
+    lv_obj_align(LV_OBJ_ICON(volume_min), LV_ALIGN_LEFT_MID, 20, 0);
+    lv_obj_add_flag(LV_OBJ_ICON(volume_min), LV_OBJ_FLAG_CLICKABLE); /// Flags
+    lv_obj_clear_flag(LV_OBJ_ICON(volume_min), LV_OBJ_FLAG_SCROLLABLE);
+    // lv_obj_add_event_cb(LV_OBJ_ICON(volume_min), ui_event_setting, LV_EVENT_RELEASED, NULL);
+    // lv_obj_add_event_cb(LV_OBJ_ICON(volume_min), ui_event_setting, LV_EVENT_PRESSED, NULL);
+    lv_obj_add_style(LV_OBJ_ICON(volume_min), &style_setting, 0);
     lv_style_init(&style_setting);
-    icon_volume_max = lv_img_create(slider_voice);
+    LV_OBJ_ICON(volume_max) = lv_img_create(slider_voice);
     lv_img_png_src_init(UI_RES_IMG_PNG(volume_max));
     // lv_img_png_src_init(&icon_volume_max_png, gicon_volume_max_pngData, gicon_volume_max_pngSize);
-    lv_img_set_src(icon_volume_max, &icon_volume_max_png);
-    lv_obj_align(icon_volume_max, LV_ALIGN_RIGHT_MID, -20, 0);
-    lv_obj_add_flag(icon_volume_max, LV_OBJ_FLAG_CLICKABLE); /// Flags
-    lv_obj_clear_flag(icon_volume_max, LV_OBJ_FLAG_SCROLLABLE);
-    // lv_obj_add_event_cb(icon_volume_max, ui_event_setting, LV_EVENT_RELEASED, NULL);
-    // lv_obj_add_event_cb(icon_volume_max, ui_event_setting, LV_EVENT_PRESSED, NULL);
-    lv_obj_add_style(icon_volume_max, &style_setting, 0);
+    lv_img_set_src(LV_OBJ_ICON(volume_max), &LV_IMG_DSC(volume_max));
+    lv_obj_align(LV_OBJ_ICON(volume_max), LV_ALIGN_RIGHT_MID, -20, 0);
+    lv_obj_add_flag(LV_OBJ_ICON(volume_max), LV_OBJ_FLAG_CLICKABLE); /// Flags
+    lv_obj_clear_flag(LV_OBJ_ICON(volume_max), LV_OBJ_FLAG_SCROLLABLE);
+    // lv_obj_add_event_cb(LV_OBJ_ICON(volume_max), ui_event_setting, LV_EVENT_RELEASED, NULL);
+    // lv_obj_add_event_cb(LV_OBJ_ICON(volume_max), ui_event_setting, LV_EVENT_PRESSED, NULL);
+    lv_obj_add_style(LV_OBJ_ICON(volume_max), &style_setting, 0);
     lv_style_init(&style_setting);
     static lv_style_t style_line;
     lv_style_init(&style_line);
@@ -282,6 +280,8 @@ lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_style_set_line_color(&style_line, lv_palette_main(LV_PALETTE_BLUE));
     lv_style_set_line_rounded(&style_line, true);
 
+//
+#if 0
     line_setting_floor = lv_line_create(setting_home);
     lv_obj_add_style(line_setting_floor, &style_line, 0);
     lv_obj_set_style_line_color(line_setting_floor, lv_color_hex(0xaaaaaa), 0);
@@ -292,7 +292,7 @@ lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_setting_line_floor[1].y = 220;
 
     lv_line_set_points(line_setting_floor, lv_setting_line_floor, 2);
-    LVGL_UI_UNLOCK();
-
+#endif
+#endif
     return parent;
 }

@@ -73,18 +73,21 @@ static void event_handler_app_panel(lv_event_t *e)
 
 lisaui_err_t app_taskbar_create(void *parent)
 {
-    g_app_taskbar = lv_obj_create(lv_layer_sys());
+    g_app_taskbar = lv_obj_create(parent);
     lv_obj_set_size(g_app_taskbar, LV_PCT(100), LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
-    _lisaui_set_style_container(g_app_taskbar, lv_color_hex(0x000000), 0, lv_color_hex(0x000000), 0, 0);
+    _lisaui_set_style_container(g_app_taskbar, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
+    _lisaui_taskbar_create_operate_menu(g_app_taskbar);
+    _lisaui_taskbar_create_battery(g_app_taskbar);
+
+#if CONFIG_LISAUI_APP_TASKBAR_TOOLKIT_ENABLE
     _lisaui_taskbar_create_back_btn(g_app_taskbar);
     if (lv_obj_get_width(g_app_taskbar) > 400) {
         _lisaui_taskbar_create_date_label(g_app_taskbar);
     }
     _lisaui_taskbar_create_time_label(g_app_taskbar);
-    _lisaui_taskbar_create_battery(g_app_taskbar);
-
     lv_obj_add_event_cb(g_app_taskbar, event_handler_app_panel, LV_EVENT_ALL, NULL);
+#endif
 
 #if CONFIG_LISAUI_DBUS_ENABLE
     lisaui_dbus_t *m_taskbar_bus;
@@ -196,7 +199,7 @@ struct lisaui_app_t app_taskbar = {
 lisaui_err_t app_taskbar_init(void)
 {
     lisaui_app_register(&app_taskbar);
-    app_taskbar_create(NULL);
+    app_taskbar_create(lv_layer_top());
     return LISAUI_ERR_OK;
 }
 

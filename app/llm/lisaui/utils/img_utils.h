@@ -18,14 +18,6 @@ extern "C" {
 
 #include <stdint.h>
 
-
-#define UI_RES_IMG_NAME(name, path) \
-	static lv_obj_t *icon_##name;\
-	lv_img_dsc_t icon_##name##_png;\
-	INCBIN(name##_png, path);
-
-
-#define UI_RES_IMG_PNG(name) &icon_##name##_png, g##name##_pngData, g##name##_pngSize
 typedef struct {
 	uint32_t width;
 	uint32_t height;

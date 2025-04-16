@@ -102,7 +102,7 @@ lv_obj_t *ls_lv_radio_group_add(lv_obj_t *group, const char *title_text, const c
     lv_obj_add_event_cb(radio_panel, radio_group_bg_event_handler, LV_EVENT_CLICKED, (void *)&item->radio_id);
     lv_obj_set_style_text_color(radio_panel, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_color(title_checkbox, lv_color_hex(0x00ff00), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_size(title_checkbox, LV_PCT(80), LV_SIZE_CONTENT);
+    lv_obj_set_size(title_checkbox, LV_PCT(90), LV_SIZE_CONTENT);
 
     lv_checkbox_set_text(title_checkbox, title_text);
     lv_obj_add_flag(title_checkbox, LV_OBJ_FLAG_EVENT_BUBBLE);
@@ -113,7 +113,7 @@ lv_obj_t *ls_lv_radio_group_add(lv_obj_t *group, const char *title_text, const c
 
     lv_obj_t *tip_text = lv_label_create(radio_panel);
     lv_obj_align_to(tip_text, title_checkbox, LV_ALIGN_BOTTOM_LEFT, 30, 25);
-    lv_obj_set_size(tip_text, LV_PCT(80), LV_SIZE_CONTENT);
+    lv_obj_set_size(tip_text, LV_PCT(90), LV_SIZE_CONTENT);
 
     lv_label_set_text(tip_text, tips_text);
     lv_obj_set_style_text_font(tip_text, &lv_font_notosans_cs_medium_14, LV_PART_MAIN | LV_STATE_DEFAULT);

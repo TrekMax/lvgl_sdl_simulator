@@ -13,7 +13,7 @@
 #ifdef __ZEPHYR__
     #include <zephyr/kernel.h>
     #include "lvgl.h"
-#elif defined(__LVGL_SIMULATOR__)
+#elif CONFIG_LVGL_ENV_SIMULATOR
     #include "lvgl/lvgl.h"
 #else
     #include "lvgl.h"

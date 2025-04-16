@@ -9,10 +9,10 @@ file(GLOB_RECURSE SRC_FILES
     # mouse_cursor_icon.c
 )
 
-add_definitions(-DCONFIG_LVGL_SIMULATOR=1)
-add_definitions(-D__LVGL_SIMULATOR__)
+set(CONFIG_LVGL_ENV_SIMULATOR 1)
+add_definitions(-DCONFIG_LVGL_ENV_SIMULATOR=${CONFIG_LVGL_ENV_SIMULATOR})
 
-set(CONFIG_LISAUI_DBUS_ENABLE 1)
+set(CONFIG_LISAUI_DBUS_ENABLE 0)
 add_definitions(-DCONFIG_LISAUI_DBUS_ENABLE=${CONFIG_LISAUI_DBUS_ENABLE})
 
 target_sources(${target_name} PRIVATE ${SRC_FILES})

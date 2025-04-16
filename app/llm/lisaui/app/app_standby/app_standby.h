@@ -24,9 +24,10 @@ extern "C" {
  * 
  */
  typedef enum _lisaui_app_standby_emoji_type_e {
-    LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY = 0,    // 待机
-    LISAUI_APP_STANDBY_EMOJI_TYPE_RECOGNITION = 1,    // 识别
-    LISAUI_APP_STANDBY_EMOJI_TYPE_RESPONSE = 2,    // 响应
+    LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY = 0,      // 待机
+    LISAUI_APP_STANDBY_EMOJI_TYPE_LISTENING,        // 聆听中
+    LISAUI_APP_STANDBY_EMOJI_TYPE_RECOGNITION,      // 识别
+    LISAUI_APP_STANDBY_EMOJI_TYPE_RESPONSE,         // 响应
     LISAUI_APP_STANDBY_EMOJI_TYPE_NONE,
 } lisaui_app_standby_emoji_type_e;
 

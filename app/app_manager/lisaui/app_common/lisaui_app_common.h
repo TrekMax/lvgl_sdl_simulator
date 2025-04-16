@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-#if defined(__LVGL_SIMULATOR__)
+#if CONFIG_LVGL_ENV_SIMULATOR
     #ifndef LV_CONF_PATH
         #define LV_CONF_PATH ../../../include/lv_conf.h
     #endif
@@ -25,7 +25,7 @@ extern "C" {
 #ifdef __ZEPHYR__
     #include <zephyr/kernel.h>
     #include "lvgl.h"
-#elif defined(__LVGL_SIMULATOR__)
+#elif CONFIG_LVGL_ENV_SIMULATOR
     #include "lvgl/lvgl.h"
 #else
     #include "lvgl.h"
@@ -42,7 +42,7 @@ extern "C" {
 #include "../app_framework/lisaui_dbus.h"
 
 
-#if defined(__LVGL_SIMULATOR__)
+#if CONFIG_LVGL_ENV_SIMULATOR
 #else
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -61,7 +61,7 @@ extern "C" {
 
 #define LISAUI_PRINTF printf
 #if CONFIG_LOG_ENABLE
-    #if defined(__LVGL_SIMULATOR__)
+    #if CONFIG_LVGL_ENV_SIMULATOR
         #include "utils_log.h"
         #define LISAUI_PRINTK(fmt, ...) printf(fmt, ##__VA_ARGS__)
         #define LISAUI_LOGE             LOGE
@@ -114,7 +114,7 @@ extern "C" {
 #define LISAUI_STATUS_BAR_HEIGHT 40
 #define CONFIG_LISAUI_EXEC_HOOK_ENABLE 1
 
-#if defined(__LVGL_SIMULATOR__)
+#if CONFIG_LVGL_ENV_SIMULATOR
 #define LVGL_UI_LOCK()                                                          \
     do {                                                                        \
     } while (0)

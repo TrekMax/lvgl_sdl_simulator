@@ -10,14 +10,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "lv_img_utils.h"
-#ifdef __ZEPHYR__
-    #include <zephyr/kernel.h>
-    #include "lvgl.h"
-#elif defined(__LVGL_SIMULATOR__)
-    #include "lvgl/lvgl.h"
-#else
-    #include "lvgl.h"
-#endif
 
 // #include "log_print.h"
 // #define LOG_INF CLOG

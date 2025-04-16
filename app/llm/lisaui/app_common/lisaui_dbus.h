@@ -54,13 +54,16 @@ struct _lisaui_dbus_node_t {
     lisaui_dbus_node_t* next;
 };
 
+
 typedef struct {
     lisaui_dbus_msg_t buffer[LISAUI_DBUS_MAX_QUEUE_SIZE];
     int head;
     int tail;
     int count;
+#ifdef __POSIX__
     pthread_mutex_t mutex;
     pthread_cond_t cond;
+#endif
 } lisaui_dbus_queue_t;
 
 typedef struct _lisaui_dbus_t {
@@ -70,8 +73,11 @@ typedef struct _lisaui_dbus_t {
     QueueHandle_t event_queue;
     TaskHandle_t task_handle;
 #else
+#ifdef __POSIX__
     pthread_mutex_t mutex;
     pthread_t thread;
+#endif
+
     lisaui_dbus_queue_t event_queue;
 #endif
 } lisaui_dbus_t;

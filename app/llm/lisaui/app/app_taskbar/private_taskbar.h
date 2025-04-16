@@ -19,11 +19,13 @@ extern "C" {
 #include "lisaui_app_common.h"
 #include "assets/assets_res.h"
 
-void _lisaui_taskbar_create_battery(lv_obj_t *parent);
+lv_obj_t *_lisaui_taskbar_create_battery(lv_obj_t *parent);
+lv_obj_t *_lisaui_taskbar_create_back_btn(lv_obj_t *parent);
+lv_obj_t *_lisaui_taskbar_create_date_label(lv_obj_t *parent);
+lv_obj_t *_lisaui_taskbar_create_time_label(lv_obj_t *parent);
+lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent);
+
 void _lisaui_taskbar_battery_update_cb(lv_timer_t *timer);
-void _lisaui_taskbar_create_back_btn(lv_obj_t *parent);
-void _lisaui_taskbar_create_date_label(lv_obj_t *parent);
-void _lisaui_taskbar_create_time_label(lv_obj_t *parent);
 
 #ifdef __cplusplus
 }

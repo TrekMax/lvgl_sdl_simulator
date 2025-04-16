@@ -16,16 +16,16 @@
 extern "C" {
 #endif
 
-#if defined(__LVGL_SIMULATOR__)
-#ifndef LV_CONF_PATH
-#define LV_CONF_PATH ../../../include/lv_conf.h
-#endif
+#if CONFIG_LVGL_ENV_SIMULATOR
+    #ifndef LV_CONF_PATH
+        #define LV_CONF_PATH ../../../include/lv_conf.h
+    #endif
 #endif
 
 #ifdef __ZEPHYR__
 #include <zephyr/kernel.h>
 #include "lvgl.h"
-#elif defined(__LVGL_SIMULATOR__)
+#elif CONFIG_LVGL_ENV_SIMULATOR
 #include "lvgl/lvgl.h"
 #else
 #include "lvgl.h"
@@ -40,7 +40,7 @@ extern "C" {
 #include "lisaui_dbus.h"
 #include "lisaui_log.h"
 
-#if defined(__LVGL_SIMULATOR__)
+#if CONFIG_LVGL_ENV_SIMULATOR
 #else
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -74,10 +74,21 @@ extern "C" {
 #define LISAUI_DBUS_APP_EXIT     "app_exit"
 #define RES_PERFIX_PATH(res)     "app/app_manager/" res
 
-#define LISAUI_STATUS_BAR_HEIGHT       40
+#define LISAUI_STATUS_BAR_HEIGHT       46
 #define CONFIG_LISAUI_EXEC_HOOK_ENABLE 1
 
-#if defined(__LVGL_SIMULATOR__)
+#define LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(parent, target)                                                          \
+    do {                                                                                                               \
+        if (parent == NULL || target == NULL) {                                                                        \
+            LISAUI_LOGE(TAG, "");                                                                                      \
+            return LISAUI_ERR_INVALID_PARAM;                                                                           \
+        }                                                                                                              \
+        lv_obj_set_y(target, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));                                                        \
+        lv_coord_t height = lv_obj_get_height(parent) - LV_DPX(LISAUI_STATUS_BAR_HEIGHT);                              \
+        lv_obj_set_size(target, LV_PCT(100), height);                                                                  \
+    } while (0)
+
+#if CONFIG_LVGL_ENV_SIMULATOR
 #define LVGL_UI_LOCK()                                                                                                 \
     do {                                                                                                               \
     } while (0)

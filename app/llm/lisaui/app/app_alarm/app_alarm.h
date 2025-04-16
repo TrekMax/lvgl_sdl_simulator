@@ -20,6 +20,7 @@ extern "C" {
 #include "lisaui_app_common.h"
 
 lisaui_err_t app_alarm_init(void);
+lisaui_err_t lisaui_app_alarm_op_alarm_add_view(const char *alarm_time_text, const char *alarm_date_text);
 
 #ifdef __cplusplus
 }

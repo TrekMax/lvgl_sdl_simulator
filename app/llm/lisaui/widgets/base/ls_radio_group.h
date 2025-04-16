@@ -15,8 +15,10 @@
 #ifdef __ZEPHYR__
 #include <zephyr/kernel.h>
 #include "lvgl.h"
-#else
+#elif CONFIG_LVGL_ENV_SIMULATOR
 #include "lvgl/lvgl.h"
+#else
+#include "lvgl.h"
 #endif
 
 LV_FONT_DECLARE(lv_font_notosans_cs_medium_14);

@@ -15,7 +15,7 @@
 #ifdef __ZEPHYR__
     #include <zephyr/kernel.h>
     #include "lvgl.h"
-#elif defined(__LVGL_SIMULATOR__)
+#elif CONFIG_LVGL_ENV_SIMULATOR
     #include "lvgl/lvgl.h"
 #else
     #include "lvgl.h"
@@ -30,13 +30,16 @@ typedef struct _lisaui_ui_res_img_png_t {
     uint32_t size;
 } lisaui_ui_res_img_png_t;
 
-// #define UI_RES_IMG_BY_ID_PNG(name, id) \
-// 	{ \
-// 		.res_id = id, \
-// 		.img = &name##_png, \
-// 		.data = g##name##_pngData, \
-// 		.size = g##name##_pngSize, \
-// 	}
+#define UI_RES_IMG_NAME(name, path) \
+	static lv_obj_t *lv_obj_icon_##name;\
+	lv_img_dsc_t lv_img_dsc_##name;\
+	INCBIN(file_##name, path);
+
+#define UI_RES_IMG_PNG(name) &lv_img_dsc_##name, gfile_##name##Data, gfile_##name##Size
+
+// #define LV_UI_RES_IMG_PNG(name) icon_##name
+#define LV_OBJ_ICON(name) lv_obj_icon_##name
+#define LV_IMG_DSC(name) lv_img_dsc_##name
 
 
 int lv_img_png_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size);

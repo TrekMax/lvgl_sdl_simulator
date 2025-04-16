@@ -16,8 +16,21 @@
 extern "C" {
 #endif
 
-#include "../../app_common/lisaui_app_common.h"
+#include "lisaui_app_common.h"
 
+#if CONFIG_LVGL_ENV_SIMULATOR
+    #define APP_SETTING_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/app/app_setting/" path
+#else
+    #define APP_SETTING_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/app/app_setting/" path
+#endif
+
+
+#define APP_SETTING_ITEM_ID_REGULAR 0
+#define APP_SETTING_ITEM_ID_ALARM 1
+#define APP_SETTING_ITEM_ID_WAKE 2
+#define APP_SETTING_ITEM_ID_WIFI 3
+#define APP_SETTING_ITEM_ID_WEATHER 4
+#define APP_SETTING_ITEM_ID_AUDIO_PLAYER 5
 
 #define UI_SILDER_BACKLIGHT_BRIGHTNESS_MAX_VALUE  (100)
 #define UI_SILDER_BACKLIGHT_BRIGHTNESS_MIN_VALUE  (0)
@@ -43,7 +56,8 @@ enum ui_battery_state {
     UI_BATTERY_STATE_FULL,
 };
 
-int app_setting_init(void);
+lisaui_err_t app_setting_init(void);
+lisaui_err_t lisaui_app_setting_enter_item_panel(void);
 
 #ifdef __cplusplus
 }

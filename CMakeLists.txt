@@ -8,6 +8,9 @@ add_compile_options(-g)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE Debug)
+# set(CMAKE_EXPORT_COMPILECOMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(SDK_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
 # 使用-ffile-prefix-map来减少调试信息中的路径长度，从而固定 ROM 占用

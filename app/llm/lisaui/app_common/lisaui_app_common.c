@@ -150,7 +150,7 @@ static void anim_timeline_create(lv_obj_t *target, int32_t width, int32_t height
     lv_anim_timeline_add(anim_timeline, 0, &a1);
     lv_anim_timeline_add(anim_timeline, 0, &a2);
 }
-lv_obj_t *ls_lv_llm_dialog_create(lv_obj_t *parent)
+lv_obj_t *ls_lv_llm_toast_create(lv_obj_t *parent)
 {
     lv_obj_t *toast = lv_obj_create(parent);
     lv_obj_set_style_pad_all(toast, 0, 0);
@@ -202,7 +202,7 @@ static void lisaui_app_sys_toast_hidden_cb(lv_timer_t *timer)
 lisaui_err_t lisaui_popup_toast(const char *message)
 {
     LVGL_OBJ_SAFE_DEL(sys_toast);
-    sys_toast = ls_lv_llm_dialog_create(lv_layer_sys());
+    sys_toast = ls_lv_llm_toast_create(lv_layer_sys());
     LISAUI_LOGV(TAG, "lisaui_popup_toast message: %s", message);
     lv_textarea_set_text(llm_asr_result_label, message);
     if (anim_timeline) {
