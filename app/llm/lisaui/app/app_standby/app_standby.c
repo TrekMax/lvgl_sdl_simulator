@@ -77,12 +77,12 @@ lisaui_err_t app_standby_create(void *parent)
     LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(g_app_standby, g_app_panel);
 
     g_icon_emoji = lv_gif_create(g_app_panel);
-    lv_obj_align(g_icon_emoji, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_align(g_icon_emoji, LV_ALIGN_CENTER, 0, -(LV_DPX(LISAUI_STATUS_BAR_HEIGHT)));
     lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
 
     g_label_wakeup_tip = lv_label_create(g_app_standby);
     lv_label_set_text(g_label_wakeup_tip, "请使用“小美小美”唤醒我");
-    lv_obj_align(g_label_wakeup_tip, LV_ALIGN_BOTTOM_MID, 0, -(LV_DPX(20)));
+    lv_obj_align(g_label_wakeup_tip, LV_ALIGN_BOTTOM_MID, 0, -(LV_DPX(LISAUI_STATUS_BAR_HEIGHT-10)));
     lv_obj_set_style_text_font(g_label_wakeup_tip, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_color(g_label_wakeup_tip, lv_color_hex(0xffffff), 0);
     lv_obj_set_style_bg_color(g_label_wakeup_tip, lv_color_black(), 0);

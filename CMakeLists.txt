@@ -1,23 +1,21 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-include(GenerateVersionHeader)
-
 project(demo C)
-add_compile_options(-g)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_BUILD_TYPE Debug)
-# set(CMAKE_EXPORT_COMPILECOMMANDS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# set(CMAKE_BUILD_TYPE Debug)
+add_compile_options(-g)
 
 set(SDK_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+set(CMAKE_MODULE_PATH ${SDK_PATH}/cmake)
+include(GenerateVersionHeader)
 
-# 使用-ffile-prefix-map来减少调试信息中的路径长度，从而固定 ROM 占用
-get_filename_component(ROOT_PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR}/ ABSOLUTE)
+# 使用 -ffile-prefix-map 来减少调试信息中的路径长度，从而固定 ROM 占用
+get_filename_component(ROOT_PROJECT_DIR ${SDK_PATH}/ ABSOLUTE)
 add_compile_options("-ffile-prefix-map=${ROOT_PROJECT_DIR}=.")
 
-# 移除符号表中的build目录前缀
+# 移除符号表中的 build 目录前缀
 get_filename_component(BUILD_DIR ${CMAKE_BINARY_DIR} ABSOLUTE)
 add_compile_options("-ffile-prefix-map=${BUILD_DIR}=")
 
@@ -36,18 +34,13 @@ string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 include_directories(
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/components
-    ${PROJECT_SOURCE_DIR}/include/
+    # ${PROJECT_SOURCE_DIR}/include/
     ${PROJECT_SOURCE_DIR}/components/utils/include/
     /usr/include/freetype2
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-# 添加公共组件
-add_subdirectory(components/lvgl)
-add_subdirectory(components/lv_drivers)
-add_subdirectory(components/utils)
-add_subdirectory(components/unity)
-
+message("父目录初始: LV_CONF_PATH = ${LV_CONF_PATH}")
 # 可选地添加app子目录
 if(NOT DEFINED BUILD_APP)
     # 默认构建所有app
@@ -66,3 +59,11 @@ else()
         message(FATAL_ERROR "App [${BUILD_APP}] not found or doesn't have CMakeLists.txt")
     endif()
 endif()
+
+include_directories(app/${BUILD_APP}/conf)
+
+# 添加公共组件
+add_subdirectory(components/lvgl)
+add_subdirectory(components/lv_drivers)
+add_subdirectory(components/utils)
+add_subdirectory(components/unity)

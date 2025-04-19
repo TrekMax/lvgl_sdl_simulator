@@ -16,12 +16,6 @@
 extern "C" {
 #endif
 
-#if CONFIG_LVGL_ENV_SIMULATOR
-    #ifndef LV_CONF_PATH
-        #define LV_CONF_PATH ../../../include/lv_conf.h
-    #endif
-#endif
-
 #ifdef __ZEPHYR__
 #include <zephyr/kernel.h>
 #include "lvgl.h"
