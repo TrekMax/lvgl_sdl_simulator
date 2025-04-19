@@ -16,7 +16,9 @@
 extern "C" {
 #endif
 
-#include "ext_lib/lv_gif.h"
+#include "base/ls_radio_group.h"
+#include "base/ls_lv_list.h"
+#include "base/ls_llm_dialog.h"
 
 #ifdef __cplusplus
 }

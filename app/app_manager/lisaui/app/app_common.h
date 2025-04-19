@@ -16,11 +16,13 @@
 extern "C" {
 #endif
 
-#include "../app_common/lisaui_app_common.h"
+#include "lisaui_app_common.h"
 
 enum lisaui_app_id_t {
-    UI_APP_ID_LAUNCHER = 0,
-    UI_APP_ID_TASKBAR = 1,
+    UI_APP_ID_NONE = LISAUI_APP_ID_NONE,
+
+    UI_APP_ID_LAUNCHER,
+    UI_APP_ID_TASKBAR,
     
     UI_APP_ID_LAUNCHER2,
     UI_APP_ID_DEMO,
@@ -46,17 +48,8 @@ enum lisaui_app_id_t {
     UI_APP_ID_TEMPLATE,
     UI_APP_ID_LVGL_DEMO,
 
-    UI_APP_ID_NONE,
     UI_APP_ID_MAX,
 };
-
-typedef enum _lisaui_textarea_mode_t {
-    LISAUI_TEXT_MODE_APPEND = 0, // 追加
-    LISAUI_TEXT_MODE_OVERWRITE,  // 覆盖
-
-    LISAUI_TEXT_MODE_NORMAL, // 默认
-} lisaui_textarea_mode_t;
-
 
 #ifdef __cplusplus
 }

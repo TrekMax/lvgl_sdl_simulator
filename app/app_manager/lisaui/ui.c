@@ -11,8 +11,8 @@
  */
 #include "ui.h"
 #include "app/app_common.h"
-#include "app_common/lisaui_app_common.h"
-#include "app_framework/lisaui_app_manager.h"
+#include "app_common/lisaui_log.h"
+#include "lisaui_app_common.h"
 #if CONFIG_LVGL_ENV_SIMULATOR
 #include <pthread.h>
 #include <stdbool.h>
@@ -50,18 +50,19 @@ void lisaui_ui_init(void)
 
 #if CONFIG_LVGL_ENV_SIMULATOR
     LISAUI_USE_APP(launcher);
-    LISAUI_USE_APP(launcher2);
+    // LISAUI_USE_APP(launcher2);
     LISAUI_USE_APP(taskbar);
 
-    LISAUI_USE_APP(demo);
-    LISAUI_USE_APP(ocr);
-    LISAUI_USE_APP(template);
-    LISAUI_USE_APP(audio_player);
-    LISAUI_USE_APP(dictionary);
+    // LISAUI_USE_APP(demo);
+    // LISAUI_USE_APP(ocr);
+    // LISAUI_USE_APP(template);
+    // LISAUI_USE_APP(audio_player);
+    // LISAUI_USE_APP(dictionary);
+    // LISAUI_USE_APP(thermography);
+    // LISAUI_USE_APP(lvgl_demo);
+    // LISAUI_USE_APP(voice);
+
     LISAUI_USE_APP(setting);
-    LISAUI_USE_APP(thermography);
-    LISAUI_USE_APP(lvgl_demo);
-    LISAUI_USE_APP(voice);
 #endif
     lisaui_app_manager_init();
     // lisaui_app_manager_show_all_app_info();

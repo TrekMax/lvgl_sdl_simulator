@@ -16,7 +16,7 @@
 static const char *TAG = "app_template";
 static lv_obj_t *g_app_template = NULL;
 
-#if 0//CONFIG_LISAUI_APP_TEMPLATE_MACRO_ENABLE
+#if CONFIG_LISAUI_APP_TEMPLATE_MACRO_ENABLE
 
 // 声明[模板]应用需要实现的接口
 LISAUI_DECLARE_APP_FUNC(template, create, destroy, enter, exit, get_page);
@@ -63,6 +63,7 @@ lisaui_err_t app_template_create(void *parent)
     lv_obj_t *label = lv_label_create(g_app_template);
     lv_label_set_text(label, "Hello LisaUI!");
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
 
     LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
     return LISAUI_ERR_OK;

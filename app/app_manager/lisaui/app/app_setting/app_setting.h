@@ -9,14 +9,14 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef __APP_SETTING_H__
-#define __APP_SETTING_H__
+#ifndef __LISAUI__APP_SETTING_H__
+#define __LISAUI__APP_SETTING_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "../../app_common/lisaui_app_common.h"
+#include "lisaui_app_common.h"
 
 
 #define UI_SILDER_BACKLIGHT_BRIGHTNESS_MAX_VALUE  (100)
@@ -53,4 +53,4 @@ int app_setting_init(void);
 }
 #endif
 
-#endif // __APP_SETTING_H__
+#endif // __LISAUI__APP_SETTING_H__

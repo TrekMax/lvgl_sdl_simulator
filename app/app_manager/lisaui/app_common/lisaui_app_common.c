@@ -108,7 +108,6 @@ lisaui_err_t _lisaui_lv_obj_set_btn_custom_style(lv_obj_t *obj)
 static lv_obj_t *sys_toast = NULL;
 static lv_anim_timeline_t *anim_timeline = NULL;
 static lv_obj_t *llm_asr_result_label;
-static lv_coord_t llm_asr_result_label_width = 0;
 static lv_coord_t llm_asr_result_label_height = 0;
 lv_anim_t a1;
 lv_anim_t a2;
@@ -150,7 +149,7 @@ static void anim_timeline_create(lv_obj_t *target, int32_t width, int32_t height
     lv_anim_timeline_add(anim_timeline, 0, &a1);
     lv_anim_timeline_add(anim_timeline, 0, &a2);
 }
-lv_obj_t *ls_lv_llm_dialog_create(lv_obj_t *parent)
+lv_obj_t *ls_lv_llm_toast_create(lv_obj_t *parent)
 {
     lv_obj_t *toast = lv_obj_create(parent);
     lv_obj_set_style_pad_all(toast, 0, 0);
@@ -175,8 +174,6 @@ lv_obj_t *ls_lv_llm_dialog_create(lv_obj_t *parent)
     lv_obj_set_style_text_color(llm_asr_result_label, lv_color_hex(0x9d6531), 0);
     lv_obj_set_style_bg_opa(llm_asr_result_label, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_width(llm_asr_result_label, lv_pct(100));
-    llm_asr_result_label_width = lv_obj_get_width(llm_asr_result_label);
-    LISAUI_LOGI(TAG, "llm_asr_result_label_width: %d", llm_asr_result_label_width);
     return toast;
 }
 
@@ -202,7 +199,7 @@ static void lisaui_app_sys_toast_hidden_cb(lv_timer_t *timer)
 lisaui_err_t lisaui_popup_toast(const char *message)
 {
     LVGL_OBJ_SAFE_DEL(sys_toast);
-    sys_toast = ls_lv_llm_dialog_create(lv_layer_sys());
+    sys_toast = ls_lv_llm_toast_create(lv_layer_sys());
     LISAUI_LOGV(TAG, "lisaui_popup_toast message: %s", message);
     lv_textarea_set_text(llm_asr_result_label, message);
     if (anim_timeline) {
@@ -292,12 +289,12 @@ void lisaui_memory_monitor(void *param)
     // mon.used_pct,
     //        mon.frag_pct, (int)mon.free_biggest_size);
     LISAUI_PRINTK("------------Memory usage------------\n");
-    LISAUI_PRINTK("\tTotal size              : %0.3lfKB(%ld Byte)\n", mon.total_size / 1024.0, mon.total_size);
-    LISAUI_PRINTK("\tFree count              : %ld\n", mon.free_cnt);
-    LISAUI_PRINTK("\tFree size               : %ld\n", mon.free_size);
-    LISAUI_PRINTK("\tFree biggest size       : %ld\n", mon.free_biggest_size);
-    LISAUI_PRINTK("\tUsed count              : %ld\n", mon.used_cnt);
-    LISAUI_PRINTK("\tMax used                : %0.3lfKB(%ld Byte)\n", mon.max_used / 1024.0, mon.max_used);
+    LISAUI_PRINTK("\tTotal size              : %0.3lfKB(%d Byte)\n", mon.total_size / 1024.0, mon.total_size);
+    LISAUI_PRINTK("\tFree count              : %d\n", mon.free_cnt);
+    LISAUI_PRINTK("\tFree size               : %d\n", mon.free_size);
+    LISAUI_PRINTK("\tFree biggest size       : %d\n", mon.free_biggest_size);
+    LISAUI_PRINTK("\tUsed count              : %d\n", mon.used_cnt);
+    LISAUI_PRINTK("\tMax used                : %0.3lfKB(%d Byte)\n", mon.max_used / 1024.0, mon.max_used);
     LISAUI_PRINTK("\tUsed percentage         : %d\n", mon.used_pct);
     LISAUI_PRINTK("\tFragmentation percentage: %d\n", mon.frag_pct);
     LISAUI_PRINTK("\n");

@@ -10,10 +10,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_launcher.h"
-#include "app_common/lisaui_app_common.h"
+#include "lisaui_log.h"
+#include "lisaui_type.h"
+#include "../app_common.h"
+#include "lisaui_app_common.h"
 #include "assets/assets_res.h"
-#include "app_framework/lisaui_app_manager.h"
-#include "app_framework/lisaui_dbus.h"
+
+#include "widgets_common.h"
 
 #include <stdbool.h>
 

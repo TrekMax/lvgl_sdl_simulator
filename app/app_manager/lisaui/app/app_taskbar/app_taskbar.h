@@ -18,8 +18,11 @@ extern "C" {
 
 #include "lisaui_app_common.h"
 
+#define CONFIG_LISAUI_APP_TASKBAR_TOOLKIT_ENABLE 1
+
 lisaui_err_t app_taskbar_init(void);
-void lisaui_taskbar_hide(bool hide);
+
+lisaui_err_t lisaui_taskbar_hide(bool hide);
 lisaui_err_t lisaui_get_taskbar_dbus(lisaui_dbus_t **dbus);
 lisaui_err_t lisaui_taskbar_set_battery_percent(int percent);
 lisaui_err_t lisaui_taskbar_set_battery_charging(bool is_charging);

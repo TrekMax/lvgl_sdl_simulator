@@ -12,6 +12,7 @@
 
 #include "app_taskbar.h"
 #include "../app_common.h"
+
 #include "lisaui_app_common.h"
 #include "assets/assets_res.h"
 #include "private_taskbar.h"
@@ -49,23 +50,19 @@ static void event_handler_app_panel(lv_event_t *e)
     lv_obj_t *obj = lv_event_get_target(e);
     LV_UNUSED(obj);
 
-    if (event_code == LV_EVENT_GESTURE)
-    {
+    if (event_code == LV_EVENT_GESTURE) {
         // lisaui_popup_toast("Gesture");
         LISAUI_LOGI(TAG, "Gesture");
         if (lv_indev_get_gesture_dir(lv_indev_get_act()) == LV_DIR_TOP) {
             lv_indev_wait_release(lv_indev_get_act());
         }
-    }
-    else if (event_code == LV_EVENT_CLICKED) {
+    } else if (event_code == LV_EVENT_CLICKED) {
         // lisaui_popup_toast("Clicked");
         LISAUI_LOGI(TAG, "Clicked");
-    }
-    else if (event_code == LV_EVENT_PRESSED) {
+    } else if (event_code == LV_EVENT_PRESSED) {
         // lisaui_popup_toast("Pressed");
         LISAUI_LOGI(TAG, "Pressed");
-    }
-    else if (event_code == LV_EVENT_RELEASED) {
+    } else if (event_code == LV_EVENT_RELEASED) {
         // lisaui_popup_toast("Released");
         LISAUI_LOGI(TAG, "Released");
     }
@@ -77,9 +74,6 @@ lisaui_err_t app_taskbar_create(void *parent)
     lv_obj_set_size(g_app_taskbar, LV_PCT(100), LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
     _lisaui_set_style_container(g_app_taskbar, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
-    _lisaui_taskbar_create_operate_menu(g_app_taskbar);
-    _lisaui_taskbar_create_battery(g_app_taskbar);
-
 #if CONFIG_LISAUI_APP_TASKBAR_TOOLKIT_ENABLE
     _lisaui_taskbar_create_back_btn(g_app_taskbar);
     if (lv_obj_get_width(g_app_taskbar) > 400) {
@@ -87,6 +81,9 @@ lisaui_err_t app_taskbar_create(void *parent)
     }
     _lisaui_taskbar_create_time_label(g_app_taskbar);
     lv_obj_add_event_cb(g_app_taskbar, event_handler_app_panel, LV_EVENT_ALL, NULL);
+#else
+    _lisaui_taskbar_create_operate_menu(g_app_taskbar);
+    _lisaui_taskbar_create_battery(g_app_taskbar);
 #endif
 
 #if CONFIG_LISAUI_DBUS_ENABLE
@@ -101,16 +98,17 @@ lisaui_err_t app_taskbar_create(void *parent)
     return LISAUI_ERR_OK;
 }
 
-void lisaui_taskbar_hide(bool hide)
+lisaui_err_t lisaui_taskbar_hide(bool hide)
 {
     if (g_app_taskbar == NULL) {
-        return;
+        return LISAUI_ERR_FAIL;
     }
     if (hide) {
-        // lv_obj_set_hidden(g_app_taskbar, true);
+        lv_obj_set_hidden(g_app_taskbar, true);
     } else {
-        // lv_obj_set_hidden(g_app_taskbar, false);
+        lv_obj_set_hidden(g_app_taskbar, false);
     }
+    return LISAUI_ERR_OK;
 }
 
 #if CONFIG_LISAUI_DBUS_ENABLE
@@ -174,7 +172,7 @@ static struct app_icon_t app_icon_res = {
 #endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = NULL,//&ui_img_icon_taskbar_png,
+    .icon = NULL, //&ui_img_icon_taskbar_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 

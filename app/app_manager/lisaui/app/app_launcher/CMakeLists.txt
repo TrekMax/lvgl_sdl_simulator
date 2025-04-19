@@ -1,28 +1,38 @@
 # app/app_launcher/CMakeLists.txt
-set(APP_SOURCES
+set(LISAUI_APP_TARGET_NAME app_launcher)
+set(${LISAUI_APP_TARGET_NAME}_SOURCES
     app_launcher.c
 )
 
-set(APP_UI_RESOURCES
+set(${LISAUI_APP_TARGET_NAME}_UI_RESOURCES
     assets/icons/icon_img_app_default_png.c
     assets/icons/icon_img_app_launcher_png.c
 )
 
-add_library(app_launcher STATIC
-    ${APP_SOURCES}
-    ${APP_UI_RESOURCES}
+add_library(${LISAUI_APP_TARGET_NAME} STATIC
+    ${${LISAUI_APP_TARGET_NAME}_SOURCES}
+    ${${LISAUI_APP_TARGET_NAME}_UI_RESOURCES}
 )
 
-target_include_directories(app_launcher PRIVATE
+target_include_directories(${LISAUI_APP_TARGET_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../../
     ${CMAKE_CURRENT_SOURCE_DIR}/../../app_common
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../..
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../widgets
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
 )
 
-
-target_link_libraries(app_launcher PRIVATE 
-    lvgl
-    utils
-    app_common
-    )
+if (CONFIG_LISAUI_ENV_ARCS_SDK)
+    target_link_libraries(${LISAUI_APP_TARGET_NAME} 
+    PRIVATE
+        utils
+    PUBLIC 
+        listenai_interface)
+    listenai_link_libraries(${LISAUI_APP_TARGET_NAME})
+else()
+    target_link_libraries(${LISAUI_APP_TARGET_NAME} 
+    PRIVATE
+        lvgl
+        utils
+        app_common
+        )
+endif()

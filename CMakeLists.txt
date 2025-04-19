@@ -40,7 +40,6 @@ include_directories(
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-message("父目录初始: LV_CONF_PATH = ${LV_CONF_PATH}")
 # 可选地添加app子目录
 if(NOT DEFINED BUILD_APP)
     # 默认构建所有app
