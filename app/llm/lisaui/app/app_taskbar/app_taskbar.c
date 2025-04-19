@@ -104,9 +104,11 @@ lisaui_err_t lisaui_taskbar_hide(bool hide)
         return LISAUI_ERR_FAIL;
     }
     if (hide) {
-        lv_obj_set_hidden(g_app_taskbar, true);
+        // lv_obj_set_hidden(g_app_taskbar, true);
+        lv_obj_add_flag(g_app_taskbar, LV_OBJ_FLAG_HIDDEN);
     } else {
-        lv_obj_set_hidden(g_app_taskbar, false);
+        // lv_obj_set_hidden(g_app_taskbar, false);
+        lv_obj_clear_flag(g_app_taskbar, LV_OBJ_FLAG_HIDDEN);
     }
     return LISAUI_ERR_OK;
 }

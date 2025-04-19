@@ -60,7 +60,7 @@ static lv_obj_t *app_alarm_delete_menu_create(lv_obj_t *parent)
     lv_obj_t *apply_btn = lv_btn_create(menu);
     lv_obj_align(apply_btn, LV_ALIGN_BOTTOM_MID, LV_DPX(80), -LV_DPX(30));
     lv_obj_add_event_cb(apply_btn, msgbox_event_handler, LV_EVENT_CLICKED, NULL);
-    lv_obj_set_size(apply_btn, LV_PCT(30), LV_SIZE_CONTENT);
+    lv_obj_set_size(apply_btn, LV_DPX(100), LV_SIZE_CONTENT);
     lv_obj_set_style_bg_color(apply_btn, lv_color_hex(0x24242d), 0);
     lv_obj_set_style_radius(apply_btn, 8, 0);
     lv_obj_set_style_shadow_width(apply_btn, 0, 0);
@@ -76,7 +76,7 @@ static lv_obj_t *app_alarm_delete_menu_create(lv_obj_t *parent)
 
     lv_obj_t *cancel_btn = lv_btn_create(menu);
     lv_obj_align(cancel_btn, LV_ALIGN_BOTTOM_MID, -LV_DPX(80), -LV_DPX(30));
-    lv_obj_set_size(cancel_btn, LV_PCT(30), LV_SIZE_CONTENT);
+    lv_obj_set_size(cancel_btn, LV_DPX(100), LV_SIZE_CONTENT);
     lv_obj_set_style_bg_color(cancel_btn, lv_color_hex(0x24242d), 0);
     lv_obj_set_style_radius(cancel_btn, 8, 0);
     lv_obj_set_style_shadow_width(cancel_btn, 0, 0);
@@ -108,11 +108,12 @@ void app_alarm_create_alarm_list(lv_obj_t *parent)
 {
     g_obj_alarm_list = ls_lv_list_create(parent);
     lv_obj_set_size(g_obj_alarm_list, LV_PCT(100), LV_PCT(100));
-    // ls_lv_list_add_text(alarm_list, "闹钟列表");
+    // ls_lv_list_add_text(g_obj_alarm_list, "闹钟列表");
     ls_lv_list_add_btn(g_obj_alarm_list, "07:00", "Alarm1", event_handler, NULL);
     ls_lv_list_add_btn(g_obj_alarm_list, "08:00", "Alarm1", event_handler, NULL);
     ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
     ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
+    // ls_lv_list_add_text(g_obj_alarm_list, "闹钟列表");
     ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
     ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
     ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);

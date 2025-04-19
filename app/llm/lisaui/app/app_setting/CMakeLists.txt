@@ -1,5 +1,6 @@
 # app/app_weather/CMakeLists.txt
 set(LISAUI_APP_TARGET_NAME app_setting)
+
 set(${LISAUI_APP_TARGET_NAME}_SOURCES
     app_setting.c
     app_setting_view_volume_backlight.c
@@ -16,24 +17,23 @@ add_library(${LISAUI_APP_TARGET_NAME} STATIC
 )
 
 target_include_directories(${LISAUI_APP_TARGET_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../app_common
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../widgets
+    ${CMAKE_CURRENT_SOURCE_DIR}/../
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
 )
 
 if (CONFIG_LISAUI_ENV_ARCS_SDK)
-    target_link_libraries(${LISAUI_APP_TARGET_NAME} 
+    target_link_libraries(${LISAUI_APP_TARGET_NAME}
     PRIVATE
         utils
-    PUBLIC 
+    PUBLIC
         listenai_interface)
     listenai_link_libraries(${LISAUI_APP_TARGET_NAME})
 else()
-    target_link_libraries(${LISAUI_APP_TARGET_NAME} 
+    target_link_libraries(${LISAUI_APP_TARGET_NAME}
     PRIVATE
         lvgl
         utils
+        common_widget
         app_common
         )
 endif()

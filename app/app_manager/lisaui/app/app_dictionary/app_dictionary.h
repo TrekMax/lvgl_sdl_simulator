@@ -9,8 +9,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef __APP_DICTIONARY_H__
-#define __APP_DICTIONARY_H__
+#ifndef __LISAUI__APP_DICTIONARY_H__
+#define __LISAUI__APP_DICTIONARY_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,4 +24,4 @@ lisaui_err_t app_dictionary_init(void);
 }
 #endif
 
-#endif // __APP_DICTIONARY_H__
+#endif // __LISAUI__APP_DICTIONARY_H__

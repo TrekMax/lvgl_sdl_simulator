@@ -1,33 +1,37 @@
 # app/app_ocr_scanner/CMakeLists.txt
-set(APP_OCR_SCANNER_SOURCES
+set(LISAUI_APP_TARGET_NAME app_ocr_scanner)
+set(${LISAUI_APP_TARGET_NAME}_SOURCES
     app_ocr.c
 )
 
-set(APP_UI_RESOURCES
+set(${LISAUI_APP_TARGET_NAME}_UI_RESOURCES
     assets/icons/icon_img_app_scanner_png.c
 )
 
-add_library(app_ocr_scanner STATIC
-    ${APP_OCR_SCANNER_SOURCES}
-    ${APP_UI_RESOURCES}
+add_library(${LISAUI_APP_TARGET_NAME} STATIC
+    ${${LISAUI_APP_TARGET_NAME}_SOURCES}
+    ${${LISAUI_APP_TARGET_NAME}_UI_RESOURCES}
 )
 
-target_include_directories(app_ocr_scanner PRIVATE
+target_include_directories(${LISAUI_APP_TARGET_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../app_common
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../widgets
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
-    ${LISAUI_BASE_DIR}/
-    ${LISAUI_BASE_DIR}/app_common
-    ${LISAUI_BASE_DIR}/..
 )
-# target_include_directories(app_ocr_scanner PRIVATE
-#     ${CMAKE_CURRENT_SOURCE_DIR}/../../
-#     ${CMAKE_CURRENT_SOURCE_DIR}/../../app_common
-#     ${CMAKE_CURRENT_SOURCE_DIR}/../../..
-#     ${CMAKE_CURRENT_SOURCE_DIR}/assets
-# )
 
-
-target_link_libraries(app_ocr_scanner PRIVATE 
-    lvgl
-    utils
-    app_common
-    )
+if (CONFIG_LISAUI_ENV_ARCS_SDK)
+    target_link_libraries(${LISAUI_APP_TARGET_NAME} 
+    PRIVATE
+        utils
+    PUBLIC 
+        listenai_interface)
+    listenai_link_libraries(${LISAUI_APP_TARGET_NAME})
+else()
+    target_link_libraries(${LISAUI_APP_TARGET_NAME} 
+    PRIVATE
+        lvgl
+        utils
+        app_common
+        )
+endif()

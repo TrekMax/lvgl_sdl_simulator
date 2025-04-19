@@ -31,12 +31,12 @@ static lv_obj_t *slider_luminance;
 static lv_style_t style_setting;
 static lv_obj_t *icon_setting_btn_bg;
 
-// UI_RES_IMG_NAME(back_btn, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/icon_back.png"))
-UI_RES_IMG_NAME(volume_min, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_volume_low.png"))
-UI_RES_IMG_NAME(volume_max, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_volume_high.png"))
-UI_RES_IMG_NAME(brightness_min, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_brightness_low.png"))
-UI_RES_IMG_NAME(brightness_max, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_brightness_high.png"))
-UI_RES_IMG_NAME(setting_btn, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_launch_setting.png"))
+// UI_RES_IMG_NAME(back_btn, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/icon_back.png"))
+UI_RES_IMG_NAME(volume_min, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_volume_low.png"))
+UI_RES_IMG_NAME(volume_max, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_volume_high.png"))
+UI_RES_IMG_NAME(brightness_min, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_brightness_low.png"))
+UI_RES_IMG_NAME(brightness_max, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_brightness_high.png"))
+UI_RES_IMG_NAME(setting_btn, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_launch_setting.png"))
 
 static const lv_font_t *font_normal;
 static ui_set_backlight_cb_t backlight_update_cb = NULL;
@@ -123,8 +123,8 @@ lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_obj_set_pos(uiAppSetting_SliderBacklight, 22, 0);
     lv_obj_set_align(uiAppSetting_SliderBacklight, LV_ALIGN_CENTER);
     lv_slider_set_value(uiAppSetting_SliderBacklight, 100, LV_ANIM_OFF);
-    lv_slider_set_range(uiAppSetting_SliderBacklight, UI_SLIDER_BACKLIGHT_BRIGHTNESS_MIN_VALUE,
-                        UI_SLIDER_BACKLIGHT_BRIGHTNESS_MAX_VALUE);
+    lv_slider_set_range(uiAppSetting_SliderBacklight, LISAUI_APP_SETTING_ITEM_BACKLIGHT_BRIGHTNESS_MIN_VALUE,
+                        LISAUI_APP_SETTING_ITEM_BACKLIGHT_BRIGHTNESS_MAX_VALUE);
     lv_obj_set_style_bg_color(uiAppSetting_SliderBacklight, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiAppSetting_SliderBacklight, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
@@ -142,7 +142,7 @@ lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_obj_set_pos(uiAppSetting_SliderVolume, 22, 40);
     lv_obj_set_align(uiAppSetting_SliderVolume, LV_ALIGN_CENTER);
     lv_slider_set_value(uiAppSetting_SliderVolume, 8, LV_ANIM_OFF);
-    lv_slider_set_range(uiAppSetting_SliderVolume, UI_SLIDER_VOLUME_MIN_VALUE, UI_SLIDER_VOLUME_MAX_VALUE);
+    lv_slider_set_range(uiAppSetting_SliderVolume, LISAUI_APP_SETTING_ITEM_VOLUME_MIN_VALUE, LISAUI_APP_SETTING_ITEM_VOLUME_MAX_VALUE);
     lv_obj_set_style_bg_color(uiAppSetting_SliderVolume, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(uiAppSetting_SliderVolume, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 

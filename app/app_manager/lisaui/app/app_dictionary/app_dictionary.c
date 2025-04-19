@@ -10,8 +10,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_dictionary.h"
-#include "app_common/lisaui_app_common.h"
-#include "assets_res.h"
+#include "lisaui_app_common.h"
+#include "../app_common.h"
+#include "assets/assets_res.h"
+
 #include "../../utils/lv_img_utils.h"
 
 #define RES_APP_ICON_PERFIX_PATH "lisaui/app/app_dictionary/"
@@ -399,7 +401,7 @@ lv_obj_t *lisaui_explain_panel_create(lv_obj_t *parent)
     lv_obj_set_size(uiApp_Demo_Text, LV_PCT(100), LV_SIZE_CONTENT);
     lv_obj_set_style_text_font(uiApp_Demo_Text, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_obj_set_style_bg_color(uiApp_Demo_Text, lv_color_hex(0xFF0000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_textarea_set_text(uiApp_Demo_Text, UI_TEST_STR1);
+    // lv_textarea_set_text(uiApp_Demo_Text, UI_TEST_STR1);
 
     lv_obj_set_style_text_color(uiApp_Demo_Text, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(uiApp_Demo_Text, 255, LV_PART_MAIN | LV_STATE_DEFAULT);

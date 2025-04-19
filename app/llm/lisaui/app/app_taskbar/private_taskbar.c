@@ -18,13 +18,13 @@
 #include "lv_img_utils.h"
 
 #if CONFIG_LVGL_ENV_SIMULATOR
-    #define APP_SETTING_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/app/app_taskbar/" path
+    #define LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/app/app_taskbar/" path
 #else
-    #define APP_SETTING_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/app/app_taskbar/" path
+    #define LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/app/app_taskbar/" path
 #endif
 
-// UI_RES_IMG_NAME(back_btn, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/icon_back.png"))
-UI_RES_IMG_NAME(icon_setting, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_launch_setting.png"))
+// UI_RES_IMG_NAME(back_btn, LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH("assets/png/icon_back.png"))
+UI_RES_IMG_NAME(icon_setting, LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH("assets/png/ic_launch_setting.png"))
 
 static const char *TAG = "pri_app_taskbar";
 

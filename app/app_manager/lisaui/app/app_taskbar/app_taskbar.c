@@ -17,7 +17,6 @@
 #include "assets/assets_res.h"
 #include "private_taskbar.h"
 
-#include <src/core/lv_obj.h>
 #include <stdio.h>
 #include <time.h>
 
@@ -84,9 +83,8 @@ lisaui_err_t app_taskbar_create(void *parent)
     lv_obj_add_event_cb(g_app_taskbar, event_handler_app_panel, LV_EVENT_ALL, NULL);
 #else
     _lisaui_taskbar_create_operate_menu(g_app_taskbar);
-#endif
-
     _lisaui_taskbar_create_battery(g_app_taskbar);
+#endif
 
 #if CONFIG_LISAUI_DBUS_ENABLE
     lisaui_dbus_t *m_taskbar_bus;

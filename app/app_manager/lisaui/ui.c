@@ -54,10 +54,10 @@ void lisaui_ui_init(void)
     LISAUI_USE_APP(taskbar);
 
     // LISAUI_USE_APP(demo);
-    // LISAUI_USE_APP(ocr);
+    LISAUI_USE_APP(ocr);
     // LISAUI_USE_APP(template);
     // LISAUI_USE_APP(audio_player);
-    // LISAUI_USE_APP(dictionary);
+    LISAUI_USE_APP(dictionary);
     // LISAUI_USE_APP(thermography);
     // LISAUI_USE_APP(lvgl_demo);
     // LISAUI_USE_APP(voice);

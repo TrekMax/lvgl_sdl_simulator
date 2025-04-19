@@ -29,5 +29,5 @@ target_include_directories(app_common PUBLIC
 target_link_libraries(app_common PRIVATE
     lvgl
     utils
-    app_widget
+    common_widget
     )

@@ -113,7 +113,7 @@ lv_obj_t *ls_lv_radio_group_add(lv_obj_t *group, const char *title_text, const c
 
     lv_obj_t *tip_text = lv_label_create(radio_panel);
     lv_obj_align_to(tip_text, title_checkbox, LV_ALIGN_BOTTOM_LEFT, 30, 25);
-    lv_obj_set_size(tip_text, LV_PCT(90), LV_SIZE_CONTENT);
+    lv_obj_set_size(tip_text, LV_PCT(86), LV_SIZE_CONTENT);
 
     lv_label_set_text(tip_text, tips_text);
     lv_obj_set_style_text_font(tip_text, &lv_font_notosans_cs_medium_14, LV_PART_MAIN | LV_STATE_DEFAULT);

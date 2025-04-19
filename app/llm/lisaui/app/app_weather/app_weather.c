@@ -111,41 +111,20 @@ lisaui_err_t app_weather_create(void *parent)
     _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
     lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(80));
     lv_obj_set_y(g_app_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
-    // // 创建渐变描述符
-    // lv_grad_dsc_t grad;
-    // grad.dir = LV_GRAD_DIR_VER;  // 垂直方向
-    // grad.stops_count = 2;        // 2个颜色停止点
-    // grad.stops[0].color = lv_color_hex(0x0000ff);
-    // // grad.stops[0].opa = LV_OPA_COVER;
-    // grad.stops[0].frac = 0;      // 开始位置(0%)
-    // grad.stops[1].color = lv_color_hex(0xff0000);
-    // // grad.stops[1].opa = LV_OPA_COVER;
-    // grad.stops[1].frac = 255;    // 结束位置(100%)
-
-    // // 创建样式并应用渐变
-    // static lv_style_t style;
-    // lv_style_init(&style);
-    // // lv_style_set_bg_grad(&style, &g_app_panel);
-    // // 设置线性渐变
-    // // lv_style_set_bg_opa(&style, LV_OPA_COVER);
-    // // lv_style_set_bg_grad(&style, LV_GRAD_DIR_VER);  // 垂直方向渐变
-    // lv_style_set_bg_color(&style, lv_color_hex(0x0000ff));  // 起始颜色
-    // lv_style_set_bg_grad_color(&style, lv_color_hex(0xff0000));  // 结束颜色
-    // lv_obj_add_style(g_app_panel, &style, 0);
-    // metadata_weather_t weather = {
-    //     .type = 0,
-    //     .city = "深圳",
-    //     // .location = "深圳",
-    //     // .time = "2025-01-22 12:00",
-    //     // .week = "星期二",
-    //     .date = "04/18",
-    //     // .title = "天气",
-    //     .temperature = "25°C",
-    //     .temperature_range = "20°C - 30°C",
-    //     .description = "晴天",
-    // };
-    // lisaui_app_weather_set_weather_view(&weather);
-    // lv_obj_t *weather_view = app_weather_create_weather_view(g_app_panel, &weather);
+    
+    metadata_weather_t weather = {
+        .type = 0,
+        .city = "深圳",
+        // .location = "深圳",
+        // .time = "2025-01-22 12:00",
+        // .week = "星期二",
+        .date = "04/18",
+        // .title = "天气",
+        .temperature = "25°C",
+        .temperature_range = "20°C - 30°C",
+        .description = "晴天",
+    };
+    lisaui_app_weather_set_weather_view(&weather);
 
     LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
     return LISAUI_ERR_OK;

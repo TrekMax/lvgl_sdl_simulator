@@ -38,16 +38,16 @@ typedef struct _setting_item_t {
     const lv_img_dsc_t *icon;
 } setting_item_t;
 
-UI_RES_IMG_NAME(alarm, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_setting_alarm.png"))
-UI_RES_IMG_NAME(regular, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_setting_regular.png"))
-UI_RES_IMG_NAME(wake, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_setting_wake.png"))
-UI_RES_IMG_NAME(wifi, APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_setting_wifi.png"))
+UI_RES_IMG_NAME(alarm, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_setting_alarm.png"))
+UI_RES_IMG_NAME(regular, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_setting_regular.png"))
+UI_RES_IMG_NAME(wake, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_setting_wake.png"))
+UI_RES_IMG_NAME(wifi, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_setting_wifi.png"))
 
 static setting_item_t setting_items[] = {
-    {APP_SETTING_ITEM_ID_REGULAR, "基础设置", &LV_IMG_DSC(regular)},
-    {APP_SETTING_ITEM_ID_ALARM, "闹钟设置", &LV_IMG_DSC(alarm)},
-    {APP_SETTING_ITEM_ID_WAKE, "唤醒交互", &LV_IMG_DSC(wake)},
-    {APP_SETTING_ITEM_ID_WIFI, "网络设置", &LV_IMG_DSC(wifi)},
+    {LISAUI_APP_SETTING_ITEM_ID_REGULAR, "基础设置", &LV_IMG_DSC(regular)},
+    {LISAUI_APP_SETTING_ITEM_ID_ALARM, "闹钟设置", &LV_IMG_DSC(alarm)},
+    {LISAUI_APP_SETTING_ITEM_ID_WAKE, "唤醒交互", &LV_IMG_DSC(wake)},
+    {LISAUI_APP_SETTING_ITEM_ID_WIFI, "网络设置", &LV_IMG_DSC(wifi)},
 };
 
 static lv_obj_t *temp_setting_item_view = NULL;
@@ -60,26 +60,26 @@ static void event_handler(lv_event_t *e)
     if (code == LV_EVENT_CLICKED) {
         LISAUI_LOGI(TAG, "Clicked: %s", item->name);
         switch (item->id) {
-        case APP_SETTING_ITEM_ID_REGULAR:
+        case LISAUI_APP_SETTING_ITEM_ID_REGULAR:
             temp_setting_item_view = _lisaui_app_view_create_volume_backlight(g_app_panel);
             break;
 
-        case APP_SETTING_ITEM_ID_ALARM:
+        case LISAUI_APP_SETTING_ITEM_ID_ALARM:
             // _lisaui_app_view_create_alarm(g_app_panel);
             // extern void app_alarm_create_alarm_list(lv_obj_t *parent);
             // app_alarm_create_alarm_list(g_app_panel);
             lisaui_app_enter(UI_APP_ID_ALARM);
             break;
 
-        case APP_SETTING_ITEM_ID_WAKE:
+        case LISAUI_APP_SETTING_ITEM_ID_WAKE:
             temp_setting_item_view = _lisaui_app_view_create_wakeup_config(g_app_panel);
             break;
 
-        case APP_SETTING_ITEM_ID_WIFI:
+        case LISAUI_APP_SETTING_ITEM_ID_WIFI:
             // _lisaui_app_view_create_wifi(g_app_panel);
             break;
 
-        case APP_SETTING_ITEM_ID_WEATHER:
+        case LISAUI_APP_SETTING_ITEM_ID_WEATHER:
             // _lisaui_app_view_create_weather(g_app_panel);
             lisaui_app_enter(UI_APP_ID_WEATHER);
             metadata_weather_t weather = {
@@ -97,7 +97,7 @@ static void event_handler(lv_event_t *e)
             lisaui_app_weather_set_weather_view(&weather);
             break;
 
-        case APP_SETTING_ITEM_ID_AUDIO_PLAYER:
+        case LISAUI_APP_SETTING_ITEM_ID_AUDIO_PLAYER:
             // _lisaui_app_view_create_weather(g_app_panel);
             lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
             break;
