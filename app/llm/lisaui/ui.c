@@ -143,6 +143,7 @@ void lisaui_ui_init(void)
     LISAUI_USE_APP(template);
     LISAUI_USE_APP(alarm);
     LISAUI_USE_APP(audio_player);
+    LISAUI_USE_APP(wifi);
 
 #endif
     lisaui_app_manager_init();
@@ -154,7 +155,8 @@ void lisaui_ui_init(void)
     // lisaui_app_enter(UI_APP_ID_ALARM);
     // lisaui_app_enter(UI_APP_ID_SETTING);
     // lisaui_app_enter(UI_APP_ID_WEATHER);
-    lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+    // lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+    // lisaui_app_enter(UI_APP_ID_WIFI);
 #if TEST_LISAUI_APP
 
     lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 1000, NULL);

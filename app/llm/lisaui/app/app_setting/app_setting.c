@@ -15,6 +15,7 @@
 #include "assets/assets_res.h"
 #include "app_setting_view_volume_backlight.h"
 #include "app_setting_view_wakeup_config.h"
+#include "lisaui_app_manager.h"
 #include "lisaui_log.h"
 #include "lisaui_type.h"
 #include "common_widgets.h"
@@ -77,6 +78,7 @@ static void event_handler(lv_event_t *e)
 
         case LISAUI_APP_SETTING_ITEM_ID_WIFI:
             // private_lisaui_app_view_create_wifi(g_app_panel);
+            lisaui_app_enter(UI_APP_ID_WIFI);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_WEATHER:
