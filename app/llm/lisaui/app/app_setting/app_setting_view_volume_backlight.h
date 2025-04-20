@@ -9,8 +9,8 @@
  * 
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef __APP_SETTING_VIEW_VOLUME_BACKLIGHT_H__
-#define __APP_SETTING_VIEW_VOLUME_BACKLIGHT_H__
+#ifndef __LISAUI_APP_SETTING_VIEW_VOLUME_BACKLIGHT_H__
+#define __LISAUI_APP_SETTING_VIEW_VOLUME_BACKLIGHT_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,18 +18,15 @@ extern "C" {
 
 #include "lisaui_app_common.h"
 
-typedef int (*ui_get_battery_cb_t)(uint8_t *state, uint8_t *level);
-typedef int (*ui_set_backlight_cb_t)(const uint8_t brightness);
-typedef int (*ui_set_volume_cb_t)(const uint8_t volume);
+typedef int (*lisaui_app_setting_set_backlight_cb_t)(const uint8_t brightness);
+typedef int (*lisaui_app_setting_set_volume_cb_t)(const uint8_t volume);
+lisaui_err_t lisaui_app_setting_register_set_backlight_handler(lisaui_app_setting_set_backlight_cb_t handler);
+lisaui_err_t lisaui_app_setting_register_set_volume_handler(lisaui_app_setting_set_backlight_cb_t handler);
 
-lv_obj_t * _lisaui_app_view_create_volume_backlight(lv_obj_t *parent);
-
-void ui_register_set_backlight_cb(ui_set_backlight_cb_t update_handler);
-void ui_register_set_volume_cb(ui_set_volume_cb_t update_handler);
-
+lv_obj_t * private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __APP_SETTING_VIEW_VOLUME_BACKLIGHT_H__
+#endif // __LISAUI_APP_SETTING_VIEW_VOLUME_BACKLIGHT_H__

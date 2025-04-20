@@ -17,7 +17,7 @@
 #include "app_setting_view_wakeup_config.h"
 #include "lisaui_log.h"
 #include "lisaui_type.h"
-#include "widgets_common.h"
+#include "common_widgets.h"
 #include "../app_weather/app_weather.h"
 
 #include "lv_img_utils.h"
@@ -61,26 +61,26 @@ static void event_handler(lv_event_t *e)
         LISAUI_LOGI(TAG, "Clicked: %s", item->name);
         switch (item->id) {
         case LISAUI_APP_SETTING_ITEM_ID_REGULAR:
-            temp_setting_item_view = _lisaui_app_view_create_volume_backlight(g_app_panel);
+            temp_setting_item_view = private_lisaui_app_view_create_volume_backlight(g_app_panel);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_ALARM:
-            // _lisaui_app_view_create_alarm(g_app_panel);
+            // private_lisaui_app_view_create_alarm(g_app_panel);
             // extern void app_alarm_create_alarm_list(lv_obj_t *parent);
             // app_alarm_create_alarm_list(g_app_panel);
             lisaui_app_enter(UI_APP_ID_ALARM);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_WAKE:
-            temp_setting_item_view = _lisaui_app_view_create_wakeup_config(g_app_panel);
+            temp_setting_item_view = private_lisaui_app_view_create_wakeup_config(g_app_panel);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_WIFI:
-            // _lisaui_app_view_create_wifi(g_app_panel);
+            // private_lisaui_app_view_create_wifi(g_app_panel);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_WEATHER:
-            // _lisaui_app_view_create_weather(g_app_panel);
+            // private_lisaui_app_view_create_weather(g_app_panel);
             lisaui_app_enter(UI_APP_ID_WEATHER);
             metadata_weather_t weather = {
                 .type = 0,
@@ -98,7 +98,7 @@ static void event_handler(lv_event_t *e)
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_AUDIO_PLAYER:
-            // _lisaui_app_view_create_weather(g_app_panel);
+            // private_lisaui_app_view_create_weather(g_app_panel);
             lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
             break;
 

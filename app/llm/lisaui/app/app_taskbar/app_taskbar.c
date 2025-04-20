@@ -29,7 +29,7 @@
 lv_obj_t *g_app_taskbar = NULL;
 
 static const char *TAG = "app_taskbar";
-static void _lisaui_app_enter_handler_cb(void *data)
+static void private_lisaui_app_enter_handler_cb(void *data)
 {
     struct lisaui_app_t *app = (struct lisaui_app_t *)data;
     if (app == NULL) {
@@ -93,7 +93,7 @@ lisaui_err_t app_taskbar_create(void *parent)
         return LISAUI_ERR_FAIL;
     }
 
-    lisaui_dbus_subscribe(m_taskbar_bus, LISAUI_DBUS_APP_ENTER, _lisaui_app_enter_handler_cb);
+    lisaui_dbus_subscribe(m_taskbar_bus, LISAUI_DBUS_APP_ENTER, private_lisaui_app_enter_handler_cb);
 #endif
     return LISAUI_ERR_OK;
 }

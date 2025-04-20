@@ -33,7 +33,7 @@ struct app_icon_t {
     uint16_t icon_height;
 };
 
-// typedef enum _lisaui_app_type {
+// typedef enum lisaui_app_type_e {
 //     LISAUI_APP_TYPE_NORMAL = 0,
 //     LISAUI_APP_TYPE_USER,
 //     LISAUI_APP_TYPE_SYSTEM, // 系统应用,会自动创建并启用

@@ -1,5 +1,5 @@
 /**
- * @file widgets_common.h
+ * @file common_widgets.h
  * @author Tianshuang Ke (dske@listenai.com)
  * @brief
  * @version 0.1

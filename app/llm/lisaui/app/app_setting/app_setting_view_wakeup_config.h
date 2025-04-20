@@ -18,7 +18,7 @@ extern "C" {
 
 #include "lisaui_app_common.h"
 
-lv_obj_t *_lisaui_app_view_create_wakeup_config(lv_obj_t *parent);
+lv_obj_t *private_lisaui_app_view_create_wakeup_config(lv_obj_t *parent);
 
 #ifdef __cplusplus
 }

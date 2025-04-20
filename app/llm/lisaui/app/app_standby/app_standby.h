@@ -23,7 +23,7 @@ extern "C" {
  * @brief 交互表情状态
  * 
  */
- typedef enum _lisaui_app_standby_emoji_type_e {
+ typedef enum private_lisaui_app_standby_emoji_type_e {
     LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY = 0,      // 待机
     LISAUI_APP_STANDBY_EMOJI_TYPE_LISTENING,        // 聆听中
     LISAUI_APP_STANDBY_EMOJI_TYPE_RECOGNITION,      // 识别

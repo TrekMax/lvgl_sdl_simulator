@@ -33,7 +33,7 @@ SemaphoreHandle_t lvgl_mutex;
 #define TEST_LISAUI_APP 1
 
 #if TEST_LISAUI_APP
-static void tset_lisaui_app_timer_cb(lv_timer_t *timer)
+static void test_lisaui_app_timer_cb(lv_timer_t *timer)
 {
     static int count = 0;
     static int index = 0;
@@ -111,7 +111,7 @@ void lisaui_ui_init(void)
     // lisaui_app_enter(UI_APP_ID_ALARM);
     // lisaui_app_enter(UI_APP_ID_SETTING);
     // lisaui_app_enter(UI_APP_ID_WEATHER);
-    // lv_timer_t *timer = lv_timer_create(tset_lisaui_app_timer_cb, 1000, NULL);
+    // lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 1000, NULL);
     // if (timer == NULL) {
     //     LISAUI_LOGE(TAG, "[%s] Failed to create timer", __FUNCTION__);
     //     return;

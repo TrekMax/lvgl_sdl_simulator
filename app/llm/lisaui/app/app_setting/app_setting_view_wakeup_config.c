@@ -15,7 +15,7 @@
 #include "assets/assets_res.h"
 #include "lisaui_app_common.h"
 #include "lv_img_utils.h"
-#include "widgets_common.h"
+#include "common_widgets.h"
 
 static const char *TAG = "app_setting_view_wakeup_config";
 
@@ -27,7 +27,7 @@ void radio_event_handler(lv_event_t *e)
     }
 }
 
-lv_obj_t *_lisaui_app_view_create_wakeup_config(lv_obj_t *parent)
+lv_obj_t *private_lisaui_app_view_create_wakeup_config(lv_obj_t *parent)
 {
     lv_obj_t *setting_home = lv_obj_create(parent);
     lv_obj_set_size(setting_home, LV_PCT(100), LV_PCT(100));

@@ -18,19 +18,6 @@
 
 static const char *TAG = "app_setting_view_volume_backlight";
 
-lv_obj_t *uiAppSetting_LabelBacklight;
-lv_obj_t *uiAppSetting_LabelVolume;
-lv_obj_t *uiAppSetting_SliderBacklight;
-lv_obj_t *uiAppSetting_SliderVolume;
-
-static lv_point_t lv_setting_line_floor[2];
-static lv_obj_t *line_setting_floor;
-static lv_obj_t *setting_home;
-static lv_obj_t *slider_voice;
-static lv_obj_t *slider_luminance;
-static lv_style_t style_setting;
-static lv_obj_t *icon_setting_btn_bg;
-
 // UI_RES_IMG_NAME(back_btn, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/icon_back.png"))
 UI_RES_IMG_NAME(volume_min, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_volume_low.png"))
 UI_RES_IMG_NAME(volume_max, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_volume_high.png"))
@@ -38,20 +25,41 @@ UI_RES_IMG_NAME(brightness_min, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/pn
 UI_RES_IMG_NAME(brightness_max, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_brightness_high.png"))
 UI_RES_IMG_NAME(setting_btn, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_launch_setting.png"))
 
+static lv_obj_t *uiAppSetting_LabelBacklight;
+static lv_obj_t *uiAppSetting_LabelVolume;
+static lv_obj_t *uiAppSetting_SliderBacklight;
+static lv_obj_t *uiAppSetting_SliderVolume;
+static lv_obj_t *line_setting_floor;
+static lv_obj_t *setting_home;
+static lv_obj_t *slider_voice;
+static lv_obj_t *slider_luminance;
+static lv_obj_t *icon_setting_btn_bg;
+
+static lv_point_t lv_setting_line_floor[2];
+static lv_style_t style_setting;
+
 static const lv_font_t *font_normal;
-static ui_set_backlight_cb_t backlight_update_cb = NULL;
-static ui_set_volume_cb_t volume_update_cb = NULL;
+static lisaui_app_setting_set_backlight_cb_t m_backlight_update_handler = NULL;
+static lisaui_app_setting_set_volume_cb_t m_volume_update_handler = NULL;
 
-void ui_register_set_backlight_cb(ui_set_backlight_cb_t update_handler)
+lisaui_err_t lisaui_app_setting_register_set_backlight_handler(lisaui_app_setting_set_backlight_cb_t handler)
 {
-    backlight_update_cb = update_handler;
+    if (handler == NULL) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    m_backlight_update_handler = handler;
+    return LISAUI_ERR_OK;
 }
-void ui_register_set_volume_cb(ui_set_volume_cb_t update_handler)
+lisaui_err_t lisaui_app_setting_register_set_volume_handler(lisaui_app_setting_set_backlight_cb_t handler)
 {
-    volume_update_cb = update_handler;
+    if (handler == NULL) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    m_volume_update_handler = handler;
+    return LISAUI_ERR_OK;
 }
 
-static void ui_event_SliderHandler(lv_event_t *e)
+static void lisaui_app_setting_event_slider_handler(lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t *obj = lv_event_get_target(e);
@@ -94,18 +102,18 @@ static void ui_event_SliderHandler(lv_event_t *e)
         }
     } else if (code == LV_EVENT_VALUE_CHANGED) {
         if (obj == uiAppSetting_SliderBacklight) {
-            if (backlight_update_cb) {
-                backlight_update_cb(lv_slider_get_value(obj));
+            if (m_backlight_update_handler) {
+                m_backlight_update_handler(lv_slider_get_value(obj));
             }
         } else if (obj == uiAppSetting_SliderVolume) {
-            if (volume_update_cb) {
-                volume_update_cb(lv_slider_get_value(obj));
+            if (m_volume_update_handler) {
+                m_volume_update_handler(lv_slider_get_value(obj));
             }
         }
     }
 }
 
-lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
+lv_obj_t *private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
 {
 
 #if 0
@@ -147,8 +155,8 @@ lv_obj_t *_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_obj_set_style_bg_opa(uiAppSetting_SliderVolume, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
 
     font_normal = LV_FONT_DEFAULT;
-    lv_obj_add_event_cb(uiAppSetting_SliderBacklight, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(uiAppSetting_SliderVolume, ui_event_SliderHandler, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(uiAppSetting_SliderBacklight, lisaui_app_setting_event_slider_handler, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(uiAppSetting_SliderVolume, lisaui_app_setting_event_slider_handler, LV_EVENT_ALL, NULL);
     LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
 #else
     setting_home = lv_obj_create(parent);

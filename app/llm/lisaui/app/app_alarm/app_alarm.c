@@ -11,8 +11,7 @@
  */
 #include "app_alarm.h"
 #include "app_common/lisaui_app_common.h"
-// #include "assets/assets_res.h"
-#include "widgets_common.h"
+#include "common_widgets.h"
 
 static const char *TAG = "app_alarm";
 static lv_obj_t *g_app_alarm = NULL;
@@ -43,7 +42,9 @@ static void msgbox_event_handler(lv_event_t *e)
 static lv_obj_t *app_alarm_delete_menu_create(lv_obj_t *parent)
 {
     lv_obj_t *menu = lv_obj_create(parent);
-    lv_obj_set_size(menu, LV_PCT(100), LV_PCT(100));
+    // lv_obj_set_size(menu, LV_PCT(100), LV_PCT(100));
+    lv_obj_set_size(menu, LV_PCT(80), LV_PCT(80));
+    lv_obj_align(menu, LV_ALIGN_CENTER, 0, 0);
     lv_obj_set_style_bg_color(menu, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(menu, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_radius(menu, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -144,7 +145,7 @@ lisaui_err_t lisaui_app_alarm_op_alarm_add(const char *time, const char *date)
     return LISAUI_ERR_OK;
 }
 
-static lv_obj_t *_lisaui_app_alarm_create_alarm_view(lv_obj_t *parent, const char *alarm_time_text,
+static lv_obj_t *private_lisaui_app_alarm_create_alarm_view(lv_obj_t *parent, const char *alarm_time_text,
                                                      const char *alarm_date_text)
 {
     lv_obj_t *alarm_page = lv_obj_create(parent);
@@ -192,7 +193,7 @@ lisaui_err_t lisaui_app_alarm_op_alarm_add_view(const char *alarm_time_text, con
             lv_obj_del(g_obj_alarm_create_view);
             g_obj_alarm_create_view = NULL;
         }
-        g_obj_alarm_create_view = _lisaui_app_alarm_create_alarm_view(g_app_panel, alarm_time_text, alarm_date_text);
+        g_obj_alarm_create_view = private_lisaui_app_alarm_create_alarm_view(g_app_panel, alarm_time_text, alarm_date_text);
     }
     LVGL_UI_UNLOCK();
     return LISAUI_ERR_OK;
