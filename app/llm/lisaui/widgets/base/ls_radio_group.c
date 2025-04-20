@@ -22,7 +22,7 @@ typedef struct _ls_radio_item_t {
 
 #define RADIO_GROUP_MAX 10
 typedef struct _ls_radio_group_t {
-    ls_radio_item_t radio_group[RADIO_GROUP_MAX];
+    ls_radio_item_t radio_items[RADIO_GROUP_MAX];
     uint16_t selected_index;
     uint16_t size;
     lv_style_t style_radio;
@@ -51,14 +51,14 @@ lv_obj_t *ls_lv_radio_group_create(lv_obj_t *parent, lv_event_cb_t event_cb, voi
     return radio_group;
 }
 
-void radio_group_bg_event_handler(lv_event_t *e)
+void radio_group_bg_event_handler(lv_event_t *event)
 {
-    lv_event_code_t code = lv_event_get_code(e);
-    if (LV_EVENT_CLICKED == code) {
-        uint16_t radio_id = *(uint16_t *)lv_event_get_user_data(e);
-        lv_lv_radio_group_set_active_id(e->target, radio_id);
-        if (g_radio_group.radio_group[radio_id].event_cb) {
-            g_radio_group.radio_group[radio_id].event_cb(e);
+    lv_event_code_t event_code = lv_event_get_code(event);
+    if (LV_EVENT_CLICKED == event_code) {
+        uint16_t radio_index = *(uint16_t *)lv_event_get_user_data(event);
+        lv_lv_radio_group_set_active_id(event->target, radio_index);
+        if (g_radio_group.radio_items[radio_index].event_cb) {
+            g_radio_group.radio_items[radio_index].event_cb(event);
         }
     }
 }
@@ -71,8 +71,8 @@ int lv_lv_radio_group_set_active_id(lv_obj_t *group, uint16_t id)
     if (id == g_radio_group.selected_index) {
         return 0;
     }
-    lv_obj_clear_state(g_radio_group.radio_group[g_radio_group.selected_index].radio, LV_STATE_CHECKED);
-    lv_obj_add_state(g_radio_group.radio_group[id].radio, LV_STATE_CHECKED);
+    lv_obj_clear_state(g_radio_group.radio_items[g_radio_group.selected_index].radio, LV_STATE_CHECKED);
+    lv_obj_add_state(g_radio_group.radio_items[id].radio, LV_STATE_CHECKED);
     g_radio_group.selected_index = id;
     return 0;
 }
@@ -93,7 +93,7 @@ lv_obj_t *ls_lv_radio_group_add(lv_obj_t *group, const char *title_text, const c
     if (radio_group_index >= RADIO_GROUP_MAX) {
         return NULL;
     }
-    ls_radio_item_t *item = &g_radio_group.radio_group[radio_group_index];
+    ls_radio_item_t *item = &g_radio_group.radio_items[radio_group_index];
 
     item->radio_panel = radio_panel;
     item->radio = title_checkbox;

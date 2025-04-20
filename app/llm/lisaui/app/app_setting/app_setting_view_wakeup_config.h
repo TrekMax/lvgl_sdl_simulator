@@ -18,6 +18,24 @@ extern "C" {
 
 #include "lisaui_app_common.h"
 
+typedef enum {
+    LISAUI_APP_SETTING_WAKEUP_MODE_KEY = 0,
+    LISAUI_APP_SETTING_WAKEUP_MODE_VOICE_SINGLE,
+    LISAUI_APP_SETTING_WAKEUP_MODE_VOICE_MULTI,
+} lisaui_app_setting_wakeup_mode_t;
+
+typedef lisaui_err_t (*lisaui_app_setting_set_wakeup_mode_cb_t)(lisaui_app_setting_wakeup_mode_t mode);
+typedef struct _lisaui_app_setting_wakeup_options_t {
+    const char *title;
+    const char *tips;
+    const int id;
+    const int mode;
+    lisaui_app_setting_set_wakeup_mode_cb_t event_cb;
+    void *user_data;
+} lisaui_app_setting_wakeup_options_t;
+
+lisaui_err_t lisaui_app_setting_register_set_wakeup_mode_handler(lisaui_app_setting_set_wakeup_mode_cb_t handler);
+
 lv_obj_t *private_lisaui_app_view_create_wakeup_config(lv_obj_t *parent);
 
 #ifdef __cplusplus

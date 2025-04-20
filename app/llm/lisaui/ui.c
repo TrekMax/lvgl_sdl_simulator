@@ -14,6 +14,7 @@
 #include "app_common/lisaui_log.h"
 #include "lisaui_app_common.h"
 #include "app/app_standby/app_standby.h"
+#include "app/app_weather/app_weather.h"
 
 #if CONFIG_LVGL_ENV_SIMULATOR
 #include <pthread.h>
@@ -30,34 +31,75 @@ pthread_mutex_t lvgl_mutex;
 SemaphoreHandle_t lvgl_mutex;
 #endif
 
-#define TEST_LISAUI_APP 1
+#define TEST_LISAUI_APP 0
 
 #if TEST_LISAUI_APP
+static int count = 0;
+static int test_index = 0;
 static void test_lisaui_app_timer_cb(lv_timer_t *timer)
 {
-    static int count = 0;
-    static int index = 0;
-    switch (index++) {
+    LISAUI_LOGI(TAG, "[%s] test_lisaui_app_timer_cb index:%d", __FUNCTION__, test_index);
+    switch (test_index++) {
     case 0:
+        lisaui_app_weather_del_weather_view();
         lisaui_app_enter(UI_APP_ID_TEMPLATE);
-        //     break;
-        // case 1:
+        break;
+    case 1:
         //     lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
         //     lisaui_app_enter(UI_APP_ID_STANDBY);
-        //     break;
-        // case 2:
-        //     lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_RECOGNITION);
-        // //     lisaui_app_enter(UI_APP_ID_LAUNCHER);
-        //     break;
-        // case 3:
-        //     lisaui_app_enter(UI_APP_ID_SETTING);
+        metadata_weather_t weather = {
+            .type = 0,
+            .city = "深圳",
+            // .location = "深圳",
+            // .time = "2025-01-22 12:00",
+            // .week = "星期二",
+            .date = "04/18",
+            // .title = "天气",
+            .temperature = "25C",
+            // .temperature = "25°C",
+            // .temperature_range = "20°C - 30°C",
+            .temperature_range = "20C ~ 30C",
+            .description = "晴朗 天气优",
+        };
+        lisaui_app_weather_set_weather_view(&weather);
+        break;
+
+    case 2:
+        lisaui_app_weather_del_weather_view();
+        lisaui_app_enter(UI_APP_ID_SETTING);
+        LISAUI_LOGI(TAG, "[%s] enter setting", __FUNCTION__);
+        break;
+
+    case 3:
+        lisaui_app_weather_del_weather_view();
+        metadata_weather_t weather2 = {
+            .type = 0,
+            .city = "潮州",
+            // .location = "深圳",
+            // .time = "2025-01-22 12:00",
+            // .week = "星期二",
+            .date = "04/20",
+            // .title = "天气",
+            .temperature = "31C",
+            // .temperature = "25°C",
+            // .temperature_range = "20°C - 30°C",
+            .temperature_range = "20C ~ 33C",
+            .description = "晴朗 天气优",
+        };
+        lisaui_app_weather_set_weather_view(&weather2);
+        break;
+    //     lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_RECOGNITION);
+    // //     lisaui_app_enter(UI_APP_ID_LAUNCHER);
+    //     break;
+    case 5:
+        lisaui_app_enter(UI_APP_ID_SETTING);
 
         extern int ls_llm_dialog_popup(const char *text);
         ls_llm_dialog_popup("Test");
 
         break;
     default:
-        index = 0;
+        test_index = 0;
         break;
     }
 
@@ -95,27 +137,31 @@ void lisaui_ui_init(void)
 #if CONFIG_LVGL_ENV_SIMULATOR
     LISAUI_USE_APP(standby);
     LISAUI_USE_APP(taskbar);
-
     LISAUI_USE_APP(setting);
+
     LISAUI_USE_APP(weather);
+    LISAUI_USE_APP(template);
     LISAUI_USE_APP(alarm);
     LISAUI_USE_APP(audio_player);
+
 #endif
     lisaui_app_manager_init();
     // lisaui_app_manager_show_all_app_info();
 
     LISAUI_LOGI(TAG, "UI init done");
 
-#if TEST_LISAUI_APP
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
     // lisaui_app_enter(UI_APP_ID_ALARM);
     // lisaui_app_enter(UI_APP_ID_SETTING);
     // lisaui_app_enter(UI_APP_ID_WEATHER);
-    // lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 1000, NULL);
-    // if (timer == NULL) {
-    //     LISAUI_LOGE(TAG, "[%s] Failed to create timer", __FUNCTION__);
-    //     return;
-    // }
+    lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+#if TEST_LISAUI_APP
+
+    lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 1000, NULL);
+    if (timer == NULL) {
+        LISAUI_LOGE(TAG, "[%s] Failed to create timer", __FUNCTION__);
+        return;
+    }
     // lv_timer_set_repeat_count(timer, LV_TIMER_REPEAT_INFINITE);
     // lv_timer_set_period(timer, 1000);
     // lv_timer_ready(timer);

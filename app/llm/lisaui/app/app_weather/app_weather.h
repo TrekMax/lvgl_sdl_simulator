@@ -17,9 +17,9 @@ extern "C" {
 #endif
 
 typedef struct _metadata_weather_t {
-    int type;   // 天气类型
-    char *city; // 城市
-    char *date; // 日期
+    int type;        // 天气类型
+    char *city;      // 城市
+    char *date;      // 日期
     char *icon_path; // 天气图标路径
     // char *location;     // 天气位置
     // char *time;         // 时间
@@ -33,8 +33,16 @@ typedef struct _metadata_weather_t {
 #include "../app_common.h"
 #include "lisaui_app_common.h"
 
+#if CONFIG_LVGL_ENV_SIMULATOR
+#define APP_WEATHER_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/app/app_weather/" path
+#else
+#define APP_WEATHER_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/app/app_weather/" path
+#endif
+
 lisaui_err_t app_weather_init(void);
+
 lisaui_err_t lisaui_app_weather_set_weather_view(metadata_weather_t *weather);
+lisaui_err_t lisaui_app_weather_del_weather_view(void);
 
 #ifdef __cplusplus
 }

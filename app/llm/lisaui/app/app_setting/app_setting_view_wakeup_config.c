@@ -19,13 +19,38 @@
 
 static const char *TAG = "app_setting_view_wakeup_config";
 
-void radio_event_handler(lv_event_t *e)
+static lisaui_app_setting_set_wakeup_mode_cb_t g_wakeup_mode_handler = NULL;
+
+lisaui_err_t lisaui_app_setting_register_set_wakeup_mode_handler(lisaui_app_setting_set_wakeup_mode_cb_t handler)
 {
-    lv_event_code_t code = lv_event_get_code(e);
-    if (LV_EVENT_CLICKED == code) {
-        uint16_t radio_id = *(uint16_t *)lv_event_get_user_data(e);
+    if (handler == NULL) {
+        LISAUI_LOGE(TAG, "wakeup mode handler is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    g_wakeup_mode_handler = handler;
+    return LISAUI_ERR_OK;
+}
+void lisaui_app_radio_select_handler(lv_event_t *event)
+{
+    lv_event_code_t event_code = lv_event_get_code(event);
+    if (LV_EVENT_CLICKED == event_code) {
+        uint16_t radio_id = *(uint16_t *)lv_event_get_user_data(event);
+        LISAUI_LOGI(TAG, "radio_id = %d", radio_id);
+        if (g_wakeup_mode_handler) {
+            lisaui_app_setting_wakeup_options_t *wakeup_option =
+                (lisaui_app_setting_wakeup_options_t *)lv_event_get_user_data(event);
+            g_wakeup_mode_handler(wakeup_option->id);
+        }
     }
 }
+
+static lisaui_app_setting_wakeup_options_t g_wakeup_options[] = {
+    {"按键唤醒", "通过开发板 K3 按键进行唤醒", 0, LISAUI_APP_SETTING_WAKEUP_MODE_KEY, NULL, NULL},
+    {"语音唤醒（单轮对话）", "通过唤醒词“小美小美”唤醒，一次唤醒一轮对话", 1,
+     LISAUI_APP_SETTING_WAKEUP_MODE_VOICE_SINGLE, NULL, NULL},
+    {"语音唤醒（多轮对话）", "通过唤醒词“小美小美”唤醒，支持多轮对话", 2, LISAUI_APP_SETTING_WAKEUP_MODE_VOICE_MULTI,
+     NULL, NULL},
+};
 
 lv_obj_t *private_lisaui_app_view_create_wakeup_config(lv_obj_t *parent)
 {
@@ -39,13 +64,21 @@ lv_obj_t *private_lisaui_app_view_create_wakeup_config(lv_obj_t *parent)
     lv_obj_clear_flag(setting_home, LV_OBJ_FLAG_SCROLLABLE); /// Flags
     lv_obj_add_flag(setting_home, LV_OBJ_FLAG_EVENT_BUBBLE);
 
-    uint8_t active = 0;
     lv_obj_t *page = ls_lv_radio_group_create(parent, NULL, NULL);
-    ls_lv_radio_group_add(page, "按键唤醒", "通过开发板 K3 按键进行唤醒", radio_event_handler, NULL);
-    ls_lv_radio_group_add(page, "语音唤醒（单轮对话）", "通过唤醒词“小美小美”唤醒，一次唤醒一轮对话",
-                          radio_event_handler, NULL);
-    ls_lv_radio_group_add(page, "语音唤醒（多轮对话）", "通过唤醒词“小美小美”唤醒，支持多轮对话", radio_event_handler,
-                          NULL);
+    // ls_lv_radio_group_add(page, "按键唤醒", "通过开发板 K3 按键进行唤醒", radio_event_handler, NULL);
+    // ls_lv_radio_group_add(page, "语音唤醒（单轮对话）", "通过唤醒词“小美小美”唤醒，一次唤醒一轮对话",
+    //                       radio_event_handler, NULL);
+    // ls_lv_radio_group_add(page, "语音唤醒（多轮对话）", "通过唤醒词“小美小美”唤醒，支持多轮对话",
+    // radio_event_handler,
+    //                       NULL);
+    uint8_t active = 0;
+    for (int i = 0; i < sizeof(g_wakeup_options) / sizeof(g_wakeup_options[0]); i++) {
+        ls_lv_radio_group_add(page, g_wakeup_options[i].title, g_wakeup_options[i].tips,
+                              lisaui_app_radio_select_handler, (void *)&g_wakeup_options[i]);
+        // if (g_wakeup_options[i].id == active) {
+        //     active = i;
+        // }
+    }
     lv_lv_radio_group_set_active_id(page, active);
     return setting_home;
 }

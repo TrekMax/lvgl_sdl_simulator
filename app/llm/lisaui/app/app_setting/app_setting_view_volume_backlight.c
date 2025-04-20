@@ -282,14 +282,14 @@ lv_obj_t *private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     // lv_obj_add_event_cb(LV_OBJ_ICON(volume_max), ui_event_setting, LV_EVENT_PRESSED, NULL);
     lv_obj_add_style(LV_OBJ_ICON(volume_max), &style_setting, 0);
     lv_style_init(&style_setting);
+//
+#if 0
     static lv_style_t style_line;
     lv_style_init(&style_line);
     lv_style_set_line_width(&style_line, 4);
     lv_style_set_line_color(&style_line, lv_palette_main(LV_PALETTE_BLUE));
     lv_style_set_line_rounded(&style_line, true);
 
-//
-#if 0
     line_setting_floor = lv_line_create(setting_home);
     lv_obj_add_style(line_setting_floor, &style_line, 0);
     lv_obj_set_style_line_color(line_setting_floor, lv_color_hex(0xaaaaaa), 0);
