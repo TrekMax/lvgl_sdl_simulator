@@ -19,13 +19,17 @@ add_library(${LISAUI_APP_TARGET_NAME} STATIC
 target_include_directories(${LISAUI_APP_TARGET_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
+    INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/
 )
 
 if (CONFIG_LISAUI_ENV_ARCS_SDK)
     target_link_libraries(${LISAUI_APP_TARGET_NAME}
     PRIVATE
         utils
-    PUBLIC
+        app_common
+        common_widget
+    PUBLIC 
         listenai_interface)
     listenai_link_libraries(${LISAUI_APP_TARGET_NAME})
 else()

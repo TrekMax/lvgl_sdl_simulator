@@ -297,7 +297,8 @@ lisaui_err_t lisaui_app_enter(const int app_id)
         return LISAUI_ERR_APP_UNKNOW_FAILED;
     }
     if (lisaui_app_manager_get_current_appid() == app_id) {
-        LISAUI_LOGW(TAG, "app already in");
+        LISAUI_LOGD(TAG, "app already in");
+        LVGL_UI_UNLOCK();
         return LISAUI_ERR_APP_ALREADY_IN;
     }
 
@@ -382,6 +383,11 @@ lisaui_err_t lisaui_app_exit(const int app_id)
 
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
     LISAUI_EXEC_HOOK(m_app_exit_hook, app, ret);
+    if (ret != LISAUI_ERR_OK) {
+        LVGL_UI_UNLOCK();
+        LISAUI_LOGE(TAG, "TAG, [ui] app exit hook failed");
+        return ret;
+    }
 #else
     lisaui_view_page_t *page = NULL;
     if (lisaui_view_manager_pop(&m_app_mgr.manager_view_stack, &page) != LISAUI_ERR_OK || !page) {
@@ -451,7 +457,9 @@ lisaui_err_t lisaui_app_close(const int app_id)
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
     LISAUI_EXEC_HOOK(m_app_close_hook, app, ret);
     if (ret != LISAUI_ERR_OK) {
+        LVGL_UI_UNLOCK();
         LISAUI_LOGE(TAG, "TAG, [ui] app close hook failed");
+        LVGL_UI_UNLOCK();
         return ret;
     }
 #endif

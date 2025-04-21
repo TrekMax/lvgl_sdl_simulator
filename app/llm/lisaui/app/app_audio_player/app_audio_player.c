@@ -10,17 +10,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_audio_player.h"
-#include "app_common/lisaui_app_common.h"
+#include "app_common.h"
+#include "lisaui_app_common.h"
 #include "assets/assets_res.h"
 
 #include "lv_img_utils.h"
-#include <src/core/lv_disp.h>
-#include <src/misc/lv_area.h>
 
 static const char *TAG = "app_audio_player";
 static lv_obj_t *g_app_audio_player = NULL;
 static lv_obj_t *g_app_panel = NULL;
 static lv_obj_t *temp_music_song_view = NULL;
+
+UI_RES_IMG_NAME(music_icon, APP_AUDIO_PLAYER_UI_RES_PERFIX_PATH("assets/png/ic_music.png"))
+UI_RES_IMG_NAME(music_care_view_bg, APP_AUDIO_PLAYER_UI_RES_PERFIX_PATH("assets/png/music_care_view_bg.png"))
 
 lv_obj_t *lisaui_app_audio_player_create_song_view(lv_obj_t *parent, metadata_music_song_t *song);
 
@@ -48,6 +50,7 @@ LISAUI_DEFINE_APP(audio_player, UI_APP_ID_AUDIO_PLAYER, "播放器", "Audio_play
 //         return LISAUI_ERR_OK; \
 //     }
 // lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, create, void *parent, {
+// });
 lisaui_err_t app_audio_player_create(void *parent)
 {
     // LISAUI_APP_ENTITY_AUDIO_PLAYER
@@ -59,17 +62,13 @@ lisaui_err_t app_audio_player_create(void *parent)
 
     g_app_panel = lv_obj_create(g_app_audio_player);
     _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-    lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(80));
-    lv_obj_set_y(g_app_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
+    // lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(80));
+    // lv_obj_set_y(g_app_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
 
-    metadata_music_song_t song = {
-        .title = "歌曲标题",
-        .artist = "歌手",
-    };
-    lisaui_app_audio_player_create_song_view(g_app_panel, &song);
+    lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(100));
+
     LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
     return LISAUI_ERR_OK;
-    // });
 }
 
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, destroy, void, {
@@ -80,27 +79,41 @@ lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, enter, void, { return LISAUI_E
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, exit, void, { return LISAUI_ERR_OK; });
 void *LISAUI_DEFINE_APP_FUNC(audio_player, get_page, void, { return g_app_audio_player; });
 
-// UI_RES_IMG_NAME(weather_undefined, APP_AUDIO_PLAYER_UI_RES_PERFIX_PATH("assets/png/weather_00.png"));
-static lv_style_t style_setting;
+/**********************************************************************************************************************/
+
 static lv_obj_t *line_setting_floor;
 static lv_point_t lv_setting_line_floor[2];
+
 lv_obj_t *lisaui_app_audio_player_create_song_view(lv_obj_t *parent, metadata_music_song_t *song)
 {
-    lv_obj_t *song_view = lv_obj_create(parent);
+    // lv_obj_t *song_view = lv_obj_create(parent);
+    // _lisaui_set_style_container(song_view, lv_color_hex(0x000000), 0, lv_color_hex(0x000000), 0, 0);
+    lv_obj_t *song_view = lv_img_create(parent);
     _lisaui_set_style_container(song_view, lv_color_hex(0x000000), 0, lv_color_hex(0x000000), 0, 0);
+    lv_img_png_src_init(UI_RES_IMG_PNG(music_care_view_bg));
+    lv_img_set_src(song_view, &LV_IMG_DSC(music_care_view_bg));
     lv_obj_set_size(song_view, LV_PCT(100), LV_PCT(100));
 
+    LV_OBJ_ICON(music_icon) = lv_img_create(song_view);
+    lv_img_png_src_init(UI_RES_IMG_PNG(music_icon));
+    lv_img_set_src(LV_OBJ_ICON(music_icon), &LV_IMG_DSC(music_icon));
+    lv_obj_align(LV_OBJ_ICON(music_icon), LV_ALIGN_LEFT_MID, 20, 0);
+    lv_obj_add_flag(LV_OBJ_ICON(music_icon), LV_OBJ_FLAG_CLICKABLE); /// Flags
+    lv_obj_clear_flag(LV_OBJ_ICON(music_icon), LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_align(LV_OBJ_ICON(music_icon), LV_ALIGN_TOP_MID, -LV_DPX(80), LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
+
     lv_obj_t *tips_label = lv_label_create(song_view);
-    lv_label_set_text(tips_label, "歌曲信息");
+    lv_label_set_text(tips_label, "正在为你播放");
     lv_obj_set_style_text_color(tips_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN);
     lv_obj_set_style_text_font(tips_label, &lv_font_chinese_18, LV_PART_MAIN);
-    lv_obj_align(tips_label, LV_ALIGN_TOP_MID, 0, LV_DPX(4));
+    // lv_obj_align(tips_label, LV_ALIGN_TOP_MID, 0, LV_DPX(4));
+    lv_obj_align_to(tips_label, LV_OBJ_ICON(music_icon), LV_ALIGN_OUT_RIGHT_MID, LV_DPX(4), LV_DPX(0));
 
     lv_obj_t *title_label = lv_label_create(song_view);
     lv_label_set_text(title_label, song->title);
     lv_obj_set_style_text_color(title_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN);
     lv_obj_set_style_text_font(title_label, &lv_font_chinese_18, LV_PART_MAIN);
-    lv_obj_align(title_label, LV_ALIGN_CENTER, 0, -LV_DPX(60));
+    lv_obj_align(title_label, LV_ALIGN_CENTER, 0, -LV_DPX(40));
 
     static lv_style_t style_line;
     lv_style_init(&style_line);
@@ -121,13 +134,13 @@ lv_obj_t *lisaui_app_audio_player_create_song_view(lv_obj_t *parent, metadata_mu
     // lv_setting_line_floor[1].y = LV_DPX(LV_VER_RES/2);
 
     lv_line_set_points(line_setting_floor, lv_setting_line_floor, 2);
-    lv_obj_align_to(line_setting_floor, title_label, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPX(20));
+    lv_obj_align_to(line_setting_floor, title_label, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPX(30));
 
     lv_obj_t *artist_label = lv_label_create(song_view);
     lv_label_set_text(artist_label, song->artist);
     lv_obj_set_style_text_color(artist_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN);
     lv_obj_set_style_text_font(artist_label, &lv_font_chinese_18, LV_PART_MAIN);
-    lv_obj_align_to(artist_label, title_label, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPX(40));
+    lv_obj_align_to(artist_label, title_label, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPX(60));
 
     return song_view;
 }
@@ -142,7 +155,7 @@ lisaui_err_t lisaui_app_audio_player_set_song_view(metadata_music_song_t *song, 
     }
 
     LVGL_OBJ_SAFE_DEL(temp_music_song_view);
-    lisaui_app_enter(UI_APP_ID_WEATHER);
+    lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
     temp_music_song_view = lisaui_app_audio_player_create_song_view(g_app_panel, song);
 
     LVGL_UI_UNLOCK();

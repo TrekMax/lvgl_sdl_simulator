@@ -93,7 +93,23 @@ extern "C" {
 
 #else
 extern SemaphoreHandle_t lvgl_mutex;
+#define CONFIG_LISAUI_LVGL_DEBUG 0
+#if CONFIG_LISAUI_LVGL_DEBUG
+static int look_count = 0;
+#define LVGL_UI_LOCK()                                                                                                 \
+    do {                                                                                                               \
+        xSemaphoreTakeRecursive(lvgl_mutex, portMAX_DELAY);                                                            \
+        look_count++;                                                                                                  \
+        LISAUI_LOGI("LVGL", "LVGL_UI_LOCK look_count:%d", look_count);                                                 \
+    } while (0)
 
+#define LVGL_UI_UNLOCK()                                                                                               \
+    do {                                                                                                               \
+        look_count--;                                                                                                  \
+        LISAUI_LOGI("LVGL", "LVGL_UI_UNLOCK look_count:%d", look_count);                                               \
+        xSemaphoreGiveRecursive(lvgl_mutex);                                                                           \
+    } while (0)
+#else
 #define LVGL_UI_LOCK()                                                                                                 \
     do {                                                                                                               \
         xSemaphoreTakeRecursive(lvgl_mutex, portMAX_DELAY);                                                            \
@@ -102,6 +118,7 @@ extern SemaphoreHandle_t lvgl_mutex;
     do {                                                                                                               \
         xSemaphoreGiveRecursive(lvgl_mutex);                                                                           \
     } while (0)
+#endif
 #endif
 
 #define LVGL_OBJ_SAFE_DEL(obj)                                                                                         \

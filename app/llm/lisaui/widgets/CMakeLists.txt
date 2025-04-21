@@ -21,16 +21,13 @@ add_library(${LISAUI_COMMON_TARGET_NAME} STATIC
     ${${LISAUI_COMMON_TARGET_NAME}_UI_FONTS_RESOURCES}
 )
 
-target_include_directories(${LISAUI_COMMON_TARGET_NAME} PUBLIC
+target_include_directories(${LISAUI_COMMON_TARGET_NAME}
+    INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/base/
     ${CMAKE_CURRENT_SOURCE_DIR}/assets
 )
 
-target_link_libraries(${LISAUI_COMMON_TARGET_NAME} PRIVATE
-    lvgl
-    utils
-    )
 
 if (CONFIG_LISAUI_ENV_ARCS_SDK)
     target_link_libraries(${LISAUI_COMMON_TARGET_NAME}

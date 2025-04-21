@@ -19,11 +19,13 @@ extern "C" {
 #ifdef __ZEPHYR__
 #include <zephyr/kernel.h>
 #include "lvgl.h"
-#elif CONFIG_LISAUI_ENV_ARCS_SDK
-    #include "lvgl.h"
+#elif CONFIG_LVGL_ENV_SIMULATOR
+#include "lvgl/lvgl.h"
 #else
-    #include "lvgl/lvgl.h"
+#include "lvgl.h"
 #endif
+
+LV_FONT_DECLARE(lv_font_notosans_cs_medium_18);
 
 typedef enum {
     LISAUI_LLM_DIALOG_TYPE_INFO,

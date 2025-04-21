@@ -10,9 +10,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_standby.h"
-#include "app_common/lisaui_app_common.h"
+#include "lisaui_app_common.h"
 #include "assets/assets_res.h"
-#include <src/misc/lv_area.h>
 
 static const char *TAG = "app_standby";
 static lv_obj_t *g_app_standby = NULL;
@@ -34,6 +33,7 @@ static void timer_listening_timeout_handler(lv_timer_t *timer)
 lisaui_err_t lisaui_app_standby_set_emoji(lisaui_app_standby_emoji_type_e type)
 {
     if (g_icon_emoji == NULL) {
+        LISAUI_LOGW(TAG, "[%d:%s] g_icon_emoji is NULL", __LINE__, __func__);
         return LISAUI_ERR_INVALID_PARAM;
     }
     LVGL_UI_LOCK();
@@ -43,13 +43,6 @@ lisaui_err_t lisaui_app_standby_set_emoji(lisaui_app_standby_emoji_type_e type)
         break;
     case LISAUI_APP_STANDBY_EMOJI_TYPE_LISTENING:
         lv_gif_set_src(g_icon_emoji, &anim_wakeup);
-        // if (timer_listening_timeout) {
-        //     lv_timer_pause(timer_listening_timeout);
-        //     lv_timer_del(timer_listening_timeout);
-        // }
-        // LISAUI_LOGD(TAG, "LISAUI_APP_STANDBY_EMOJI_TYPE_LISTENING");
-        // timer_listening_timeout = lv_timer_create(timer_listening_timeout_handler, 3000, NULL);
-        // lv_timer_set_repeat_count(timer_listening_timeout, 1);
         break;
     case LISAUI_APP_STANDBY_EMOJI_TYPE_RECOGNITION:
         break;
@@ -75,9 +68,10 @@ lisaui_err_t app_standby_create(void *parent)
     _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
     LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(g_app_standby, g_app_panel);
+    // lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(100));
 
     g_icon_emoji = lv_gif_create(g_app_panel);
-    lv_obj_align(g_icon_emoji, LV_ALIGN_CENTER, 0, -(LV_DPX(LISAUI_STATUS_BAR_HEIGHT)));
+    lv_obj_align(g_icon_emoji, LV_ALIGN_CENTER, 0, -(LV_DPX(30)));
     lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
 
     g_label_wakeup_tip = lv_label_create(g_app_standby);
@@ -95,7 +89,7 @@ lisaui_err_t app_standby_destroy(void)
 {
     LVGL_OBJ_SAFE_DEL(g_icon_emoji);
     LVGL_OBJ_SAFE_DEL(g_label_wakeup_tip);
-
+    
     LVGL_OBJ_SAFE_DEL(g_app_standby);
     LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
     return LISAUI_ERR_OK;

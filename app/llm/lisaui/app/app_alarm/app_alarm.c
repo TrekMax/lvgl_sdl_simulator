@@ -10,16 +10,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_alarm.h"
-#include "app_common/lisaui_app_common.h"
+#include "lisaui_app_common.h"
 #include "common_widgets.h"
 
 static const char *TAG = "app_alarm";
 static lv_obj_t *g_app_alarm = NULL;
 static lv_obj_t *g_app_panel = NULL;
 
-lv_obj_t *g_obj_alarm_list = NULL;
-lv_obj_t *g_obj_alarm_create_view = NULL;
-lv_obj_t *g_delete_alarm_menu = NULL;
+static lv_obj_t *g_obj_alarm_list = NULL;
+static lv_obj_t *g_obj_alarm_create_view = NULL;
+static lv_obj_t *g_delete_alarm_menu = NULL;
+
 static void app_alarm_delete_menu_destroy(lv_obj_t *menu)
 {
     if (menu == NULL) {

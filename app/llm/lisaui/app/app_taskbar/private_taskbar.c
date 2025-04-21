@@ -1,12 +1,12 @@
 /**
  * @file private_taskbar.c
  * @author TrekMax (QinYUN575@Foxmail.com)
- * @brief
+ * @brief 
  * @version 0.1
  * @date 2025-04-15
- *
+ * 
  * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
- *
+ * 
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_taskbar.h"
@@ -245,7 +245,7 @@ lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
     lv_obj_t *menu_panel = lv_obj_create(parent);
     lv_obj_set_size(menu_panel, LV_DPX(160), LV_PCT(100));
     lv_obj_set_style_bg_color(menu_panel, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(menu_panel, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_radius(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_obj_set_style_padding_all(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -289,7 +289,7 @@ lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
     lv_obj_set_style_bg_opa(LV_OBJ_ICON(icon_setting), 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_t *label2 = lv_label_create(menu_panel);
-    lv_label_set_text(label2, "唤醒设置");
+    lv_label_set_text(label2, "");
     lv_obj_set_width(label2, LV_DPX(140));
     lv_label_set_long_mode(label2, LV_LABEL_LONG_CLIP);
     lv_obj_set_style_text_font(label2, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);

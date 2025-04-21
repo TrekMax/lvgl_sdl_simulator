@@ -31,9 +31,9 @@ typedef struct _lisaui_ui_res_img_png_t {
 } lisaui_ui_res_img_png_t;
 
 #define UI_RES_IMG_NAME(name, path) \
-	static lv_obj_t *lv_obj_icon_##name;\
-	lv_img_dsc_t lv_img_dsc_##name;\
-	INCBIN(file_##name, path);
+    static lv_obj_t *lv_obj_icon_##name;\
+    lv_img_dsc_t lv_img_dsc_##name;\
+    INCBIN(file_##name, path);
 
 #define UI_RES_IMG_PNG(name) &lv_img_dsc_##name, gfile_##name##Data, gfile_##name##Size
 

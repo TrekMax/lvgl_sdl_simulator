@@ -13,8 +13,6 @@
 #include "app/app_common.h"
 #include "app_common/lisaui_log.h"
 #include "lisaui_app_common.h"
-#include "app/app_standby/app_standby.h"
-#include "app/app_weather/app_weather.h"
 
 #if CONFIG_LVGL_ENV_SIMULATOR
 #include <pthread.h>
@@ -31,46 +29,55 @@ pthread_mutex_t lvgl_mutex;
 SemaphoreHandle_t lvgl_mutex;
 #endif
 
-#define TEST_LISAUI_APP 0
+#define TEST_LISAUI_APP 1
+#include "app_standby.h"
+#include "app_weather.h"
+#include "app_audio_player.h"
+#include "common_widgets.h"
 
 #if TEST_LISAUI_APP
+
 static int count = 0;
 static int test_index = 0;
+
+static metadata_weather_t weather = {
+    .type = 0,
+    .city = "深圳",
+    // .location = "深圳",
+    // .time = "2025-01-22 12:00",
+    // .week = "星期二",
+    .date = "04/18",
+    // .title = "天气",
+    .temperature = "25C",
+    // .temperature = "25°C",
+    // .temperature_range = "20°C - 30°C",
+    .temperature_range = "20C ~ 30C",
+    .description = "晴朗 天气优",
+};
+
+static metadata_music_song_t song = {
+    .title = "稻香",
+    .artist = "周杰伦",
+};
+
 static void test_lisaui_app_timer_cb(lv_timer_t *timer)
 {
     LISAUI_LOGI(TAG, "[%s] test_lisaui_app_timer_cb index:%d", __FUNCTION__, test_index);
-    switch (test_index++) {
-    case 0:
+    switch (test_index) {
+    case 1:
         lisaui_app_weather_del_weather_view();
         lisaui_app_enter(UI_APP_ID_TEMPLATE);
         break;
-    case 1:
-        //     lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
-        //     lisaui_app_enter(UI_APP_ID_STANDBY);
-        metadata_weather_t weather = {
-            .type = 0,
-            .city = "深圳",
-            // .location = "深圳",
-            // .time = "2025-01-22 12:00",
-            // .week = "星期二",
-            .date = "04/18",
-            // .title = "天气",
-            .temperature = "25C",
-            // .temperature = "25°C",
-            // .temperature_range = "20°C - 30°C",
-            .temperature_range = "20C ~ 30C",
-            .description = "晴朗 天气优",
-        };
+    case 2:
+        lisaui_app_enter(UI_APP_ID_WEATHER);
         lisaui_app_weather_set_weather_view(&weather);
         break;
-
-    case 2:
+    case 3:
         lisaui_app_weather_del_weather_view();
         lisaui_app_enter(UI_APP_ID_SETTING);
         LISAUI_LOGI(TAG, "[%s] enter setting", __FUNCTION__);
         break;
-
-    case 3:
+    case 4:
         lisaui_app_weather_del_weather_view();
         metadata_weather_t weather2 = {
             .type = 0,
@@ -88,25 +95,43 @@ static void test_lisaui_app_timer_cb(lv_timer_t *timer)
         };
         lisaui_app_weather_set_weather_view(&weather2);
         break;
-    //     lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_RECOGNITION);
-    // //     lisaui_app_enter(UI_APP_ID_LAUNCHER);
-    //     break;
     case 5:
-        lisaui_app_enter(UI_APP_ID_SETTING);
-
-        extern int ls_llm_dialog_popup(const char *text);
+        lisaui_app_enter(UI_APP_ID_WEATHER);
         ls_llm_dialog_popup("Test");
-
+        ls_llm_dialog_popup("Test233123");
+        ls_llm_dialog_popup("Test2114141");
         break;
+    case 6:
+        lisaui_app_enter(UI_APP_ID_SETTING);
+        ls_llm_dialog_popup("Test");
+        break;
+    case 7:
+        lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+        lisaui_app_audio_player_set_song_view(&song, LISAUI_APP_AUDIO_PLAYER_STATE_PLAY);
+        LISAUI_LOGI(TAG, "[%s] enter setting", __FUNCTION__);
+        break;
+    case 8:
+        lisaui_app_enter(UI_APP_ID_STANDBY);
+        lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
+        break;
+    case 9:
+        lisaui_app_enter(UI_APP_ID_STANDBY);
+        lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_LISTENING);
+        break;
+    case 10:
+        lisaui_app_enter(UI_APP_ID_STANDBY);
+        lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
+        break;
+
     default:
         test_index = 0;
         break;
     }
-
-    if (count++ > 10) {
-        LISAUI_LOGI(TAG, "[%s] delete timer", __FUNCTION__);
-        lv_timer_del(timer);
-    }
+    test_index++;
+    // if (count++ > 10) {
+    //     LISAUI_LOGI(TAG, "[%s] delete timer", __FUNCTION__);
+    //     lv_timer_del(timer);
+    // }
 }
 #endif
 
@@ -159,15 +184,14 @@ void lisaui_ui_init(void)
     // lisaui_app_enter(UI_APP_ID_WIFI);
 #if TEST_LISAUI_APP
 
-    lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 1000, NULL);
+    lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 500, NULL);
     if (timer == NULL) {
         LISAUI_LOGE(TAG, "[%s] Failed to create timer", __FUNCTION__);
         return;
     }
-    // lv_timer_set_repeat_count(timer, LV_TIMER_REPEAT_INFINITE);
-    // lv_timer_set_period(timer, 1000);
-    // lv_timer_ready(timer);
 
-    // test_lisaui_dbus_example1();
+    // lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+    // lisaui_app_audio_player_set_song_view(&song, LISAUI_APP_AUDIO_PLAYER_STATE_PLAY);
+    // lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_LISTENING);
 #endif
 }

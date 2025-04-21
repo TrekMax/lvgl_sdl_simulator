@@ -110,8 +110,7 @@ lv_obj_t *ls_lv_llm_dialog_create(lv_obj_t *parent)
     // lv_obj_add_flag(llm_asr_result_label, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_clear_state(llm_asr_result_label, LV_STATE_FOCUSED);
     lv_obj_set_style_text_color(llm_asr_result_label, lv_color_hex(0xFFFFFF), 0);
-    // lv_obj_set_style_text_font(llm_asr_result_label, &lv_font_notosans_cs_medium_18, LV_PART_MAIN |
-    // LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(llm_asr_result_label, &lv_font_notosans_cs_medium_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(llm_asr_result_label, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_obj_set_width(llm_asr_result_label, lv_pct(70));
 

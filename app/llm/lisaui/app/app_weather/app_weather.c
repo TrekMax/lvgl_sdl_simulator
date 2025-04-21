@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_weather.h"
-#include "app_common/lisaui_app_common.h"
+#include "lisaui_app_common.h"
 #include "lv_img_utils.h"
 
 static const char *TAG = "app_weather";
@@ -20,18 +20,24 @@ static lv_obj_t *temp_weather_view = NULL;
 
 // UI_RES_IMG_NAME(weather_undefined, APP_WEATHER_UI_RES_PERFIX_PATH("assets/png/weather_undefined.png"));
 UI_RES_IMG_NAME(weather_undefined, APP_WEATHER_UI_RES_PERFIX_PATH("assets/png/weather_00.png"));
+UI_RES_IMG_NAME(weather_care_view_bg, APP_WEATHER_UI_RES_PERFIX_PATH("assets/png/weather_care_view_bg.png"))
 
 lv_obj_t *app_weather_create_weather_view(lv_obj_t *parent, metadata_weather_t *weather)
 {
-    lv_obj_t *weather_view = lv_obj_create(parent);
+    // lv_obj_t *weather_view = lv_obj_create(parent);
+    // _lisaui_set_style_container(weather_view, lv_color_hex(0x000000), 0, lv_color_hex(0x000000), 0, 0);
+    // lv_obj_set_size(weather_view, LV_PCT(100), LV_PCT(100));
+    lv_obj_t *weather_view = lv_img_create(parent);
     _lisaui_set_style_container(weather_view, lv_color_hex(0x000000), 0, lv_color_hex(0x000000), 0, 0);
+    lv_img_png_src_init(UI_RES_IMG_PNG(weather_care_view_bg));
+    lv_img_set_src(weather_view, &LV_IMG_DSC(weather_care_view_bg));
     lv_obj_set_size(weather_view, LV_PCT(100), LV_PCT(100));
-
+	
     lv_obj_t *city_label = lv_label_create(weather_view);
     lv_label_set_text(city_label, weather->city);
     lv_obj_set_style_text_color(city_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN);
     lv_obj_set_style_text_font(city_label, &lv_font_chinese_18, LV_PART_MAIN);
-    lv_obj_align(city_label, LV_ALIGN_TOP_LEFT, LV_DPX(40), LV_DPX(6));
+    lv_obj_align(city_label, LV_ALIGN_TOP_LEFT, LV_DPX(40), LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
 
     lv_obj_t *date_label = lv_label_create(weather_view);
     lv_label_set_text(date_label, weather->date);
@@ -105,24 +111,10 @@ lisaui_err_t app_weather_create(void *parent)
 
     g_app_panel = lv_obj_create(g_app_weather);
     _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-    lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(80));
-    lv_obj_set_y(g_app_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
-
-    metadata_weather_t weather = {
-        .type = 0,
-        .city = "深圳",
-        // .location = "深圳",
-        // .time = "2025-01-22 12:00",
-        // .week = "星期二",
-        .date = "04/18",
-        // .title = "天气",
-        .temperature = "25C",
-        // .temperature = "25°C",
-        // .temperature_range = "20°C - 30°C",
-        .temperature_range = "20C ~ 30C",
-        .description = "晴朗 天气优",
-    };
-    lisaui_app_weather_set_weather_view(&weather);
+    // lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(80));
+    // lv_obj_set_y(g_app_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
+    
+    lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(100));
 
     LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
     return LISAUI_ERR_OK;

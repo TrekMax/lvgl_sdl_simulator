@@ -63,12 +63,16 @@ if(APPLE)
     target_link_libraries(lisaui PRIVATE
     ${APP_LIBRARIES}
     # -unity
+    app_common
+    common_widget
     )
 else()
     target_link_libraries(lisaui PRIVATE
     -T ${LINKER_SCRIPT}
     ${APP_LIBRARIES}
     -unity
+    app_common
+    common_widget
     )
 endif()
 

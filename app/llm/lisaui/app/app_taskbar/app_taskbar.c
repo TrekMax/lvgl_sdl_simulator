@@ -12,7 +12,6 @@
 
 #include "app_taskbar.h"
 #include "../app_common.h"
-
 #include "lisaui_app_common.h"
 #include "assets/assets_res.h"
 #include "private_taskbar.h"
@@ -72,7 +71,7 @@ lisaui_err_t app_taskbar_create(void *parent)
 {
     g_app_taskbar = lv_obj_create(parent);
     lv_obj_set_size(g_app_taskbar, LV_PCT(100), LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
-    _lisaui_set_style_container(g_app_taskbar, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+    _lisaui_set_style_container(g_app_taskbar, lv_color_hex(0x000000), 0, lv_color_hex(0x000000), 0, 0);
 
 #if CONFIG_LISAUI_APP_TASKBAR_TOOLKIT_ENABLE
     _lisaui_taskbar_create_back_btn(g_app_taskbar);
@@ -174,7 +173,7 @@ static struct app_icon_t app_icon_res = {
 #endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = NULL, //&ui_img_icon_taskbar_png,
+    .icon = NULL,//&ui_img_icon_taskbar_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 

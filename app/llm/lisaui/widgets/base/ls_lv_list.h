@@ -13,16 +13,14 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-// #include "lv_obj.h"
-// #include "lv_flex.h"
 
 #ifdef __ZEPHYR__
 #include <zephyr/kernel.h>
 #include "lvgl.h"
-#elif CONFIG_LISAUI_ENV_ARCS_SDK
-#include "lvgl.h"
-#else
+#elif CONFIG_LVGL_ENV_SIMULATOR
 #include "lvgl/lvgl.h"
+#else
+#include "lvgl.h"
 #endif
 
 // #if LV_USE_LS_LIST

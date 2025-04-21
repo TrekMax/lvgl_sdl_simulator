@@ -22,11 +22,6 @@
 #include "../app_weather/app_weather.h"
 
 #include "lv_img_utils.h"
-#include <src/core/lv_obj.h>
-#include <src/core/lv_obj_pos.h>
-#include <src/core/lv_obj_style.h>
-#include <src/misc/lv_color.h>
-#include <src/widgets/lv_label.h>
 
 static const char *TAG = "app_setting";
 lv_obj_t *g_app_setting = NULL;

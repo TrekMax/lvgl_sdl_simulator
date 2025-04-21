@@ -17,9 +17,9 @@ extern "C" {
 #endif
 
 typedef struct _metadata_weather_t {
-    int type;        // 天气类型
-    char *city;      // 城市
-    char *date;      // 日期
+    int type;   // 天气类型
+    char *city; // 城市
+    char *date; // 日期
     char *icon_path; // 天气图标路径
     // char *location;     // 天气位置
     // char *time;         // 时间
