@@ -14,6 +14,7 @@ set(${LISAUI_COMMON_TARGET_NAME}_UI_FONTS_RESOURCES
     assets/fonts/lv_font_notosans_cs_medium_18.c
     assets/fonts/lv_font_notosans_cs_medium_14.c
     assets/fonts/lv_font_rubik_bold_64.c
+    assets/fonts/lv_font_rubik_bold_64_ascii.c
 )
 
 add_library(${LISAUI_COMMON_TARGET_NAME} STATIC
@@ -41,5 +42,6 @@ else()
     PRIVATE
         lvgl
         utils
+        app_common
         )
 endif()

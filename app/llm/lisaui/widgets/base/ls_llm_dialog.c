@@ -14,7 +14,7 @@
 
 static lv_obj_t *llm_dialog;
 static lv_obj_t *llm_asr_result_label;
-// lv_obj_t *emoji_icon;
+lv_obj_t *emoji_icon;
 
 static lv_anim_t a1;
 static lv_anim_t a2;
@@ -67,12 +67,24 @@ static void anim_timeline_create(int32_t width, int32_t height)
     lv_anim_timeline_add(anim_timeline, 0, &a1);
     lv_anim_timeline_add(anim_timeline, 0, &a2);
 }
+#include "lv_img_utils.h"
+#include "incbin.h"
+
+#if CONFIG_LVGL_ENV_SIMULATOR
+#define LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/widgets/" path
+#else
+#define LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/widgets/" path
+// app/llm/lisaui/widgets/assets/gif/ani_talk.gif
+#endif
+
+UI_RES_IMG_NAME(ani_talk, LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH("assets/gif/ani_talk-10fps.gif"))
+// UI_RES_IMG_NAME(ani_talk, LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH("assets/gif/ani_talk.gif"))
+static lv_img_dsc_t img_gif_ani_talk;
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
 lv_obj_t *ls_lv_llm_dialog_create(lv_obj_t *parent)
 {
-    LISAUI_PRINTK("ls_lv_llm_dialog_create");
     llm_dialog = lv_obj_create(parent);
     // lv_obj_remove_style_all(llm_dialog);
     lv_obj_set_style_pad_all(llm_dialog, 0, 0);
@@ -80,20 +92,22 @@ lv_obj_t *ls_lv_llm_dialog_create(lv_obj_t *parent)
     lv_obj_clear_flag(llm_dialog, LV_OBJ_FLAG_SCROLLABLE); /// Flags
     // bottom_bg = lv_obj_create(lv_scr_act());
     // lv_obj_set_size(bottom_bg, LV_HOR_RES, LV_VER_RES);
-    lv_obj_set_size(llm_dialog, LV_PCT(100), LV_DPX(40));
+    lv_obj_set_size(llm_dialog, LV_PCT(100), LV_DPX(80));
     // lv_obj_set_pos(llm_dialog, lv_pct(10), lv_pct(70));
     lv_obj_align(llm_dialog, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_style_border_width(llm_dialog, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_obj_set_style_border_color(llm_dialog, lv_color_hex(0x454554), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_opa(llm_dialog, LV_OPA_20, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_radius(llm_dialog, 25, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(llm_dialog, lv_color_hex(0x454554), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(llm_dialog, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_bg_color(llm_dialog, lv_color_hex(0x454554), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(llm_dialog, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_obj_set_style_bg_color(llm_dialog, lv_color_hex(0x454554), LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    // emoji_icon = lv_gif_create(llm_dialog);
-    // lv_gif_set_src(emoji_icon, &xiaoling_thinking_s);
-    // // lv_obj_align(emoji_icon, LV_ALIGN_TOP_LEFT, 0, 0);
-    // lv_obj_align_to(emoji_icon, llm_dialog, LV_ALIGN_LEFT_MID, 0, 0);
+    emoji_icon = lv_gif_create(llm_dialog);
+    lv_img_gif_src_init(&img_gif_ani_talk, gfile_ani_talkData, gfile_ani_talkSize);
+    lv_gif_set_src(emoji_icon, &img_gif_ani_talk);
+    // lv_obj_align(emoji_icon, LV_ALIGN_TOP_LEFT, 0, 0);
+    lv_obj_align_to(emoji_icon, llm_dialog, LV_ALIGN_LEFT_MID, 0, 0);
 
     /*Initialize the label style with the animation template*/
     static lv_style_t label_style;
@@ -104,7 +118,7 @@ lv_obj_t *ls_lv_llm_dialog_create(lv_obj_t *parent)
     lv_obj_set_style_pad_all(llm_asr_result_label, 0, 0);
     lv_obj_set_style_pad_left(llm_asr_result_label, 20, 0);
     lv_obj_set_style_pad_right(llm_asr_result_label, 20, 0);
-    // lv_obj_align_to(llm_asr_result_label, emoji_icon, LV_ALIGN_OUT_LEFT_TOP, 10, 0);
+    lv_obj_align_to(llm_asr_result_label, emoji_icon, LV_ALIGN_OUT_LEFT_TOP, 10, 0);
     lv_obj_set_style_border_width(llm_asr_result_label, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     // lv_obj_align(llm_asr_result_label, LV_ALIGN_CENTER, 0, 0);
     // lv_obj_add_flag(llm_asr_result_label, LV_OBJ_FLAG_SCROLLABLE);
@@ -154,7 +168,10 @@ int ls_llm_dialog_popup(const char *text)
     // lv_label_set_text(llm_asr_result_, text);
     // lv_textarea_set_text(llm_asr_result_label, text);
     // lv_anim_timeline_start(anim_timeline);
-    ls_llm_dialog_popup_with_mode(LISAUI_LLM_STATUS_WAITING, text, LISAUI_TEXT_MODE_OVERWRITE);
+    if (strlen(text) == 0) {
+        return 0;
+    }
+    ls_llm_dialog_popup_with_mode(LISAUI_LLM_STATUS_SUCCESS, text, LISAUI_TEXT_MODE_OVERWRITE);
     return 0;
 }
 

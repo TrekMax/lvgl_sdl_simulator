@@ -43,9 +43,7 @@ static void msgbox_event_handler(lv_event_t *e)
 static lv_obj_t *app_alarm_delete_menu_create(lv_obj_t *parent)
 {
     lv_obj_t *menu = lv_obj_create(parent);
-    // lv_obj_set_size(menu, LV_PCT(100), LV_PCT(100));
-    lv_obj_set_size(menu, LV_PCT(80), LV_PCT(80));
-    lv_obj_align(menu, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_size(menu, LV_PCT(100), LV_PCT(100));
     lv_obj_set_style_bg_color(menu, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(menu, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_radius(menu, 0, LV_PART_MAIN | LV_STATE_DEFAULT);

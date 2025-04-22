@@ -54,16 +54,13 @@ static void event_handler(lv_event_t *e)
     lv_obj_t *obj = lv_event_get_target(e);
     setting_item_t *item = (setting_item_t *)lv_event_get_user_data(e);
     if (code == LV_EVENT_CLICKED) {
-        LISAUI_LOGI(TAG, "Clicked: %s", item->name);
+        LISAUI_LOGI(TAG, "Open setting: %s", item->name);
         switch (item->id) {
         case LISAUI_APP_SETTING_ITEM_ID_REGULAR:
             temp_setting_item_view = private_lisaui_app_view_create_volume_backlight(g_app_panel);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_ALARM:
-            // private_lisaui_app_view_create_alarm(g_app_panel);
-            // extern void app_alarm_create_alarm_list(lv_obj_t *parent);
-            // app_alarm_create_alarm_list(g_app_panel);
             lisaui_app_enter(UI_APP_ID_ALARM);
             break;
 
@@ -72,30 +69,14 @@ static void event_handler(lv_event_t *e)
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_WIFI:
-            // private_lisaui_app_view_create_wifi(g_app_panel);
             lisaui_app_enter(UI_APP_ID_WIFI);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_WEATHER:
-            // private_lisaui_app_view_create_weather(g_app_panel);
             lisaui_app_enter(UI_APP_ID_WEATHER);
-            metadata_weather_t weather = {
-                .type = 0,
-                .city = "深圳",
-                // .location = "深圳",
-                // .time = "2025-01-22 12:00",
-                // .week = "星期二",
-                .date = "04/18",
-                // .title = "天气",
-                .temperature = "25°C",
-                .temperature_range = "20°C - 30°C",
-                .description = "晴天",
-            };
-            lisaui_app_weather_set_weather_view(&weather);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_AUDIO_PLAYER:
-            // private_lisaui_app_view_create_weather(g_app_panel);
             lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
             break;
 
@@ -126,28 +107,29 @@ lv_obj_t *app_settings_create_item_page(lv_obj_t *parent)
     for (int i = 0; i < sizeof(setting_items) / sizeof(setting_items[0]); i++) {
         lv_obj_t *btn = lv_btn_create(g_settings_panel);
         lv_obj_add_event_cb(btn, event_handler, LV_EVENT_CLICKED, (void *)&(setting_items[i]));
-        lv_obj_set_size(btn, LV_PCT(48), LV_DPX(80));
+        lv_obj_set_size(btn, LV_PCT(45), 60);
+        // lv_obj_set_size(btn, LV_PCT(48), LV_DPX(80));
         lv_obj_set_style_bg_color(btn, lv_color_hex(0x24242d), 0);
         lv_obj_set_style_radius(btn, 10, 0);
         lv_obj_set_style_shadow_width(btn, 0, 0);
         lv_obj_set_style_border_width(btn, 0, 0);
         lv_obj_set_style_outline_width(btn, 0, 0);
 
-        // lv_obj_set_layout(btn, LV_LAYOUT_FLEX);
+        lv_obj_set_layout(btn, LV_LAYOUT_FLEX);
         lv_obj_set_flex_flow(btn, LV_FLEX_FLOW_ROW);
         lv_obj_set_flex_align(btn, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
         lv_obj_t *icon = lv_img_create(btn);
         lv_img_set_src(icon, setting_items[i].icon);
-        lv_obj_align(icon, LV_ALIGN_LEFT_MID, LV_DPX(10), 0);
+        // lv_obj_align(icon, LV_ALIGN_LEFT_MID, LV_DPX(10), 0);
 
         lv_obj_t *label = lv_label_create(btn);
         lv_label_set_text(label, setting_items[i].name);
-        lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
-        // lv_obj_set_size(label, LV_PCT(90), LV_DPX(100));
-        lv_obj_set_width(label, LV_PCT(80));
-        lv_obj_set_height(label, LV_DPX(30));
-        // lv_obj_align_to(label, icon, LV_ALIGN_OUT_RIGHT_MID, LV_DPX(20), 0);
+        // lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
+        // // lv_obj_set_size(label, LV_PCT(90), LV_DPX(100));
+        // lv_obj_set_width(label, LV_PCT(80));
+        // lv_obj_set_height(label, LV_DPX(30));
+        lv_obj_align_to(label, icon, LV_ALIGN_OUT_RIGHT_MID, LV_DPX(20), 0);
         lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     }
     return g_settings_panel;

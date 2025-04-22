@@ -1,12 +1,12 @@
 /**
  * @file lisaui_view_manager.c
  * @author Tianshuang Ke (dske@listenai.com)
- * @brief
+ * @brief 
  * @version 0.1
  * @date 2025-03-03
- *
+ * 
  * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
- *
+ * 
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "lisaui_view_manager.h"
@@ -94,7 +94,7 @@ lisaui_err_t lisaui_view_manager_print_usage(lisaui_view_stack_t *view_stack)
     // LISAUI_LOGD(TAG, "view stack current: %p", view_stack.current);
     void *p = view_stack->head;
     int depth = 0;
-    while (p != NULL) {
+    while (p!=NULL) {
         depth++;
         lisaui_view_page_t *page = (lisaui_view_page_t *)p;
         // LISAUI_LOGD(TAG, "\t\tpage: %p, page->prev: %p, page->next: %p", page, page->prev, page->next);

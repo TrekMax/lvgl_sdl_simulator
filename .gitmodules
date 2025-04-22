@@ -13,3 +13,6 @@
 [submodule "components/unity"]
 	path = components/unity
 	url = git@github.com:ThrowTheSwitch/Unity.git
+[submodule "components/cJSON"]
+	path = components/cJSON
+	url = git@github.com:TrekMax/cJSON.git

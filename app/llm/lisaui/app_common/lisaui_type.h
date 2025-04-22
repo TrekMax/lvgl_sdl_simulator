@@ -40,7 +40,7 @@ extern "C" {
 #define LISAUI_ERR_INVALID_PARAM            (-2)
 #define LISAUI_ERR_NO_MEMORY                (-3)
 
-
+// 应用错误
 #define LISAUI_ERR_APP_OK                   (LISAUI_ERR_OK)
 #define LISAUI_ERR_APP_UNKNOW_FAILED        (-1000)
 #define LISAUI_ERR_APP_NOT_REGISTERED       (-1001)
@@ -57,6 +57,11 @@ extern "C" {
 #define LISAUI_ERR_APP_LOCKED               (-1011)
 #define LISAUI_ERR_APP_ALREADY_IN           (-1012)
 
+// 资源错误
+#define LISAUI_ERR_RES_NOT_FOUND            (-2000)
+#define LISAUI_ERR_RES_NOT_LOADED           (-2001)
+#define LISAUI_ERR_RES_INVALID_SIZE         (-2002)
+#define LISAUI_ERR_RES_INVALID_TYPE         (-2003)
 
 #define LISAUI_VIEW_OBJ_T lv_obj_t
 #define LISAUI_ICON_RES_T const lv_img_dsc_t

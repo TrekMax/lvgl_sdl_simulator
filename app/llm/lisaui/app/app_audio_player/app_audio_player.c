@@ -113,7 +113,7 @@ lv_obj_t *lisaui_app_audio_player_create_song_view(lv_obj_t *parent, metadata_mu
     lv_label_set_text(title_label, song->title);
     lv_obj_set_style_text_color(title_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN);
     lv_obj_set_style_text_font(title_label, &lv_font_chinese_18, LV_PART_MAIN);
-    lv_obj_align(title_label, LV_ALIGN_CENTER, 0, -LV_DPX(40));
+    lv_obj_align(title_label, LV_ALIGN_CENTER, 0, -LV_DPX(30));
 
     static lv_style_t style_line;
     lv_style_init(&style_line);

@@ -45,7 +45,7 @@ void lisaui_app_radio_select_handler(lv_event_t *event)
 }
 
 static lisaui_app_setting_wakeup_options_t g_wakeup_options[] = {
-    {"按键唤醒", "通过开发板 K3 按键进行唤醒", 0, LISAUI_APP_SETTING_WAKEUP_MODE_KEY, NULL, NULL},
+    {"按键唤醒", "通过开发板 VOICE 按键进行唤醒", 0, LISAUI_APP_SETTING_WAKEUP_MODE_KEY, NULL, NULL},
     {"语音唤醒（单轮对话）", "通过唤醒词“小美小美”唤醒，一次唤醒一轮对话", 1,
      LISAUI_APP_SETTING_WAKEUP_MODE_VOICE_SINGLE, NULL, NULL},
     {"语音唤醒（多轮对话）", "通过唤醒词“小美小美”唤醒，支持多轮对话", 2, LISAUI_APP_SETTING_WAKEUP_MODE_VOICE_MULTI,

@@ -68,15 +68,14 @@ lisaui_err_t app_standby_create(void *parent)
     _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
     LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(g_app_standby, g_app_panel);
-    // lv_obj_set_size(g_app_panel, LV_PCT(100), LV_PCT(100));
 
     g_icon_emoji = lv_gif_create(g_app_panel);
     lv_obj_align(g_icon_emoji, LV_ALIGN_CENTER, 0, -(LV_DPX(30)));
     lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_STANDBY);
 
     g_label_wakeup_tip = lv_label_create(g_app_standby);
-    lv_label_set_text(g_label_wakeup_tip, "请使用“小美小美”唤醒我");
-    lv_obj_align(g_label_wakeup_tip, LV_ALIGN_BOTTOM_MID, 0, -(LV_DPX(LISAUI_STATUS_BAR_HEIGHT-10)));
+    lv_label_set_text(g_label_wakeup_tip, "请使用“小聆小聆”唤醒我");
+    lv_obj_align(g_label_wakeup_tip, LV_ALIGN_BOTTOM_MID, 0, -(LV_DPX(20)));
     lv_obj_set_style_text_font(g_label_wakeup_tip, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_color(g_label_wakeup_tip, lv_color_hex(0xffffff), 0);
     lv_obj_set_style_bg_color(g_label_wakeup_tip, lv_color_black(), 0);
@@ -89,7 +88,7 @@ lisaui_err_t app_standby_destroy(void)
 {
     LVGL_OBJ_SAFE_DEL(g_icon_emoji);
     LVGL_OBJ_SAFE_DEL(g_label_wakeup_tip);
-    
+
     LVGL_OBJ_SAFE_DEL(g_app_standby);
     LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
     return LISAUI_ERR_OK;

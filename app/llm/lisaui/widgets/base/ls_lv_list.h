@@ -46,7 +46,6 @@ lv_obj_t *ls_lv_list_add_text(lv_obj_t *list, const char *txt);
 
 lv_obj_t *ls_lv_list_add_btn(lv_obj_t *list, const char *title_text, const char *tips_text, lv_event_cb_t event_cb,
                              void *user_data);
-
 const char *ls_lv_list_get_btn_text(lv_obj_t *list, lv_obj_t *btn);
 
 /**********************

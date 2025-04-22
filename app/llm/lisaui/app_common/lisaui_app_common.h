@@ -68,7 +68,7 @@ extern "C" {
 #define LISAUI_DBUS_APP_EXIT     "app_exit"
 #define RES_PERFIX_PATH(res)     "app/app_manager/" res
 
-#define LISAUI_STATUS_BAR_HEIGHT       46
+#define LISAUI_STATUS_BAR_HEIGHT       48
 #define CONFIG_LISAUI_EXEC_HOOK_ENABLE 1
 
 #define LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(parent, target)                                                          \
@@ -114,10 +114,12 @@ static int look_count = 0;
     do {                                                                                                               \
         xSemaphoreTakeRecursive(lvgl_mutex, portMAX_DELAY);                                                            \
     } while (0)
+
 #define LVGL_UI_UNLOCK()                                                                                               \
     do {                                                                                                               \
         xSemaphoreGiveRecursive(lvgl_mutex);                                                                           \
     } while (0)
+
 #endif
 #endif
 

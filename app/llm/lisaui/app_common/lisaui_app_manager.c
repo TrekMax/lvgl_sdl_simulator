@@ -457,7 +457,6 @@ lisaui_err_t lisaui_app_close(const int app_id)
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
     LISAUI_EXEC_HOOK(m_app_close_hook, app, ret);
     if (ret != LISAUI_ERR_OK) {
-        LVGL_UI_UNLOCK();
         LISAUI_LOGE(TAG, "TAG, [ui] app close hook failed");
         LVGL_UI_UNLOCK();
         return ret;

@@ -41,7 +41,8 @@ static int count = 0;
 static int test_index = 0;
 
 static metadata_weather_t weather = {
-    .type = 0,
+    .weather = "晴",
+    
     .city = "深圳",
     // .location = "深圳",
     // .time = "2025-01-22 12:00",
@@ -80,7 +81,7 @@ static void test_lisaui_app_timer_cb(lv_timer_t *timer)
     case 4:
         lisaui_app_weather_del_weather_view();
         metadata_weather_t weather2 = {
-            .type = 0,
+            .weather = "晴",
             .city = "潮州",
             // .location = "深圳",
             // .time = "2025-01-22 12:00",
@@ -179,19 +180,39 @@ void lisaui_ui_init(void)
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
     // lisaui_app_enter(UI_APP_ID_ALARM);
     // lisaui_app_enter(UI_APP_ID_SETTING);
-    // lisaui_app_enter(UI_APP_ID_WEATHER);
-    // lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+    lisaui_app_enter(UI_APP_ID_WEATHER);
+    metadata_weather_t weather2 = {
+        .weather = "晴",
+        .city = "潮州",
+        // .location = "深圳",
+        // .time = "2025-01-22 12:00",
+        // .week = "星期二",
+        .date = "04/20",
+        // .title = "天气",
+        .temperature = "28°C",
+        .temperature_range = "20°C - 30°C",
+        .description = "晴朗 天气优",
+    };
+    lisaui_app_weather_set_weather_view(&weather2);
+
+#if 0
+    lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+    lisaui_app_audio_player_set_song_view(&song, LISAUI_APP_AUDIO_PLAYER_STATE_PLAY);
+    #endif
+    // LISAUI_LOGI(TAG, "[%s] enter setting", __FUNCTION__);
     // lisaui_app_enter(UI_APP_ID_WIFI);
 #if TEST_LISAUI_APP
 
-    lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 500, NULL);
-    if (timer == NULL) {
-        LISAUI_LOGE(TAG, "[%s] Failed to create timer", __FUNCTION__);
-        return;
-    }
+    // lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 500, NULL);
+    // if (timer == NULL) {
+    //     LISAUI_LOGE(TAG, "[%s] Failed to create timer", __FUNCTION__);
+    //     return;
+    // }
 
     // lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
     // lisaui_app_audio_player_set_song_view(&song, LISAUI_APP_AUDIO_PLAYER_STATE_PLAY);
     // lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_LISTENING);
+
+    // lisaui_app_enter(UI_APP_ID_WIFI);
 #endif
 }

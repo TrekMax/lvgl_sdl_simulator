@@ -1,6 +1,7 @@
 add_library(utils STATIC
     img_utils.c
     lv_img_utils.c
+    cJSON.c
 )
 
 target_include_directories(utils PUBLIC

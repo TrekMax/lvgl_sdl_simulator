@@ -20,6 +20,16 @@ extern "C" {
 
 #define LISAUI_VIEW_MANAGER_MAX_CAPACITY 20
 
+typedef enum _lisaui_view_type_e {
+    LISAUI_VIEW_TYPE_NORMAL = 0,
+    LISAUI_VIEW_TYPE_DIALOG,
+    LISAUI_VIEW_TYPE_MENU,
+
+    LISAUI_VIEW_TYPE_APP,   // App 视图
+    LISAUI_VIEW_TYPE_PAGE,  // Page 视图
+    LISAUI_VIEW_TYPE_CARD,  // Card 视图
+} lisaui_view_type_t;
+
 struct _lisaui_view_page_t {
     int app_id; // 页面栈归属的 app id, 用于在不同 app 之间 view 切换
     int page_id;

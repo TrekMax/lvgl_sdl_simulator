@@ -66,3 +66,7 @@ add_subdirectory(components/lvgl)
 add_subdirectory(components/lv_drivers)
 add_subdirectory(components/utils)
 add_subdirectory(components/unity)
+
+# set(ENABLE_CJSON_UTILS ON)
+# set(BUILD_SHARED_AND_STATIC_LIBS ON)
+# add_subdirectory(components/cJSON)
