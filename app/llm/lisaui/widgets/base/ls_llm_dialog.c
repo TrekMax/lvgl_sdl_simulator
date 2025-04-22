@@ -10,7 +10,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "ls_llm_dialog.h"
-#include "../../app_common/lisaui_log.h"
+#include "lisaui_log.h"
+#include "lv_img_utils.h"
+#include "incbin.h"
+#include <src/misc/lv_area.h>
 
 static lv_obj_t *llm_dialog;
 static lv_obj_t *llm_asr_result_label;
@@ -19,19 +22,17 @@ lv_obj_t *emoji_icon;
 static lv_anim_t a1;
 static lv_anim_t a2;
 static lv_anim_timeline_t *anim_timeline = NULL;
+static lv_img_dsc_t img_gif_ani_talk;
 
-int ls_llm_dialog_popup(const char *text);
+#if CONFIG_LVGL_ENV_SIMULATOR
+#define LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/widgets/" path
+#else
+#define LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/widgets/" path
+// app/llm/lisaui/widgets/assets/gif/ani_talk.gif
+#endif
 
-// static void dialog_event_handler(lv_event_t *event)
-// {
-//     lv_obj_t *target = lv_event_get_target(event);
-//     LV_UNUSED(target);
-//     if (event->code == LV_EVENT_DEFOCUSED)
-//     {
-//         lv_anim_timeline_set_reverse(anim_timeline, 1);
-//         lv_anim_timeline_start(anim_timeline);
-//     }
-// }
+UI_RES_IMG_NAME(ani_talk, LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH("assets/gif/ani_talk-10fps.gif"))
+// UI_RES_IMG_NAME(ani_talk, LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH("assets/gif/ani_talk.gif"))
 
 static void set_width(void *var, int32_t v)
 {
@@ -45,7 +46,6 @@ static void set_height(void *var, int32_t v)
 
 static void anim_timeline_create(int32_t width, int32_t height)
 {
-    /* obj1 */
     lv_anim_init(&a1);
     lv_anim_set_var(&a1, llm_dialog);
     lv_anim_set_values(&a1, 0, width);
@@ -67,19 +67,6 @@ static void anim_timeline_create(int32_t width, int32_t height)
     lv_anim_timeline_add(anim_timeline, 0, &a1);
     lv_anim_timeline_add(anim_timeline, 0, &a2);
 }
-#include "lv_img_utils.h"
-#include "incbin.h"
-
-#if CONFIG_LVGL_ENV_SIMULATOR
-#define LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/widgets/" path
-#else
-#define LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/widgets/" path
-// app/llm/lisaui/widgets/assets/gif/ani_talk.gif
-#endif
-
-UI_RES_IMG_NAME(ani_talk, LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH("assets/gif/ani_talk-10fps.gif"))
-// UI_RES_IMG_NAME(ani_talk, LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH("assets/gif/ani_talk.gif"))
-static lv_img_dsc_t img_gif_ani_talk;
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
@@ -88,11 +75,11 @@ lv_obj_t *ls_lv_llm_dialog_create(lv_obj_t *parent)
     llm_dialog = lv_obj_create(parent);
     // lv_obj_remove_style_all(llm_dialog);
     lv_obj_set_style_pad_all(llm_dialog, 0, 0);
-    lv_obj_set_flex_flow(llm_dialog, LV_FLEX_FLOW_ROW);
+    // lv_obj_set_flex_flow(llm_dialog, LV_FLEX_FLOW_ROW);
     lv_obj_clear_flag(llm_dialog, LV_OBJ_FLAG_SCROLLABLE); /// Flags
     // bottom_bg = lv_obj_create(lv_scr_act());
     // lv_obj_set_size(bottom_bg, LV_HOR_RES, LV_VER_RES);
-    lv_obj_set_size(llm_dialog, LV_PCT(100), LV_DPX(80));
+    lv_obj_set_size(llm_dialog, LV_PCT(100), LV_DPX(60));
     // lv_obj_set_pos(llm_dialog, lv_pct(10), lv_pct(70));
     lv_obj_align(llm_dialog, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_style_border_width(llm_dialog, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -109,29 +96,26 @@ lv_obj_t *ls_lv_llm_dialog_create(lv_obj_t *parent)
     // lv_obj_align(emoji_icon, LV_ALIGN_TOP_LEFT, 0, 0);
     lv_obj_align_to(emoji_icon, llm_dialog, LV_ALIGN_LEFT_MID, 0, 0);
 
-    /*Initialize the label style with the animation template*/
-    static lv_style_t label_style;
-    lv_style_init(&label_style);
-
-    // llm_asr_result_ = lv_label_create(llm_dialog);
     llm_asr_result_label = lv_textarea_create(llm_dialog);
+    lv_obj_set_size(llm_asr_result_label, LV_PCT(80), LV_DPX(45));
+    lv_obj_align_to(llm_asr_result_label, emoji_icon, LV_ALIGN_OUT_RIGHT_MID, 0, 0);
+    lv_obj_clear_state(llm_asr_result_label, LV_STATE_FOCUSED);
+    // lv_obj_align(llm_asr_result_label, LV_ALIGN_CENTER, 0, 0);
+    // lv_obj_add_flag(llm_asr_result_label, LV_OBJ_FLAG_SCROLLABLE);
+    
     lv_obj_set_style_pad_all(llm_asr_result_label, 0, 0);
     lv_obj_set_style_pad_left(llm_asr_result_label, 20, 0);
     lv_obj_set_style_pad_right(llm_asr_result_label, 20, 0);
-    lv_obj_align_to(llm_asr_result_label, emoji_icon, LV_ALIGN_OUT_LEFT_TOP, 10, 0);
     lv_obj_set_style_border_width(llm_asr_result_label, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_align(llm_asr_result_label, LV_ALIGN_CENTER, 0, 0);
-    // lv_obj_add_flag(llm_asr_result_label, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_clear_state(llm_asr_result_label, LV_STATE_FOCUSED);
+
     lv_obj_set_style_text_color(llm_asr_result_label, lv_color_hex(0xFFFFFF), 0);
     lv_obj_set_style_text_font(llm_asr_result_label, &lv_font_notosans_cs_medium_18, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(llm_asr_result_label, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_set_width(llm_asr_result_label, lv_pct(70));
+    lv_obj_set_style_bg_color(llm_asr_result_label, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(llm_asr_result_label, LV_OPA_100, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_bg_opa(llm_asr_result_label, LV_OPA_100, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    // lv_textarea_set_cursor_click_pos(llm_asr_result_label, false);
-    // lv_textarea_set_one_line(llm_asr_result_label, true);
     if (!anim_timeline) {
-        anim_timeline_create(256, 48); // width: 320 * 0.8 = 256, height: 240 * 0.2 = 48;
+        anim_timeline_create(LV_PCT(100), LV_DPX(60)); // width: 320 * 0.8 = 256, height: 240 * 0.2 = 48;
     }
     // lv_obj_add_event_cb(llm_asr_result_label, dialog_event_handler, LV_EVENT_ALL, NULL);
     return llm_dialog;

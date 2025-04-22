@@ -18,10 +18,18 @@ extern "C" {
 
 #include "lisaui_app_common.h"
 
-typedef int (*lisaui_app_setting_set_backlight_cb_t)(const uint8_t brightness);
-typedef int (*lisaui_app_setting_set_volume_cb_t)(const uint8_t volume);
-lisaui_err_t lisaui_app_setting_register_set_backlight_handler(lisaui_app_setting_set_backlight_cb_t handler);
-lisaui_err_t lisaui_app_setting_register_set_volume_handler(lisaui_app_setting_set_backlight_cb_t handler);
+typedef enum  {
+    LISAUI_SETTING_ITEM_BACKLIGHT = 0,
+    LISAUI_SETTING_ITEM_VOLUME,
+} lisaui_setting_item_t;
+
+typedef enum {
+    LISAUI_SETTING_OP_GET = 0,
+    LISAUI_SETTING_OP_SET,
+} lisaui_setting_op_t;
+
+typedef int (*lisaui_app_setting_handler_t)(lisaui_setting_item_t type, lisaui_setting_op_t operation, void *value);
+lisaui_err_t lisaui_app_setting_register_handler(lisaui_app_setting_handler_t handler);
 
 lv_obj_t * private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent);
 

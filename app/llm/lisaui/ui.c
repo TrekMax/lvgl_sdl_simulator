@@ -42,7 +42,6 @@ static int test_index = 0;
 
 static metadata_weather_t weather = {
     .weather = "晴",
-    
     .city = "深圳",
     // .location = "深圳",
     // .time = "2025-01-22 12:00",
@@ -61,6 +60,12 @@ static metadata_music_song_t song = {
     .artist = "周杰伦",
 };
 
+#include "app_alarm.h"
+int lisaui_app_alarm_handler(lisaui_alarm_item_t type, lisaui_alarm_op_t operation, void *param)
+{
+    LISAUI_LOGI(TAG, "[%s] type:%d operation:%d", __FUNCTION__, type, operation);
+    return 0;
+}
 static void test_lisaui_app_timer_cb(lv_timer_t *timer)
 {
     LISAUI_LOGI(TAG, "[%s] test_lisaui_app_timer_cb index:%d", __FUNCTION__, test_index);
@@ -171,6 +176,7 @@ void lisaui_ui_init(void)
     LISAUI_USE_APP(audio_player);
     LISAUI_USE_APP(wifi);
 
+    lisaui_app_alarm_register_handler(lisaui_app_alarm_handler);
 #endif
     lisaui_app_manager_init();
     // lisaui_app_manager_show_all_app_info();
@@ -187,18 +193,20 @@ void lisaui_ui_init(void)
         // .location = "深圳",
         // .time = "2025-01-22 12:00",
         // .week = "星期二",
-        .date = "04/20",
+        .date = "04月23日",
         // .title = "天气",
-        .temperature = "28°C",
-        .temperature_range = "20°C - 30°C",
+        .temperature = "28℃",
+        .temperature_range = "20℃ ~ 30℃",
         .description = "晴朗 天气优",
     };
     lisaui_app_weather_set_weather_view(&weather2);
-
+    // ls_llm_dialog_popup("Test");
+    // ls_llm_dialog_popup("Test233123");
+    // ls_llm_dialog_popup("Test2114141");
 #if 0
     lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
     lisaui_app_audio_player_set_song_view(&song, LISAUI_APP_AUDIO_PLAYER_STATE_PLAY);
-    #endif
+#endif
     // LISAUI_LOGI(TAG, "[%s] enter setting", __FUNCTION__);
     // lisaui_app_enter(UI_APP_ID_WIFI);
 #if TEST_LISAUI_APP

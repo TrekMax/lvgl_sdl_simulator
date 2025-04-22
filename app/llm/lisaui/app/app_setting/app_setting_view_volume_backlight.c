@@ -39,23 +39,14 @@ static lv_point_t lv_setting_line_floor[2];
 static lv_style_t style_setting;
 
 static const lv_font_t *font_normal;
-static lisaui_app_setting_set_backlight_cb_t m_backlight_update_handler = NULL;
-static lisaui_app_setting_set_volume_cb_t m_volume_update_handler = NULL;
 
-lisaui_err_t lisaui_app_setting_register_set_backlight_handler(lisaui_app_setting_set_backlight_cb_t handler)
+static lisaui_app_setting_handler_t m_item_op_handler = NULL;
+lisaui_err_t lisaui_app_setting_register_handler(lisaui_app_setting_handler_t handler)
 {
     if (handler == NULL) {
         return LISAUI_ERR_INVALID_PARAM;
     }
-    m_backlight_update_handler = handler;
-    return LISAUI_ERR_OK;
-}
-lisaui_err_t lisaui_app_setting_register_set_volume_handler(lisaui_app_setting_set_backlight_cb_t handler)
-{
-    if (handler == NULL) {
-        return LISAUI_ERR_INVALID_PARAM;
-    }
-    m_volume_update_handler = handler;
+    m_item_op_handler = handler;
     return LISAUI_ERR_OK;
 }
 
@@ -102,12 +93,14 @@ static void lisaui_app_setting_event_slider_handler(lv_event_t *e)
         }
     } else if (code == LV_EVENT_VALUE_CHANGED) {
         if (obj == uiAppSetting_SliderBacklight) {
-            if (m_backlight_update_handler) {
-                m_backlight_update_handler(lv_slider_get_value(obj));
+            if (m_item_op_handler) {
+                uint8_t value = lv_slider_get_value(obj);
+                m_item_op_handler(LISAUI_SETTING_ITEM_BACKLIGHT, LISAUI_SETTING_OP_SET, &value);
             }
         } else if (obj == uiAppSetting_SliderVolume) {
-            if (m_volume_update_handler) {
-                m_volume_update_handler(lv_slider_get_value(obj));
+            if (m_item_op_handler) {
+                uint8_t value = lv_slider_get_value(obj);
+                m_item_op_handler(LISAUI_SETTING_ITEM_VOLUME, LISAUI_SETTING_OP_SET, &value);
             }
         }
     }
@@ -301,6 +294,16 @@ lv_obj_t *private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
 
     lv_line_set_points(line_setting_floor, lv_setting_line_floor, 2);
 #endif
+    if (m_item_op_handler) {
+        uint8_t value = 0;
+        m_item_op_handler(LISAUI_SETTING_ITEM_VOLUME, LISAUI_SETTING_OP_GET, &value);
+        lv_slider_set_value(slider_voice, value, LV_ANIM_OFF);
+    }
+    if (m_item_op_handler) {
+        uint8_t value = 0;
+        m_item_op_handler(LISAUI_SETTING_ITEM_BACKLIGHT, LISAUI_SETTING_OP_GET, &value);
+        lv_slider_set_value(slider_luminance, value, LV_ANIM_OFF);
+    }
 #endif
     return parent;
 }

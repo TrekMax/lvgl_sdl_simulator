@@ -21,6 +21,19 @@ static lv_obj_t *g_obj_alarm_list = NULL;
 static lv_obj_t *g_obj_alarm_create_view = NULL;
 static lv_obj_t *g_delete_alarm_menu = NULL;
 
+static lv_obj_t *apply_btn = NULL;
+static lv_obj_t *cancel_btn = NULL;
+
+static lisaui_app_alarm_handler_t g_app_alarm_op_handler = NULL;
+lisaui_err_t lisaui_app_alarm_register_handler(lisaui_app_alarm_handler_t handler)
+{
+    if (handler == NULL) {
+        return LISAUI_ERR_FAIL;
+    }
+    g_app_alarm_op_handler = handler;
+    return LISAUI_ERR_OK;
+}
+
 static void app_alarm_delete_menu_destroy(lv_obj_t *menu)
 {
     if (menu == NULL) {
@@ -35,8 +48,13 @@ static void msgbox_event_handler(lv_event_t *e)
     lv_obj_t *obj = lv_event_get_current_target(e);
     LV_LOG_USER("Button %s clicked", lv_msgbox_get_active_btn_text(obj));
     if (e->code == LV_EVENT_CLICKED) {
-        LISAUI_LOGI(TAG, "Clicked");
-        app_alarm_delete_menu_destroy(g_delete_alarm_menu);
+        // LISAUI_LOGI(TAG, "Clicked");
+        if (apply_btn && apply_btn == obj) {
+            // g_app_alarm_op_handler(LISAUI_ALARM_ITEM_CLOCK, LISAUI_ALARM_OP_DELETE, &alarm_clock_list);
+        }
+        if (cancel_btn && cancel_btn == obj) {
+            app_alarm_delete_menu_destroy(g_delete_alarm_menu);
+        }
     }
 }
 
@@ -108,15 +126,24 @@ void app_alarm_create_alarm_list(lv_obj_t *parent)
 {
     g_obj_alarm_list = ls_lv_list_create(parent);
     lv_obj_set_size(g_obj_alarm_list, LV_PCT(100), LV_PCT(100));
-    // ls_lv_list_add_text(g_obj_alarm_list, "闹钟列表");
-    ls_lv_list_add_btn(g_obj_alarm_list, "07:00", "Alarm1", event_handler, NULL);
-    ls_lv_list_add_btn(g_obj_alarm_list, "08:00", "Alarm1", event_handler, NULL);
-    ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
-    ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
-    // ls_lv_list_add_text(g_obj_alarm_list, "闹钟列表");
-    ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
-    ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
-    ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
+    // // ls_lv_list_add_text(g_obj_alarm_list, "闹钟列表");
+    // ls_lv_list_add_btn(g_obj_alarm_list, "07:00", "Alarm1", event_handler, NULL);
+    // ls_lv_list_add_btn(g_obj_alarm_list, "08:00", "Alarm1", event_handler, NULL);
+    // ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
+    // ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
+    // // ls_lv_list_add_text(g_obj_alarm_list, "闹钟列表");
+    // ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
+    // ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
+    // ls_lv_list_add_btn(g_obj_alarm_list, "09:00", "Alarm1", event_handler, NULL);
+
+    if (g_app_alarm_op_handler) {
+        lisaui_alarm_clock_list_t alarm_clock_list = {0};
+        g_app_alarm_op_handler(LISAUI_ALARM_ITEM_CLOCK_LIST, LISAUI_ALARM_OP_GET_LIST, &alarm_clock_list);
+        for (int i = 0; i < alarm_clock_list.alarm_list_count; i++) {
+            ls_lv_list_add_btn(g_obj_alarm_list, alarm_clock_list.alarm_list->alarm_time_text,
+                               alarm_clock_list.alarm_list->alarm_date_text, event_handler, NULL);
+        }
+    }
 }
 
 lisaui_err_t lisaui_app_alarm_op_alarm_clear(void)
@@ -192,7 +219,8 @@ lisaui_err_t lisaui_app_alarm_op_alarm_add_view(const char *alarm_time_text, con
             lv_obj_del(g_obj_alarm_create_view);
             g_obj_alarm_create_view = NULL;
         }
-        g_obj_alarm_create_view = private_lisaui_app_alarm_create_alarm_view(g_app_panel, alarm_time_text, alarm_date_text);
+        g_obj_alarm_create_view =
+            private_lisaui_app_alarm_create_alarm_view(g_app_panel, alarm_time_text, alarm_date_text);
     }
     LVGL_UI_UNLOCK();
     return LISAUI_ERR_OK;

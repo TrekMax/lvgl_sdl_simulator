@@ -134,6 +134,7 @@ lv_obj_t *app_weather_create_weather_view(lv_obj_t *parent, metadata_weather_t *
     lv_obj_t *temp_label = lv_label_create(weather_view);
     lv_label_set_text(temp_label, weather->temperature);
     lv_obj_set_style_text_color(temp_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN);
+    // lv_obj_set_style_text_font(temp_label, &lv_font_rubik_bold_64, LV_PART_MAIN);
     lv_obj_set_style_text_font(temp_label, &lv_font_rubik_bold_64_ascii, LV_PART_MAIN);
     lv_obj_align(temp_label, LV_ALIGN_RIGHT_MID, -LV_DPX(30), -LV_DPX(36));
 

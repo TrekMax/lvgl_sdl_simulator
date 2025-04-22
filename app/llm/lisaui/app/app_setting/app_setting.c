@@ -156,11 +156,6 @@ lisaui_err_t lisaui_app_setting_enter_item_panel(void)
         LVGL_UI_UNLOCK();
         return LISAUI_ERR_OK;
     }
-
-    // if (g_settings_panel) {
-    //     lv_obj_del(g_settings_panel);
-    //     app_settings_create_item_page(g_app_panel);
-    // }
     LVGL_UI_UNLOCK();
 
     return LISAUI_ERR_OK;

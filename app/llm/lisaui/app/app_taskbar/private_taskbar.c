@@ -1,12 +1,12 @@
 /**
  * @file private_taskbar.c
  * @author TrekMax (QinYUN575@Foxmail.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2025-04-15
- * 
+ *
  * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
- * 
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_taskbar.h"
@@ -18,9 +18,9 @@
 #include "lv_img_utils.h"
 
 #if CONFIG_LVGL_ENV_SIMULATOR
-    #define LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/app/app_taskbar/" path
+#define LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/app/app_taskbar/" path
 #else
-    #define LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/app/app_taskbar/" path
+#define LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/app/app_taskbar/" path
 #endif
 
 // UI_RES_IMG_NAME(back_btn, LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH("assets/png/icon_back.png"))
@@ -96,6 +96,25 @@ lv_obj_t *_lisaui_taskbar_create_date_label(lv_obj_t *parent)
     return m_label_date;
 }
 
+// typedef void (*lisaui_taskbar_event_handler_t)(lisaui_taskbar_event_t event, void *param);
+
+static lisaui_taskbar_event_handler_t g_taskbar_event_handler = NULL;
+
+lisaui_err_t lisaui_taskbar_register_event_handler(lisaui_taskbar_event_handler_t handler)
+{
+    if (handler == NULL) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    g_taskbar_event_handler = handler;
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_taskbar_unregister_event_handler(void)
+{
+    g_taskbar_event_handler = NULL;
+    return LISAUI_ERR_OK;
+}
+
 static void back_btn_event_click_handler(lv_event_t *e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -112,10 +131,14 @@ static void back_btn_event_click_handler(lv_event_t *e)
             extern lisaui_err_t lisaui_app_setting_enter_item_panel(void);
             lisaui_app_setting_enter_item_panel();
         } else {
+#if CONFIG_LVGL_ENV_SIMULATOR
             lisaui_app_enter(UI_APP_ID_SETTING);
+#else
+            LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_SETTING, NULL);
+#endif
         }
 
-        #if 0
+#if 0
         if (app->info.type == LISAUI_APP_TYPE_LAUNCHER) {
             lisaui_popup_toast("Can't exit or close launcher");
             return;
@@ -131,7 +154,7 @@ static void back_btn_event_click_handler(lv_event_t *e)
         } else if (target == g_taskbar_btn_home) {
             lisaui_app_enter(UI_APP_ID_LAUNCHER);
         }
-        #endif
+#endif
     }
 }
 
@@ -277,10 +300,10 @@ lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
     lv_img_set_src(LV_OBJ_ICON(icon_setting), &LV_IMG_DSC(icon_setting));
     lv_obj_set_size(LV_OBJ_ICON(icon_setting), LV_DPX(40), LV_DPX(LISAUI_STATUS_BAR_HEIGHT - 10));
     lv_obj_align(LV_OBJ_ICON(icon_setting), LV_ALIGN_LEFT_MID, LV_DPX(4), 0);
-    
+
     lv_obj_add_flag(LV_OBJ_ICON(icon_setting), LV_OBJ_FLAG_CLICKABLE); /// Flags
     lv_obj_add_event_cb(LV_OBJ_ICON(icon_setting), back_btn_event_click_handler, LV_EVENT_CLICKED, NULL);
-    
+
     lv_obj_set_style_radius(LV_OBJ_ICON(icon_setting), 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_color(LV_OBJ_ICON(icon_setting), lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_shadow_width(LV_OBJ_ICON(icon_setting), 0, 0);
