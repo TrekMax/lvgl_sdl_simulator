@@ -21,8 +21,8 @@ static lv_obj_t *g_obj_alarm_list = NULL;
 static lv_obj_t *g_obj_alarm_create_view = NULL;
 static lv_obj_t *g_delete_alarm_menu = NULL;
 
-static lv_obj_t *apply_btn = NULL;
-static lv_obj_t *cancel_btn = NULL;
+static lv_obj_t *g_apply_btn = NULL;
+static lv_obj_t *g_cancel_btn = NULL;
 
 static lisaui_app_alarm_handler_t g_app_alarm_op_handler = NULL;
 lisaui_err_t lisaui_app_alarm_register_handler(lisaui_app_alarm_handler_t handler)
@@ -43,16 +43,19 @@ static void app_alarm_delete_menu_destroy(lv_obj_t *menu)
     menu = NULL;
 }
 
-static void msgbox_event_handler(lv_event_t *e)
+static void msgbox_event_handler(lv_event_t *event)
 {
-    lv_obj_t *obj = lv_event_get_current_target(e);
-    LV_LOG_USER("Button %s clicked", lv_msgbox_get_active_btn_text(obj));
-    if (e->code == LV_EVENT_CLICKED) {
-        // LISAUI_LOGI(TAG, "Clicked");
-        if (apply_btn && apply_btn == obj) {
-            // g_app_alarm_op_handler(LISAUI_ALARM_ITEM_CLOCK, LISAUI_ALARM_OP_DELETE, &alarm_clock_list);
+    lv_obj_t *obj = lv_event_get_target(event);
+    lv_event_code_t event_code = lv_event_get_code(event);
+    LISAUI_LOGI(TAG, "button clicked");
+
+    if (event_code == LV_EVENT_CLICKED) {
+        if (g_apply_btn && g_apply_btn == obj) {
+            LISAUI_LOGI(TAG, "button apply clicked");
+            g_app_alarm_op_handler(LISAUI_ALARM_ITEM_CLOCK, LISAUI_ALARM_OP_DELETE, NULL);
         }
-        if (cancel_btn && cancel_btn == obj) {
+        if (g_cancel_btn && g_cancel_btn == obj) {
+            LISAUI_LOGI(TAG, "button cancel clicked");
             app_alarm_delete_menu_destroy(g_delete_alarm_menu);
         }
     }
@@ -75,34 +78,34 @@ static lv_obj_t *app_alarm_delete_menu_create(lv_obj_t *parent)
     lv_obj_set_style_text_font(tips_label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_align(tips_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_t *apply_btn = lv_btn_create(menu);
-    lv_obj_align(apply_btn, LV_ALIGN_BOTTOM_MID, LV_DPX(80), -LV_DPX(30));
-    lv_obj_add_event_cb(apply_btn, msgbox_event_handler, LV_EVENT_CLICKED, NULL);
-    lv_obj_set_size(apply_btn, LV_DPX(100), LV_SIZE_CONTENT);
-    lv_obj_set_style_bg_color(apply_btn, lv_color_hex(0x24242d), 0);
-    lv_obj_set_style_radius(apply_btn, 8, 0);
-    lv_obj_set_style_shadow_width(apply_btn, 0, 0);
-    lv_obj_set_style_border_width(apply_btn, 0, 0);
-    lv_obj_set_style_outline_width(apply_btn, 0, 0);
+    g_apply_btn = lv_btn_create(menu);
+    lv_obj_align(g_apply_btn, LV_ALIGN_BOTTOM_MID, LV_DPX(80), -LV_DPX(30));
+    lv_obj_add_event_cb(g_apply_btn, msgbox_event_handler, LV_EVENT_CLICKED, NULL);
+    lv_obj_set_size(g_apply_btn, LV_DPX(100), LV_SIZE_CONTENT);
+    lv_obj_set_style_bg_color(g_apply_btn, lv_color_hex(0x24242d), 0);
+    lv_obj_set_style_radius(g_apply_btn, 8, 0);
+    lv_obj_set_style_shadow_width(g_apply_btn, 0, 0);
+    lv_obj_set_style_border_width(g_apply_btn, 0, 0);
+    lv_obj_set_style_outline_width(g_apply_btn, 0, 0);
 
     lv_obj_t *label;
-    label = lv_label_create(apply_btn);
+    label = lv_label_create(g_apply_btn);
     lv_label_set_text(label, "删除");
     lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_center(label);
 
-    lv_obj_t *cancel_btn = lv_btn_create(menu);
-    lv_obj_align(cancel_btn, LV_ALIGN_BOTTOM_MID, -LV_DPX(80), -LV_DPX(30));
-    lv_obj_set_size(cancel_btn, LV_DPX(100), LV_SIZE_CONTENT);
-    lv_obj_set_style_bg_color(cancel_btn, lv_color_hex(0x24242d), 0);
-    lv_obj_set_style_radius(cancel_btn, 8, 0);
-    lv_obj_set_style_shadow_width(cancel_btn, 0, 0);
-    lv_obj_set_style_border_width(cancel_btn, 0, 0);
-    lv_obj_set_style_outline_width(cancel_btn, 0, 0);
-    lv_obj_add_event_cb(cancel_btn, msgbox_event_handler, LV_EVENT_CLICKED, NULL);
+    g_cancel_btn = lv_btn_create(menu);
+    lv_obj_align(g_cancel_btn, LV_ALIGN_BOTTOM_MID, -LV_DPX(80), -LV_DPX(30));
+    lv_obj_set_size(g_cancel_btn, LV_DPX(100), LV_SIZE_CONTENT);
+    lv_obj_set_style_bg_color(g_cancel_btn, lv_color_hex(0x24242d), 0);
+    lv_obj_set_style_radius(g_cancel_btn, 8, 0);
+    lv_obj_set_style_shadow_width(g_cancel_btn, 0, 0);
+    lv_obj_set_style_border_width(g_cancel_btn, 0, 0);
+    lv_obj_set_style_outline_width(g_cancel_btn, 0, 0);
+    lv_obj_add_event_cb(g_cancel_btn, msgbox_event_handler, LV_EVENT_CLICKED, NULL);
 
-    label = lv_label_create(cancel_btn);
+    label = lv_label_create(g_cancel_btn);
     lv_label_set_text(label, "取消");
     lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -139,9 +142,9 @@ void app_alarm_create_alarm_list(lv_obj_t *parent)
     if (g_app_alarm_op_handler) {
         lisaui_alarm_clock_list_t alarm_clock_list = {0};
         g_app_alarm_op_handler(LISAUI_ALARM_ITEM_CLOCK_LIST, LISAUI_ALARM_OP_GET_LIST, &alarm_clock_list);
-        for (int i = 0; i < alarm_clock_list.alarm_list_count; i++) {
-            ls_lv_list_add_btn(g_obj_alarm_list, alarm_clock_list.alarm_list->alarm_time_text,
-                               alarm_clock_list.alarm_list->alarm_date_text, event_handler, NULL);
+        for (int i = 0; i < alarm_clock_list.count; i++) {
+            ls_lv_list_add_btn(g_obj_alarm_list, alarm_clock_list.list->alarm_time_text,
+                               alarm_clock_list.list->alarm_date_text, event_handler, NULL);
         }
     }
 }
@@ -172,7 +175,7 @@ lisaui_err_t lisaui_app_alarm_op_alarm_add(const char *time, const char *date)
 }
 
 static lv_obj_t *private_lisaui_app_alarm_create_alarm_view(lv_obj_t *parent, const char *alarm_time_text,
-                                                     const char *alarm_date_text)
+                                                            const char *alarm_date_text)
 {
     lv_obj_t *alarm_page = lv_obj_create(parent);
     lv_obj_set_size(alarm_page, LV_PCT(100), LV_PCT(100));

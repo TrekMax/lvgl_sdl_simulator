@@ -32,7 +32,7 @@ const lv_obj_class_t ls_lv_list_class = {
     .base_class = &lv_obj_class, .width_def = (LV_DPI_DEF * 3) / 2, .height_def = LV_DPI_DEF * 2};
 
 const lv_obj_class_t ls_lv_list_btn_class = {
-    .base_class = &lv_obj_class,
+    .base_class = &lv_label_class,
 };
 
 const lv_obj_class_t ls_lv_list_text_class = {
@@ -85,6 +85,7 @@ lv_obj_t *ls_lv_list_add_btn(lv_obj_t *list, const char *title_text, const char 
 {
     LV_LOG_INFO("begin");
     lv_obj_t *item = lv_obj_create(list);
+    // lv_obj_t *item = lv_obj_class_create_obj(&ls_lv_list_btn_class, list);
     lv_obj_set_size(item, LV_PCT(100), LV_SIZE_CONTENT);
     lv_obj_set_style_border_width(item, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_side(item, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);

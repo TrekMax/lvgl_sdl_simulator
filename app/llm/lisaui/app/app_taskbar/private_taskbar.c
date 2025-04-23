@@ -132,7 +132,8 @@ static void back_btn_event_click_handler(lv_event_t *e)
             lisaui_app_setting_enter_item_panel();
         } else {
 #if CONFIG_LVGL_ENV_SIMULATOR
-            lisaui_app_enter(UI_APP_ID_SETTING);
+            // lisaui_app_enter(UI_APP_ID_SETTING);
+            LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_SETTING, NULL);
 #else
             LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_SETTING, NULL);
 #endif

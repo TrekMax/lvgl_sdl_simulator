@@ -13,6 +13,7 @@
 #include "app/app_common.h"
 #include "app_common/lisaui_log.h"
 #include "lisaui_app_common.h"
+#include "lisaui_app_manager.h"
 
 #if CONFIG_LVGL_ENV_SIMULATOR
 #include <pthread.h>
@@ -33,6 +34,9 @@ SemaphoreHandle_t lvgl_mutex;
 #include "app_standby.h"
 #include "app_weather.h"
 #include "app_audio_player.h"
+#include "app_alarm.h"
+#include "app_setting.h"
+#include "app_taskbar.h"
 #include "common_widgets.h"
 
 #if TEST_LISAUI_APP
@@ -60,12 +64,54 @@ static metadata_music_song_t song = {
     .artist = "周杰伦",
 };
 
-#include "app_alarm.h"
+static lisaui_alarm_clock_item_t alarm_clocks[] = {
+    {.alarm_time_text = "07:00", .alarm_date_text = "4月1日"},
+    {.alarm_time_text = "08:00", .alarm_date_text = "4月2日"},
+    {.alarm_time_text = "09:00", .alarm_date_text = "4月3日"},
+    {.alarm_time_text = "10:00", .alarm_date_text = "4月4日"},
+};
+static lisaui_alarm_clock_list_t alarm_clock_list = {
+    .list = alarm_clocks,
+    .count = sizeof(alarm_clocks) / sizeof(lisaui_alarm_clock_item_t),
+};
+
 int lisaui_app_alarm_handler(lisaui_alarm_item_t type, lisaui_alarm_op_t operation, void *param)
 {
     LISAUI_LOGI(TAG, "[%s] type:%d operation:%d", __FUNCTION__, type, operation);
+    if (type == LISAUI_ALARM_ITEM_CLOCK_LIST) {
+        if (operation == LISAUI_ALARM_OP_GET_LIST) {
+            lisaui_alarm_clock_list_t *list = (lisaui_alarm_clock_list_t *)param;
+            list->list = alarm_clocks;
+            list->count = sizeof(alarm_clocks) / sizeof(lisaui_alarm_clock_item_t);
+        }
+    }
     return 0;
 }
+
+void lisaui_taskbar_event_handler(lisaui_taskbar_event_t event, void *param)
+{
+    LISAUI_LOGI(TAG, "[%s] event:%d", __FUNCTION__, event);
+    switch (event) {
+    case LISAUI_TASKBAR_EVENT_ENTER_SETTING:
+        lisaui_app_enter(UI_APP_ID_SETTING);
+        break;
+    case LISAUI_TASKBAR_EVENT_ENTER_ALARM:
+        lisaui_app_enter(UI_APP_ID_ALARM);
+        break;
+    case LISAUI_TASKBAR_EVENT_ENTER_AUDIO_PLAYER:
+        lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+        break;
+    case LISAUI_TASKBAR_EVENT_ENTER_WEATHER:
+        lisaui_app_enter(UI_APP_ID_WEATHER);
+        break;
+    case LISAUI_TASKBAR_EVENT_ENTER_STANDBY:
+        lisaui_app_enter(UI_APP_ID_STANDBY);
+        break;
+    default:
+        break;
+    }
+}
+
 static void test_lisaui_app_timer_cb(lv_timer_t *timer)
 {
     LISAUI_LOGI(TAG, "[%s] test_lisaui_app_timer_cb index:%d", __FUNCTION__, test_index);
@@ -167,6 +213,7 @@ void lisaui_ui_init(void)
 
 #if CONFIG_LVGL_ENV_SIMULATOR
     LISAUI_USE_APP(standby);
+    LISAUI_USE_APP(launcher);
     LISAUI_USE_APP(taskbar);
     LISAUI_USE_APP(setting);
 
@@ -176,13 +223,17 @@ void lisaui_ui_init(void)
     LISAUI_USE_APP(audio_player);
     LISAUI_USE_APP(wifi);
 
+    lisaui_app_enter(UI_APP_ID_LAUNCHER);
+
     lisaui_app_alarm_register_handler(lisaui_app_alarm_handler);
+    lisaui_taskbar_register_event_handler(lisaui_taskbar_event_handler);
 #endif
     lisaui_app_manager_init();
-    // lisaui_app_manager_show_all_app_info();
+    lisaui_app_manager_show_all_app_info();
 
     LISAUI_LOGI(TAG, "UI init done");
 
+#if 0
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
     // lisaui_app_enter(UI_APP_ID_ALARM);
     // lisaui_app_enter(UI_APP_ID_SETTING);
@@ -203,6 +254,7 @@ void lisaui_ui_init(void)
     // ls_llm_dialog_popup("Test");
     // ls_llm_dialog_popup("Test233123");
     // ls_llm_dialog_popup("Test2114141");
+#endif
 #if 0
     lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
     lisaui_app_audio_player_set_song_view(&song, LISAUI_APP_AUDIO_PLAYER_STATE_PLAY);

@@ -48,6 +48,9 @@ typedef enum _ls_llm_status_t {
     LISAUI_LLM_STATUS_SUCCESS,     // 成功
     LISAUI_LLM_STATUS_FAIL,        // 失败
     LISAUI_LLM_STATUS_CLOSE,       // 关闭
+
+    // 强制关闭
+    LISAUI_LLM_STATUS_FORCE_CLOSE = 0xFF,
 } ls_llm_status_t;
 
 typedef enum _ls_text_mode_t {

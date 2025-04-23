@@ -6,7 +6,7 @@ set(${LISAUI_APP_TARGET_NAME}_SOURCES
 )
 
 set(${LISAUI_APP_TARGET_NAME}_UI_RESOURCES
-    assets/icons/icon_img_app_store_png.c
+    assets/icons/icon_img_app_wifi_png.c
 )
 
 add_library(${LISAUI_APP_TARGET_NAME} STATIC

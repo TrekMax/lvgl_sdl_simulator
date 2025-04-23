@@ -162,8 +162,10 @@ int ls_llm_dialog_popup(const char *text)
 int ls_llm_dialog_popup_with_mode(const ls_llm_status_t llm_ret_status, const char *text, ls_text_mode_t text_mode)
 {
     static ls_llm_status_t last = LISAUI_LLM_STATUS_CLOSE;
-
     if (!llm_dialog) {
+        if (llm_ret_status == LISAUI_LLM_STATUS_FORCE_CLOSE) {
+            return 0;
+        }
         ls_lv_llm_dialog_create(lv_layer_top());
     }
 
@@ -195,6 +197,11 @@ int ls_llm_dialog_popup_with_mode(const ls_llm_status_t llm_ret_status, const ch
             lv_anim_timeline_set_reverse(anim_timeline, true);
             lv_anim_timeline_start(anim_timeline);
         }
+        // lv_obj_set_size(llm_dialog, LV_PCT(0), lv_pct(0));
+        break;
+    case LISAUI_LLM_STATUS_FORCE_CLOSE:
+        lv_anim_timeline_set_reverse(anim_timeline, true);
+        lv_anim_timeline_start(anim_timeline);
         // lv_obj_set_size(llm_dialog, LV_PCT(0), lv_pct(0));
         break;
 

@@ -25,10 +25,6 @@ UI_RES_IMG_NAME(brightness_min, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/pn
 UI_RES_IMG_NAME(brightness_max, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_brightness_high.png"))
 UI_RES_IMG_NAME(setting_btn, LISAUI_APP_SETTING_UI_RES_PERFIX_PATH("assets/png/ic_launch_setting.png"))
 
-static lv_obj_t *uiAppSetting_LabelBacklight;
-static lv_obj_t *uiAppSetting_LabelVolume;
-static lv_obj_t *uiAppSetting_SliderBacklight;
-static lv_obj_t *uiAppSetting_SliderVolume;
 static lv_obj_t *line_setting_floor;
 static lv_obj_t *setting_home;
 static lv_obj_t *slider_voice;
@@ -55,49 +51,50 @@ static void lisaui_app_setting_event_slider_handler(lv_event_t *e)
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t *obj = lv_event_get_target(e);
 
-    if (code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
-        lv_coord_t *s = lv_event_get_param(e);
-        *s = LV_MAX(*s, 60);
-    } else if (code == LV_EVENT_DRAW_PART_END) {
-        lv_obj_draw_part_dsc_t *dsc = lv_event_get_param(e);
-        if (dsc->part == LV_PART_KNOB && lv_obj_has_state(obj, LV_STATE_PRESSED)) {
-            char buf[8];
-            lv_snprintf(buf, sizeof(buf), "%" LV_PRId32, lv_slider_get_value(obj));
+    // if (code == LV_EVENT_REFR_EXT_DRAW_SIZE) {
+    //     lv_coord_t *s = lv_event_get_param(e);
+    //     *s = LV_MAX(*s, 60);
+    // } else
+    if (code == LV_EVENT_DRAW_PART_END) {
+        // lv_obj_draw_part_dsc_t *dsc = lv_event_get_param(e);
+        // if (dsc->part == LV_PART_KNOB && lv_obj_has_state(obj, LV_STATE_PRESSED)) {
+        //     char buf[8];
+        //     lv_snprintf(buf, sizeof(buf), "%" LV_PRId32, lv_slider_get_value(obj));
 
-            lv_point_t text_size;
-            lv_txt_get_size(&text_size, buf, font_normal, 0, 0, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
+        //     lv_point_t text_size;
+        //     lv_txt_get_size(&text_size, buf, font_normal, 0, 0, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
 
-            lv_area_t txt_area;
-            txt_area.x1 = dsc->draw_area->x1 + lv_area_get_width(dsc->draw_area) / 2 - text_size.x / 2;
-            txt_area.x2 = txt_area.x1 + text_size.x;
-            txt_area.y2 = dsc->draw_area->y1 - 10;
-            txt_area.y1 = txt_area.y2 - text_size.y;
+        //     lv_area_t txt_area;
+        //     txt_area.x1 = dsc->draw_area->x1 + lv_area_get_width(dsc->draw_area) / 2 - text_size.x / 2;
+        //     txt_area.x2 = txt_area.x1 + text_size.x;
+        //     txt_area.y2 = dsc->draw_area->y1 - 10;
+        //     txt_area.y1 = txt_area.y2 - text_size.y;
 
-            lv_area_t bg_area;
-            bg_area.x1 = txt_area.x1 - LV_DPX(8);
-            bg_area.x2 = txt_area.x2 + LV_DPX(8);
-            bg_area.y1 = txt_area.y1 - LV_DPX(8);
-            bg_area.y2 = txt_area.y2 + LV_DPX(8);
+        //     lv_area_t bg_area;
+        //     bg_area.x1 = txt_area.x1 - LV_DPX(8);
+        //     bg_area.x2 = txt_area.x2 + LV_DPX(8);
+        //     bg_area.y1 = txt_area.y1 - LV_DPX(8);
+        //     bg_area.y2 = txt_area.y2 + LV_DPX(8);
 
-            lv_draw_rect_dsc_t rect_dsc;
-            lv_draw_rect_dsc_init(&rect_dsc);
-            rect_dsc.bg_color = lv_palette_darken(LV_PALETTE_GREY, 3);
-            rect_dsc.radius = LV_DPX(5);
-            lv_draw_rect(dsc->draw_ctx, &rect_dsc, &bg_area);
+        //     lv_draw_rect_dsc_t rect_dsc;
+        //     lv_draw_rect_dsc_init(&rect_dsc);
+        //     rect_dsc.bg_color = lv_palette_darken(LV_PALETTE_GREY, 3);
+        //     rect_dsc.radius = LV_DPX(5);
+        //     lv_draw_rect(dsc->draw_ctx, &rect_dsc, &bg_area);
 
-            lv_draw_label_dsc_t label_dsc;
-            lv_draw_label_dsc_init(&label_dsc);
-            label_dsc.color = lv_color_white();
-            label_dsc.font = font_normal;
-            lv_draw_label(dsc->draw_ctx, &label_dsc, &txt_area, buf, NULL);
-        }
+        //     lv_draw_label_dsc_t label_dsc;
+        //     lv_draw_label_dsc_init(&label_dsc);
+        //     label_dsc.color = lv_color_white();
+        //     label_dsc.font = font_normal;
+        //     lv_draw_label(dsc->draw_ctx, &label_dsc, &txt_area, buf, NULL);
+        // }
     } else if (code == LV_EVENT_VALUE_CHANGED) {
-        if (obj == uiAppSetting_SliderBacklight) {
+        if (obj == slider_luminance) {
             if (m_item_op_handler) {
                 uint8_t value = lv_slider_get_value(obj);
                 m_item_op_handler(LISAUI_SETTING_ITEM_BACKLIGHT, LISAUI_SETTING_OP_SET, &value);
             }
-        } else if (obj == uiAppSetting_SliderVolume) {
+        } else if (obj == slider_voice) {
             if (m_item_op_handler) {
                 uint8_t value = lv_slider_get_value(obj);
                 m_item_op_handler(LISAUI_SETTING_ITEM_VOLUME, LISAUI_SETTING_OP_SET, &value);
@@ -109,49 +106,6 @@ static void lisaui_app_setting_event_slider_handler(lv_event_t *e)
 lv_obj_t *private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
 {
 
-#if 0
-    uiAppSetting_LabelBacklight = lv_label_create(parent);
-    lv_obj_set_size(uiAppSetting_LabelBacklight, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_set_align(uiAppSetting_LabelBacklight, LV_ALIGN_LEFT_MID);
-    lv_obj_set_pos(uiAppSetting_LabelBacklight, 30, 0);
-    lv_label_set_text(uiAppSetting_LabelBacklight, "亮度");
-    lv_obj_set_style_text_color(uiAppSetting_LabelBacklight, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(uiAppSetting_LabelBacklight, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(uiAppSetting_LabelBacklight, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    uiAppSetting_SliderBacklight = lv_slider_create(parent);
-    lv_obj_set_size(uiAppSetting_SliderBacklight, LV_PCT(70), 16);
-    lv_obj_set_pos(uiAppSetting_SliderBacklight, 22, 0);
-    lv_obj_set_align(uiAppSetting_SliderBacklight, LV_ALIGN_CENTER);
-    lv_slider_set_value(uiAppSetting_SliderBacklight, 100, LV_ANIM_OFF);
-    lv_slider_set_range(uiAppSetting_SliderBacklight, LISAUI_APP_SETTING_ITEM_BACKLIGHT_BRIGHTNESS_MIN_VALUE,
-                        LISAUI_APP_SETTING_ITEM_BACKLIGHT_BRIGHTNESS_MAX_VALUE);
-    lv_obj_set_style_bg_color(uiAppSetting_SliderBacklight, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(uiAppSetting_SliderBacklight, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
-
-    uiAppSetting_LabelVolume = lv_label_create(parent);
-    lv_obj_set_size(uiAppSetting_LabelVolume, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_set_align(uiAppSetting_LabelVolume, LV_ALIGN_LEFT_MID);
-    lv_obj_set_pos(uiAppSetting_LabelVolume, 30, 40);
-    lv_label_set_text(uiAppSetting_LabelVolume, "音量");
-    lv_obj_set_style_text_color(uiAppSetting_LabelVolume, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(uiAppSetting_LabelVolume, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(uiAppSetting_LabelVolume, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    uiAppSetting_SliderVolume = lv_slider_create(parent);
-    lv_obj_set_size(uiAppSetting_SliderVolume, LV_PCT(70), 16);
-    lv_obj_set_pos(uiAppSetting_SliderVolume, 22, 40);
-    lv_obj_set_align(uiAppSetting_SliderVolume, LV_ALIGN_CENTER);
-    lv_slider_set_value(uiAppSetting_SliderVolume, 8, LV_ANIM_OFF);
-    lv_slider_set_range(uiAppSetting_SliderVolume, LISAUI_APP_SETTING_ITEM_VOLUME_MIN_VALUE, LISAUI_APP_SETTING_ITEM_VOLUME_MAX_VALUE);
-    lv_obj_set_style_bg_color(uiAppSetting_SliderVolume, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(uiAppSetting_SliderVolume, 255, LV_PART_KNOB | LV_STATE_DEFAULT);
-
-    font_normal = LV_FONT_DEFAULT;
-    lv_obj_add_event_cb(uiAppSetting_SliderBacklight, lisaui_app_setting_event_slider_handler, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(uiAppSetting_SliderVolume, lisaui_app_setting_event_slider_handler, LV_EVENT_ALL, NULL);
-    LISAUI_LOGI(TAG, "[%d:%s] create", __LINE__, __func__);
-#else
     setting_home = lv_obj_create(parent);
     lv_obj_remove_style_all(setting_home);
     lv_obj_clear_flag(setting_home, LV_OBJ_FLAG_SCROLLABLE); /// Flags
@@ -159,28 +113,6 @@ lv_obj_t *private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_obj_set_style_bg_color(setting_home, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(setting_home, 250, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_size(setting_home, LV_PCT(100), LV_PCT(100));
-
-    // lv_obj_add_event_cb(parent, ui_event_setting_page_handler, LV_EVENT_ALL, NULL);
-
-    // icon_setting_btn_bg = lv_obj_create(setting_home);
-    // lv_obj_set_pos(icon_setting_btn_bg, 20, 12);
-    // lv_obj_set_size(icon_setting_btn_bg, 60, 60);
-    // lv_obj_set_style_border_width(icon_setting_btn_bg, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_set_style_outline_width(icon_setting_btn_bg, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_clear_flag(icon_setting_btn_bg, LV_OBJ_FLAG_SCROLLABLE); /// Flags
-    // lv_obj_set_style_bg_color(icon_setting_btn_bg, lv_color_hex(0x454554), LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    // icon_setting_btn = lv_img_create(icon_setting_btn_bg);
-    // lv_img_png_src_init(UI_RES_IMG_PNG(setting_btn));
-    // lv_img_set_src(icon_setting_btn, &icon_setting_btn_png);
-    // lv_obj_set_pos(icon_setting_btn, 0, 0);
-    // lv_obj_set_align(icon_setting_btn, LV_ALIGN_CENTER);
-    // lv_obj_add_flag(icon_setting_btn, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST); /// Flags
-    // lv_obj_clear_flag(icon_setting_btn, LV_OBJ_FLAG_SCROLLABLE);
-    // lv_obj_add_flag(icon_setting_btn, LV_OBJ_FLAG_EVENT_BUBBLE);
-    // lv_obj_add_event_cb(icon_setting_btn_bg, ui_event_setting, LV_EVENT_RELEASED, NULL);
-    // lv_obj_add_event_cb(icon_setting_btn_bg, ui_event_setting, LV_EVENT_PRESSED, NULL);
-    // lv_obj_add_event_cb(icon_setting_btn_bg, ui_event_setting, LV_EVENT_CLICKED, NULL);
 
     // 亮度滑块
     slider_luminance = lv_slider_create(setting_home);
@@ -201,10 +133,9 @@ lv_obj_t *private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_obj_set_style_radius(slider_luminance, 10, LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_radius(slider_luminance, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_radius(slider_luminance, 10, LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    // lv_obj_add_event_cb(slider_luminance, slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL); /*Assign an event
-    // function*/ extern uint8_t aweui_read_brightness(void); brightness_value = aweui_read_brightness();
-    // lv_slider_set_value(slider_luminance, 100 - brightness_value, LV_ANIM_OFF);
     lv_slider_set_range(slider_luminance, 2, 100);
+    lv_obj_add_event_cb(slider_luminance, lisaui_app_setting_event_slider_handler, LV_EVENT_VALUE_CHANGED, NULL);
+    // /*Assign an event
 
     // 音量滑块
     slider_voice = lv_slider_create(setting_home);
@@ -224,7 +155,8 @@ lv_obj_t *private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     lv_obj_set_style_radius(slider_voice, 10, LV_PART_KNOB | LV_STATE_DEFAULT);
     lv_obj_set_style_radius(slider_voice, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_radius(slider_voice, 10, LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    // lv_obj_add_event_cb(slider_voice, slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL); /*Assign an event function*/
+    lv_obj_add_event_cb(slider_voice, lisaui_app_setting_event_slider_handler, LV_EVENT_VALUE_CHANGED,
+                        NULL); /*Assign an event function*/
 
     // 图标
     LV_OBJ_ICON(brightness_min) = lv_img_create(slider_luminance);
@@ -275,25 +207,7 @@ lv_obj_t *private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
     // lv_obj_add_event_cb(LV_OBJ_ICON(volume_max), ui_event_setting, LV_EVENT_PRESSED, NULL);
     lv_obj_add_style(LV_OBJ_ICON(volume_max), &style_setting, 0);
     lv_style_init(&style_setting);
-//
-#if 0
-    static lv_style_t style_line;
-    lv_style_init(&style_line);
-    lv_style_set_line_width(&style_line, 4);
-    lv_style_set_line_color(&style_line, lv_palette_main(LV_PALETTE_BLUE));
-    lv_style_set_line_rounded(&style_line, true);
 
-    line_setting_floor = lv_line_create(setting_home);
-    lv_obj_add_style(line_setting_floor, &style_line, 0);
-    lv_obj_set_style_line_color(line_setting_floor, lv_color_hex(0xaaaaaa), 0);
-
-    lv_setting_line_floor[0].x = 120;
-    lv_setting_line_floor[0].y = 220;
-    lv_setting_line_floor[1].x = 200;
-    lv_setting_line_floor[1].y = 220;
-
-    lv_line_set_points(line_setting_floor, lv_setting_line_floor, 2);
-#endif
     if (m_item_op_handler) {
         uint8_t value = 0;
         m_item_op_handler(LISAUI_SETTING_ITEM_VOLUME, LISAUI_SETTING_OP_GET, &value);
@@ -304,6 +218,5 @@ lv_obj_t *private_lisaui_app_view_create_volume_backlight(lv_obj_t *parent)
         m_item_op_handler(LISAUI_SETTING_ITEM_BACKLIGHT, LISAUI_SETTING_OP_GET, &value);
         lv_slider_set_value(slider_luminance, value, LV_ANIM_OFF);
     }
-#endif
     return parent;
 }

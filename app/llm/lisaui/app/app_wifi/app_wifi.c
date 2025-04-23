@@ -100,7 +100,7 @@ static struct app_icon_t app_icon_res_wifi = {
     .title = "WIFI",
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = &icon_img_app_store_png,
+    .icon = &icon_img_app_wifi_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 

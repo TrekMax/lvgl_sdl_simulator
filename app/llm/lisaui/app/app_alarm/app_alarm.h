@@ -25,11 +25,12 @@ lisaui_err_t lisaui_app_alarm_op_alarm_add_view(const char *alarm_time_text, con
 typedef struct {
     char *alarm_time_text;
     char *alarm_date_text;
+    uint64_t timestamp;
 } lisaui_alarm_clock_item_t;
 
 typedef struct {
-    lisaui_alarm_clock_item_t *alarm_list;
-    int alarm_list_count;
+    lisaui_alarm_clock_item_t *list;
+    int count;
 } lisaui_alarm_clock_list_t;
 
 typedef enum  {
