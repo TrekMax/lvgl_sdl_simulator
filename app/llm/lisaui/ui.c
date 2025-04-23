@@ -223,16 +223,16 @@ void lisaui_ui_init(void)
     LISAUI_USE_APP(audio_player);
     LISAUI_USE_APP(wifi);
 
-    lisaui_app_enter(UI_APP_ID_LAUNCHER);
 
     lisaui_app_alarm_register_handler(lisaui_app_alarm_handler);
     lisaui_taskbar_register_event_handler(lisaui_taskbar_event_handler);
 #endif
     lisaui_app_manager_init();
-    lisaui_app_manager_show_all_app_info();
+    // lisaui_app_manager_show_all_app_info();
 
     LISAUI_LOGI(TAG, "UI init done");
 
+    lisaui_app_enter(UI_APP_ID_LAUNCHER);
 #if 0
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
     // lisaui_app_enter(UI_APP_ID_ALARM);

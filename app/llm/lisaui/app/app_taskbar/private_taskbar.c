@@ -115,30 +115,18 @@ lisaui_err_t lisaui_taskbar_unregister_event_handler(void)
     return LISAUI_ERR_OK;
 }
 
-static void back_btn_event_click_handler(lv_event_t *e)
+static void back_btn_event_click_handler(lv_event_t *event)
 {
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t *target = lv_event_get_target(e);
+    lv_event_code_t event_code = lv_event_get_code(event);
+    lv_obj_t *target = lv_event_get_target(event);
     if (event_code == LV_EVENT_CLICKED) {
         int app_id = lisaui_app_manager_get_current_appid();
-        struct lisaui_app_t *app = NULL;
+        lisaui_app_t *app = NULL;
         if (lisaui_app_manager_get_app_by_id(app_id, &app) != LISAUI_ERR_OK) {
             LISAUI_LOGE(TAG, "Failed to get app by id: %d", app_id);
             return;
         }
-        if (app->info.id == UI_APP_ID_SETTING) {
-            // LISAUI_LOGI(TAG, "taskbar back app: %s", app->icon->title);
-            extern lisaui_err_t lisaui_app_setting_enter_item_panel(void);
-            lisaui_app_setting_enter_item_panel();
-        } else {
-#if CONFIG_LVGL_ENV_SIMULATOR
-            // lisaui_app_enter(UI_APP_ID_SETTING);
-            LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_SETTING, NULL);
-#else
-            LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_SETTING, NULL);
-#endif
-        }
-
+        LISAUI_LOGI(TAG, "app_id: %d, app_name: %s", app->info.id, app->info.name);
 #if 0
         if (app->info.type == LISAUI_APP_TYPE_LAUNCHER) {
             lisaui_popup_toast("Can't exit or close launcher");
@@ -155,6 +143,20 @@ static void back_btn_event_click_handler(lv_event_t *e)
         } else if (target == g_taskbar_btn_home) {
             lisaui_app_enter(UI_APP_ID_LAUNCHER);
         }
+#endif
+        // if (target == g_taskbar_btn_back) {
+        //     LISAUI_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_BACK, NULL);
+        // } else if (target == g_taskbar_btn_close) {
+        //     LISAUI_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_CLOSE, NULL);
+        // } else if (target == g_taskbar_btn_home) {
+        //     LISAUI_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_HOME, NULL);
+        // }
+        // 行为由应用决定
+        
+#if CONFIG_LVGL_ENV_SIMULATOR
+        LISAUI_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_SETTING, NULL);
+#else
+        LISAUI_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_SETTING, NULL);
 #endif
     }
 }

@@ -50,7 +50,6 @@ enum lisaui_app_audio_player_action {
 };
 
 lisaui_err_t app_setting_init(void);
-lisaui_err_t lisaui_app_setting_enter_item_panel(void);
 
 #ifdef __cplusplus
 }

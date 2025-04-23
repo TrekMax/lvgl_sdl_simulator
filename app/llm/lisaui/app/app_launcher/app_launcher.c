@@ -34,7 +34,7 @@ static void icon_event_click_handler(lv_event_t *event)
     lv_event_code_t event_code = lv_event_get_code(event);
     lv_obj_t *target = lv_event_get_target(event);
     if (event_code == LV_EVENT_CLICKED) {
-        struct lisaui_app_t *app = (struct lisaui_app_t *)lv_event_get_user_data(event);
+        lisaui_app_t *app = (lisaui_app_t *)lv_event_get_user_data(event);
         if (app == NULL) {
             LISAUI_LOGW(TAG, "app is NULL");
             return;
@@ -54,7 +54,7 @@ static void icon_event_click_handler(lv_event_t *event)
     }
 }
 
-void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t *app)
+void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, lisaui_app_t *app)
 {
     if (icon_container == NULL || app == NULL) {
         LISAUI_LOGE(TAG, "icon_panel or app is NULL");
@@ -99,7 +99,7 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, struct lisaui_app_t 
 static lv_obj_t *g_app_launcher = NULL;
 static lv_obj_t *g_icon_panel = NULL;
 
-lisaui_err_t lisaui_launcher_register_app(struct lisaui_app_t *app)
+lisaui_err_t lisaui_launcher_register_app(lisaui_app_t *app)
 {
     if (g_icon_panel == NULL || app == NULL) {
         LISAUI_LOGE(TAG, "g_icon_panel or app is NULL");
@@ -119,7 +119,7 @@ lisaui_err_t lisaui_launcher_update_app_icon(struct lisaui_app_manager_t *app_ma
     }
     lv_obj_clean(g_icon_panel);
     for (int i = 0; i < lisaui_app_manager_get_registered_count(); i++) {
-        struct lisaui_app_t *app = NULL;
+        lisaui_app_t *app = NULL;
         if (lisaui_app_manager_get_app_by_uuid(i, &app) != LISAUI_ERR_OK) {
             // LISAUI_LOGE(TAG, "Failed to get app by uuid: %d", i);
             // return LISAUI_ERR_FAIL;
@@ -134,7 +134,7 @@ lisaui_err_t lisaui_launcher_update_app_icon(struct lisaui_app_manager_t *app_ma
     }
     return LISAUI_ERR_OK;
 }
-lisaui_err_t lisaui_launcher_update_app(struct lisaui_app_t *app)
+lisaui_err_t lisaui_launcher_update_app(lisaui_app_t *app)
 {
     if (g_icon_panel == NULL || app == NULL) {
         LISAUI_LOGE(TAG, "g_icon_panel or app is NULL");
@@ -239,7 +239,7 @@ lisaui_err_t app_launcher_exit(void)
     return LISAUI_ERR_OK;
 }
 
-void *app_launcher_get_page(void)
+void *app_launcher_get_view(void)
 {
     return g_app_launcher;
 }
@@ -256,13 +256,13 @@ static struct app_icon_t app_icon_res = {
     .zoom = APP_ICON_ZOOM(0),
 };
 
-struct lisaui_app_t app_launcher = {
+lisaui_app_t app_launcher = {
     .create = app_launcher_create,
     .destroy = app_launcher_destroy,
     .enter = app_launcher_enter,
     .exit = app_launcher_exit,
 
-    .get_root_view = app_launcher_get_page,
+    .get_app_view = app_launcher_get_view,
     .info =
         {
             .name = "launcher",

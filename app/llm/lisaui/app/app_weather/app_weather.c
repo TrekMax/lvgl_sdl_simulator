@@ -221,7 +221,7 @@ lisaui_err_t app_weather_exit(void)
     return LISAUI_ERR_OK;
 }
 
-void *app_weather_get_page(void)
+void *app_weather_get_view(void)
 {
     return g_app_weather;
 }
@@ -234,13 +234,13 @@ static struct app_icon_t app_icon_res_weather = {
     .zoom = APP_ICON_ZOOM(0),
 };
 
-struct lisaui_app_t app_weather = {
+lisaui_app_t app_weather = {
     .create = app_weather_create,
     .destroy = app_weather_destroy,
     .enter = app_weather_enter,
     .exit = app_weather_exit,
 
-    .get_root_view = app_weather_get_page,
+    .get_app_view = app_weather_get_view,
     .info =
         {
             .name = "Weather",

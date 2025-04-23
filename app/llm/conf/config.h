@@ -26,8 +26,8 @@ extern "C" {
 #else
 // #define SDL_HOR_RES (320*2) // 320
 // #define SDL_VER_RES (240*2) // 240
-#define SDL_HOR_RES (320)
-#define SDL_VER_RES (240)
+#define SDL_HOR_RES (320*2)
+#define SDL_VER_RES (240*2)
 #endif
 
 #define LV_COLOR_DEPTH 16

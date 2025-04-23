@@ -19,7 +19,7 @@ static lv_obj_t *g_app_template = NULL;
 #if CONFIG_LISAUI_APP_TEMPLATE_MACRO_ENABLE
 
 // 声明[模板]应用需要实现的接口
-LISAUI_DECLARE_APP_FUNC(template, create, destroy, enter, exit, get_page);
+LISAUI_DECLARE_APP_FUNC(template, create, destroy, enter, exit, get_view);
 // 定义[模板]应用
 LISAUI_DEFINE_APP(template, UI_APP_ID_TEMPLATE, "模板", "Template", &icon_img_app_store_png, {});
 
@@ -48,7 +48,7 @@ lisaui_err_t LISAUI_DEFINE_APP_FUNC(template, destroy, void, {
 });
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(template, enter, void, { return LISAUI_ERR_OK; });
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(template, exit, void, { return LISAUI_ERR_OK; });
-void *LISAUI_DEFINE_APP_FUNC(template, get_page, void, { return g_app_template; });
+void *LISAUI_DEFINE_APP_FUNC(template, get_view, void, { return g_app_template; });
 
 #else
 
@@ -89,7 +89,7 @@ lisaui_err_t app_template_exit(void)
     return LISAUI_ERR_OK;
 }
 
-void *app_template_get_page(void)
+void *app_template_get_view(void)
 {
     return g_app_template;
 }
@@ -102,13 +102,13 @@ static struct app_icon_t app_icon_res_template = {
     .zoom = APP_ICON_ZOOM(0),
 };
 
-struct lisaui_app_t app_template = {
+lisaui_app_t app_template = {
     .create = app_template_create,
     .destroy = app_template_destroy,
     .enter = app_template_enter,
     .exit = app_template_exit,
 
-    .get_root_view = app_template_get_page,
+    .get_app_view = app_template_get_view,
     .info =
         {
             .name = "Template",

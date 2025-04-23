@@ -47,12 +47,13 @@ static setting_item_t setting_items[] = {
 };
 
 static lv_obj_t *temp_setting_item_view = NULL;
-
 static void event_handler(lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t *obj = lv_event_get_target(e);
     setting_item_t *item = (setting_item_t *)lv_event_get_user_data(e);
+
+    lisaui_app_t *app = NULL;
     if (code == LV_EVENT_CLICKED) {
         LISAUI_LOGI(TAG, "Open setting: %s", item->name);
         switch (item->id) {
@@ -60,24 +61,29 @@ static void event_handler(lv_event_t *e)
             temp_setting_item_view = private_lisaui_app_view_create_volume_backlight(g_app_panel);
             break;
 
-        case LISAUI_APP_SETTING_ITEM_ID_ALARM:
-            lisaui_app_enter(UI_APP_ID_ALARM);
-            break;
-
         case LISAUI_APP_SETTING_ITEM_ID_WAKE:
             temp_setting_item_view = private_lisaui_app_view_create_wakeup_config(g_app_panel);
             break;
 
+        case LISAUI_APP_SETTING_ITEM_ID_ALARM:
+            // lisaui_app_enter(UI_APP_ID_ALARM);
+            // 这里直接载入闹钟界面
+            lisaui_app_common_switch_app_scr_with_lvgl(UI_APP_ID_ALARM);
+            break;
+
         case LISAUI_APP_SETTING_ITEM_ID_WIFI:
-            lisaui_app_enter(UI_APP_ID_WIFI);
+            // lisaui_app_enter(UI_APP_ID_WIFI);
+            lisaui_app_common_switch_app_scr_with_lvgl(UI_APP_ID_WIFI);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_WEATHER:
-            lisaui_app_enter(UI_APP_ID_WEATHER);
+            // lisaui_app_enter(UI_APP_ID_WEATHER);
+            lisaui_app_common_switch_app_scr_with_lvgl(UI_APP_ID_WEATHER);
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_AUDIO_PLAYER:
-            lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+            // lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
+            lisaui_app_common_switch_app_scr_with_lvgl(UI_APP_ID_AUDIO_PLAYER);
             break;
 
         default:
@@ -88,16 +94,16 @@ static void event_handler(lv_event_t *e)
 
 lv_obj_t *app_settings_create_item_page(lv_obj_t *parent)
 {
-    g_settings_panel = lv_obj_create(parent);
-    _lisaui_set_style_container(g_settings_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-    lv_obj_set_size(g_settings_panel, LV_PCT(100), LV_PCT(100));
-    lv_obj_center(g_settings_panel);
+    lv_obj_t *panel = lv_obj_create(parent);
+    _lisaui_set_style_container(panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+    lv_obj_set_size(panel, LV_PCT(100), LV_PCT(100));
+    lv_obj_center(panel);
 
-    lv_obj_set_layout(g_settings_panel, LV_LAYOUT_FLEX);
-    lv_obj_set_flex_flow(g_settings_panel, LV_FLEX_FLOW_ROW_WRAP);
-    lv_obj_set_style_pad_row(g_settings_panel, 12, 0);
-    lv_obj_set_style_pad_column(g_settings_panel, 12, 0);
-    lv_obj_set_style_pad_all(g_settings_panel, 10, 0);
+    lv_obj_set_layout(panel, LV_LAYOUT_FLEX);
+    lv_obj_set_flex_flow(panel, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_style_pad_row(panel, 12, 0);
+    lv_obj_set_style_pad_column(panel, 12, 0);
+    lv_obj_set_style_pad_all(panel, 10, 0);
 
     lv_img_png_src_init(UI_RES_IMG_PNG(alarm));
     lv_img_png_src_init(UI_RES_IMG_PNG(regular));
@@ -105,7 +111,7 @@ lv_obj_t *app_settings_create_item_page(lv_obj_t *parent)
     lv_img_png_src_init(UI_RES_IMG_PNG(wifi));
 
     for (int i = 0; i < sizeof(setting_items) / sizeof(setting_items[0]); i++) {
-        lv_obj_t *btn = lv_btn_create(g_settings_panel);
+        lv_obj_t *btn = lv_btn_create(panel);
         lv_obj_add_event_cb(btn, event_handler, LV_EVENT_CLICKED, (void *)&(setting_items[i]));
         lv_obj_set_size(btn, LV_PCT(45), 60);
         // lv_obj_set_size(btn, LV_PCT(48), LV_DPX(80));
@@ -132,36 +138,10 @@ lv_obj_t *app_settings_create_item_page(lv_obj_t *parent)
         lv_obj_align_to(label, icon, LV_ALIGN_OUT_RIGHT_MID, LV_DPX(20), 0);
         lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     }
-    return g_settings_panel;
+    return panel;
 }
 
-lisaui_err_t lisaui_app_setting_enter_item_panel(void)
-{
-    LVGL_UI_LOCK();
-
-    // lisaui_app_enter(UI_APP_ID_STANDBY);
-    if (g_app_panel == NULL) {
-        LISAUI_LOGE(TAG, "g_app_panel is NULL");
-        LVGL_UI_UNLOCK();
-        return LISAUI_ERR_FAIL;
-    }
-    if (temp_setting_item_view) {
-        // lisaui_app_enter(UI_APP_ID_SETTING);
-        // LVGL_OBJ_SAFE_DEL(temp_setting_item_view);
-        lv_obj_del(g_settings_panel);
-        app_settings_create_item_page(g_app_panel);
-        temp_setting_item_view = NULL;
-    } else {
-        lisaui_app_enter(UI_APP_ID_STANDBY);
-        LVGL_UI_UNLOCK();
-        return LISAUI_ERR_OK;
-    }
-    LVGL_UI_UNLOCK();
-
-    return LISAUI_ERR_OK;
-}
-
-lisaui_err_t app_setting_create(void *parent)
+lisaui_err_t _app_setting_create_view(lv_obj_t *parent)
 {
     if (g_app_setting != NULL) {
         return LISAUI_ERR_OK;
@@ -179,14 +159,20 @@ lisaui_err_t app_setting_create(void *parent)
 
     LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(g_app_setting, g_app_panel);
 
-    app_settings_create_item_page(g_app_panel);
+    g_settings_panel = app_settings_create_item_page(g_app_panel);
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t app_setting_create(void *parent)
+{
+    _app_setting_create_view(parent);
+
     return LISAUI_ERR_OK;
 }
 
 lisaui_err_t app_setting_destroy(void)
 {
     LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
-    LVGL_OBJ_SAFE_DEL(g_app_panel);
     LVGL_OBJ_SAFE_DEL(g_app_setting);
     return LISAUI_ERR_OK;
 }
@@ -203,9 +189,28 @@ lisaui_err_t app_setting_exit(void)
     return LISAUI_ERR_OK;
 }
 
-void *app_setting_get_page(void)
+void *app_setting_get_view(void)
 {
     return g_app_setting;
+}
+
+lisaui_err_t lisaui_app_setting_handler_event(const int app_id, lisaui_event_t event, void *param)
+{
+    LISAUI_LOGI(TAG, "[%d:%s] app_id: %d, event: %d", __LINE__, __func__, app_id, event);
+    if (event == LISAUI_EVENT_OP_BACK_VIEW) {
+        if (temp_setting_item_view != NULL) {
+            LVGL_OBJ_SAFE_DEL(temp_setting_item_view);
+        }
+        else {
+            int app_id = lisaui_app_manager_get_current_appid();
+            if (app_id == UI_APP_ID_SETTING) {
+                lisaui_app_exit(app_id);
+            } else {
+                lisaui_app_enter(UI_APP_ID_STANDBY);
+            }
+        }
+    }
+    return LISAUI_ERR_OK;
 }
 
 static struct app_icon_t app_icon_res = {
@@ -217,13 +222,14 @@ static struct app_icon_t app_icon_res = {
     .zoom = APP_ICON_ZOOM(0),
 };
 
-struct lisaui_app_t app_setting = {
+lisaui_app_t app_setting = {
     .create = app_setting_create,
     .destroy = app_setting_destroy,
     .enter = app_setting_enter,
     .exit = app_setting_exit,
+    .event_handler = lisaui_app_setting_handler_event,
 
-    .get_root_view = app_setting_get_page,
+    .get_app_view = app_setting_get_view,
     .info =
         {
             .name = "Setting",

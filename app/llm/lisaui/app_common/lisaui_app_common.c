@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "lisaui_app_common.h"
+#include "lisaui_app_manager.h"
 
 static const char *TAG = "app_common";
 
@@ -175,8 +176,6 @@ lv_obj_t *ls_lv_llm_toast_create(lv_obj_t *parent)
     lv_obj_set_style_text_color(llm_asr_result_label, lv_color_hex(0x9d6531), 0);
     lv_obj_set_style_bg_opa(llm_asr_result_label, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_width(llm_asr_result_label, lv_pct(100));
-    llm_asr_result_label_width = lv_obj_get_width(llm_asr_result_label);
-    LISAUI_LOGI(TAG, "llm_asr_result_label_width: %d", llm_asr_result_label_width);
     return toast;
 }
 
@@ -222,7 +221,7 @@ lisaui_err_t lisaui_popup_toast(const char *message)
 
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
 
-lisaui_err_t lisaui_app_enter_lvgl_hook(struct lisaui_app_t *app)
+lisaui_err_t lisaui_app_enter_lvgl_hook(lisaui_app_t *app)
 {
     lisaui_view_stack_t *view_stask;
     lisaui_app_manager_get_view_stack(&view_stask);
@@ -232,7 +231,7 @@ lisaui_err_t lisaui_app_enter_lvgl_hook(struct lisaui_app_t *app)
         return LISAUI_ERR_NO_MEMORY;
     }
     memset(page, 0, sizeof(lisaui_view_page_t));
-    page->root = (lisaui_view_t *)app->get_root_view();
+    page->root = (lisaui_view_t *)app->get_app_view();
     page->app_id = app->info.id;
     // LISAUI_LOGI(TAG, "[ui] lv_disp_load_scr page:%p page->root: %p", page, page->root);
     if (page->root == NULL) {
@@ -248,7 +247,7 @@ lisaui_err_t lisaui_app_enter_lvgl_hook(struct lisaui_app_t *app)
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_app_exit_lvgl_hook(struct lisaui_app_t *app)
+lisaui_err_t lisaui_app_exit_lvgl_hook(lisaui_app_t *app)
 {
     lisaui_view_stack_t *view_stask;
     lisaui_app_manager_get_view_stack(&view_stask);
@@ -281,6 +280,74 @@ lisaui_err_t lisaui_app_exit_lvgl_hook(struct lisaui_app_t *app)
 }
 
 #endif
+
+// 直接载入对应 View 界面
+lisaui_err_t lisaui_app_common_switch_app_scr_with_lvgl(const int app_id)
+{
+    lisaui_app_t *app = NULL;
+    if (lisaui_app_manager_get_app_by_id(app_id, &app) != LISAUI_ERR_APP_OK) {
+        LISAUI_LOGE(TAG, "[ui] app(id:%d) not registered", app_id);
+        return LISAUI_ERR_APP_NOT_REGISTERED;
+    }
+    if (app->get_app_view() == NULL) {
+        if (app->create(NULL) != LISAUI_ERR_APP_OK) {
+            return LISAUI_ERR_APP_CREATE_FAILED;
+        }
+    }
+    lisaui_app_enter_lvgl_hook(app);
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_app_common_pop_app_scr_with_lvgl(const int app_id)
+{
+    lisaui_app_t *app = NULL;
+    if (lisaui_app_manager_get_app_by_id(app_id, &app) != LISAUI_ERR_APP_OK) {
+        LISAUI_LOGE(TAG, "[ui] app(id:%d) not registered", app_id);
+        return LISAUI_ERR_APP_NOT_REGISTERED;
+    }
+    if (app->get_app_view() == NULL) {
+        if (app->create(NULL) != LISAUI_ERR_APP_OK) {
+            return LISAUI_ERR_APP_CREATE_FAILED;
+        }
+    }
+    lv_obj_t *view = lv_disp_get_scr_act(NULL);
+    if (view != NULL) {
+        LISAUI_LOGI(TAG, "[ui] prev_view: %p", view);
+        if (view != app->get_app_view()) {
+            lisaui_app_exit_lvgl_hook(app);
+        } else {
+            int current_app_id = lisaui_app_manager_get_current_appid();
+            LISAUI_LOGI(TAG, "[ui] current_app_id: %d", current_app_id);
+            // lisaui_app_exit(app_id);
+            if (lisaui_app_manager_get_app_by_id(current_app_id, &app) != LISAUI_ERR_APP_OK) {
+                LISAUI_LOGE(TAG, "[ui] app(id:%d) not registered", current_app_id);
+                return LISAUI_ERR_APP_NOT_REGISTERED;
+            }
+        }
+    }
+
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_app_common_get_current_scr(lv_obj_t **view)
+{
+    if (view == NULL) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    // lisaui_view_stack_t *view_stask;
+    // lisaui_app_manager_get_view_stack(&view_stask);
+    // lisaui_view_page_t *page = NULL;
+    // if (lisaui_view_manager_get_current(view_stask, &page) != LISAUI_ERR_OK) {
+    //     LISAUI_LOGE(TAG, "[ui] view page is NULL");
+    //     return LISAUI_ERR_NO_MEMORY;
+    // }
+    // if (page == NULL) {
+    //     LISAUI_LOGE(TAG, "[ui] view page is NULL");
+    //     return LISAUI_ERR_NO_MEMORY;
+    // }
+    // *view = page->root;
+    return LISAUI_ERR_OK;
+}
 
 void lisaui_memory_monitor(void *param)
 {

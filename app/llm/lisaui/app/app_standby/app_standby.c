@@ -106,7 +106,7 @@ lisaui_err_t app_standby_exit(void)
     return LISAUI_ERR_OK;
 }
 
-void *app_standby_get_page(void)
+void *app_standby_get_view(void)
 {
     return g_app_standby;
 }
@@ -119,13 +119,13 @@ static struct app_icon_t app_icon_res_standby = {
     .zoom = APP_ICON_ZOOM(0),
 };
 
-struct lisaui_app_t app_standby = {
+lisaui_app_t app_standby = {
     .create = app_standby_create,
     .destroy = app_standby_destroy,
     .enter = app_standby_enter,
     .exit = app_standby_exit,
 
-    .get_root_view = app_standby_get_page,
+    .get_app_view = app_standby_get_view,
     .info =
         {
             .name = "Standby",

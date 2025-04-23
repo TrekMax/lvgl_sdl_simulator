@@ -268,7 +268,7 @@ lisaui_err_t app_alarm_exit(void)
     return LISAUI_ERR_OK;
 }
 
-void *app_alarm_get_page(void)
+void *app_alarm_get_view(void)
 {
     return g_app_alarm;
 }
@@ -281,13 +281,13 @@ static struct app_icon_t app_icon_res_alarm = {
     .zoom = APP_ICON_ZOOM(0),
 };
 
-struct lisaui_app_t app_alarm = {
+lisaui_app_t app_alarm = {
     .create = app_alarm_create,
     .destroy = app_alarm_destroy,
     .enter = app_alarm_enter,
     .exit = app_alarm_exit,
 
-    .get_root_view = app_alarm_get_page,
+    .get_app_view = app_alarm_get_view,
     .info =
         {
             .name = "Alarm",

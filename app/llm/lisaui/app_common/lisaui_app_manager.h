@@ -39,16 +39,16 @@ struct app_icon_t {
 //     LISAUI_APP_TYPE_SYSTEM, // 系统应用,会自动创建并启用
 // } lisaui_app_type_t;
 
-#define LISAUI_APP_TYPE_NORMAL      (0)
-#define LISAUI_APP_TYPE_USER        (1)
-#define LISAUI_APP_TYPE_SYSTEM      (2)
-#define LISAUI_APP_TYPE_LAUNCHER    (3)
+#define LISAUI_APP_TYPE_NORMAL   (0)
+#define LISAUI_APP_TYPE_USER     (1)
+#define LISAUI_APP_TYPE_SYSTEM   (2)
+#define LISAUI_APP_TYPE_LAUNCHER (3)
 
-#define LISAUI_APP_MAX              (30) // 支持注册最大 App 数目
-#define LISAUI_APP_ID_NONE          (0)  // 默认 App ID
+#define LISAUI_APP_MAX     (30) // 支持注册最大 App 数目
+#define LISAUI_APP_ID_NONE (0)  // 默认 App ID
 
-#define LISAUI_APP_MAX_RUNNING      (5)  // 支持最多运行的 App 数目
-#define LISAUI_APP_HASH_SIZE        (19) //
+#define LISAUI_APP_MAX_RUNNING (5)  // 支持最多运行的 App 数目
+#define LISAUI_APP_HASH_SIZE   (19) //
 struct app_info_t {
     const char *name;
     const char *package_name;
@@ -57,20 +57,33 @@ struct app_info_t {
     const int type;
 };
 
-struct lisaui_app_t {
+typedef enum {
+    LISAUI_EVENT_OP_BACK_VIEW,
+    LISAUI_EVENT_OP_CLOSE_VIEW,
+    LISAUI_EVENT_OP_ENTER_HOME_VIEW,
+
+    LISAUI_EVENT_APP_EXIT,
+    LISAUI_EVENT_APP_ENTER,
+    LISAUI_EVENT_APP_CREATE,
+    LISAUI_EVENT_APP_DESTROY,
+    LISAUI_EVENT_APP_CLOSE,
+} lisaui_event_t;
+
+typedef struct _lisaui_app_t {
     lisaui_err_t (*create)(void *parent);
     lisaui_err_t (*destroy)(void);
     lisaui_err_t (*enter)(void);
     lisaui_err_t (*exit)(void);
+    lisaui_err_t (*event_handler)(const int id, lisaui_event_t event, void *param);
 
-    void *(*get_root_view)(void);
+    void *(*get_app_view)(void);
 
     struct app_info_t info;
     struct app_icon_t *icon;
     uint8_t hidden_icon;
-    struct lisaui_app_t *app;
-    lisaui_view_stack_t app_view_stack;
-};
+    struct _lisaui_app_t *app;
+    lisaui_view_stack_t view_stack;
+} lisaui_app_t;
 
 typedef struct {
     const char *app_name;
@@ -78,17 +91,17 @@ typedef struct {
 } app_entry_t;
 
 typedef struct _app_running_t {
-    struct lisaui_app_t *app;
+    lisaui_app_t *app;
     int valid;
 } app_runtime_t;
 
 typedef struct _app_hash_slot_t {
     int key;
-    struct lisaui_app_t *app;
+    lisaui_app_t *app;
 } app_hash_slot_t;
 
 struct lisaui_app_manager_t {
-    struct lisaui_app_t *apps_list[LISAUI_APP_MAX]; // 已注册的 App 列表
+    lisaui_app_t *apps_list[LISAUI_APP_MAX]; // 已注册的 App 列表
     lisaui_dbus_t *dbus;
     lisaui_view_stack_t manager_view_stack;
     int current_appid;
@@ -106,11 +119,11 @@ struct lisaui_app_manager_t {
 };
 
 #ifdef __APPLE__
-    // macOS 的 Mach-O 格式要求段和节名称
-    #define LISAUI_APP_SECTION __attribute__((used, section("__DATA,.lisaui_apps")))
+// macOS 的 Mach-O 格式要求段和节名称
+#define LISAUI_APP_SECTION __attribute__((used, section("__DATA,.lisaui_apps")))
 #else
-    // Linux 或其他平台的 ELF 格式
-    #define LISAUI_APP_SECTION __attribute__((used, section(".lisaui_apps")))
+// Linux 或其他平台的 ELF 格式
+#define LISAUI_APP_SECTION __attribute__((used, section(".lisaui_apps")))
 #endif
 
 #define CONFIG_LISAUI_APP_TEMPLATE_MACRO_ENABLE 1
@@ -130,12 +143,12 @@ struct lisaui_app_manager_t {
     extern const app_entry_t lisaui_app_##name##_entry;                                                                \
     __attribute__((unused)) void *_app_##name = (void *)&lisaui_app_##name##_entry
 
-#define LISAUI_DECLARE_APP_FUNC(name, func_create, func_destroy, func_enter, func_exit, func_get_page)                 \
+#define LISAUI_DECLARE_APP_FUNC(name, func_create, func_destroy, func_enter, func_exit, func_get_view)                 \
     lisaui_err_t app_##name##_##func_create(void *parent);                                                             \
     lisaui_err_t app_##name##_##func_destroy(void);                                                                    \
     lisaui_err_t app_##name##_##func_enter(void);                                                                      \
     lisaui_err_t app_##name##_##func_exit(void);                                                                       \
-    void *app_##name##_get_page(void);
+    void *app_##name##_get_view(void);
 
 #define LISAUI_DEFINE_APP_FUNC(name, func, param, entity)                                                              \
     app_##name##_##func(param)                                                                                         \
@@ -149,12 +162,12 @@ struct lisaui_app_manager_t {
         .icon = app_icon,                                                                                              \
         .zoom = APP_ICON_ZOOM(0),                                                                                      \
     };                                                                                                                 \
-    struct lisaui_app_t app_##app = {                                                                                  \
+    lisaui_app_t app_##app = {                                                                                         \
         .create = app_##app##_create,                                                                                  \
         .destroy = app_##app##_destroy,                                                                                \
         .enter = app_##app##_enter,                                                                                    \
         .exit = app_##app##_exit,                                                                                      \
-        .get_root_view = app_##app##_get_page,                                                                         \
+        .get_app_view = app_##app##_get_view,                                                                         \
         .info =                                                                                                        \
             {                                                                                                          \
                 .name = name_en,                                                                                       \
@@ -162,7 +175,7 @@ struct lisaui_app_manager_t {
                 .id = app_id,                                                                                          \
             },                                                                                                         \
         .icon = &app_icon_res_##app,                                                                                   \
-        .app_view_stack =                                                                                              \
+        .view_stack =                                                                                                  \
             {                                                                                                          \
                 .capacity = CONFIG_LISAUI_APP_DEFAULT_VIEW_DEPTH,                                                      \
                 .size = 0,                                                                                             \
@@ -180,16 +193,16 @@ struct lisaui_app_manager_t {
 
 #define LISAUI_APP_INIT_CHECK(app_id, obj, err, ret)                                                                   \
     if (obj == NULL) {                                                                                                 \
-        struct lisaui_app_t *app = lisaui_app_manager_get_app(app_id);                                                 \
+        lisaui_app_t *app = lisaui_app_manager_get_app(app_id);                                                        \
         if (app == NULL) {                                                                                             \
-            LISAUI_LOGE(TAG, "[%s] %d not registered", __func__, app_id);                                          \
+            LISAUI_LOGE(TAG, "[%s] %d not registered", __func__, app_id);                                              \
             return err;                                                                                                \
         }                                                                                                              \
         if (lisaui_app_enter(app_id) != LISAUI_ERR_OK) {                                                               \
-            LISAUI_LOGE(TAG, "[%s] %s not init", __func__, app->info.name);                                        \
+            LISAUI_LOGE(TAG, "[%s] %s not init", __func__, app->info.name);                                            \
             return err;                                                                                                \
         }                                                                                                              \
-        obj = app->get_root_view();                                                                                    \
+        obj = app->get_app_view();                                                                                    \
         if (obj == NULL) {                                                                                             \
             return err;                                                                                                \
         }                                                                                                              \
@@ -212,7 +225,7 @@ struct lisaui_app_manager_t {
  * @note 目前只支持 APP 注册、注销、进入、退出、关闭时的 hook, 且只支持一个 hook
  *
  */
-typedef lisaui_err_t (*lisaui_app_manager_app_hook_t)(struct lisaui_app_t *app);
+typedef lisaui_err_t (*lisaui_app_manager_app_hook_t)(lisaui_app_t *app);
 lisaui_err_t lisaui_app_manager_set_register_app_hook(lisaui_app_manager_app_hook_t hook);
 lisaui_err_t lisaui_app_manager_set_unregister_app_hook(lisaui_app_manager_app_hook_t hook);
 lisaui_err_t lisaui_app_manager_set_enter_app_hook(lisaui_app_manager_app_hook_t hook);
@@ -224,11 +237,14 @@ lisaui_err_t lisaui_app_manager_default_hook_deinit(void);
 typedef lisaui_err_t (*lisaui_app_manager_hook_t)(struct lisaui_app_manager_t *app_manager);
 lisaui_err_t lisaui_app_manager_set_hook(lisaui_app_manager_hook_t hook);
 
-lisaui_err_t lisaui_app_register(struct lisaui_app_t *app);
-lisaui_err_t lisaui_app_unregister(struct lisaui_app_t *app);
+lisaui_err_t lisaui_app_register(lisaui_app_t *app);
+lisaui_err_t lisaui_app_unregister(lisaui_app_t *app);
 lisaui_err_t lisaui_app_enter(const int app_id);
 lisaui_err_t lisaui_app_exit(const int app_id);
 lisaui_err_t lisaui_app_close(const int app_id);
+
+lisaui_err_t lisaui_app_sent_event(const int app_id, lisaui_event_t event, void *param);
+lisaui_err_t lisaui_app_sent_event_to_all(lisaui_event_t event, void *param);
 
 lisaui_err_t lisaui_app_lock(void);
 lisaui_err_t lisaui_app_unlock(void);
@@ -238,21 +254,19 @@ lisaui_err_t lisaui_app_manager_init(void);
 lisaui_err_t lisaui_app_manager_get_bus(lisaui_dbus_t **dbus);
 lisaui_err_t lisaui_app_manager_get_view_stack(lisaui_view_stack_t **view_stask);
 
-lisaui_err_t lisaui_app_manager_show_app_info(struct lisaui_app_t *app);
+lisaui_err_t lisaui_app_manager_show_app_info(lisaui_app_t *app);
 lisaui_err_t lisaui_app_manager_show_all_app_info(void);
-lisaui_err_t lisaui_app_manager_get_app_by_uuid(const int uuid, struct lisaui_app_t **app);
-lisaui_err_t lisaui_app_manager_get_app_by_id(const int app_id, struct lisaui_app_t **app);
+lisaui_app_t **lisaui_app_manager_get_app_lists(void);
+
+lisaui_err_t lisaui_app_manager_get_app_by_uuid(const int uuid, lisaui_app_t **app);
+lisaui_err_t lisaui_app_manager_get_app_by_id(const int app_id, lisaui_app_t **app);
+lisaui_app_t *lisaui_app_manager_get_app(const int app_id);
 
 int lisaui_app_manager_get_registered_count(void);
 int lisaui_app_manager_get_unhidden_count(void);
 int lisaui_app_manager_get_current_appid(void);
 
-struct lisaui_app_t **lisaui_app_manager_get_app_lists(void);
-struct lisaui_app_t *lisaui_app_manager_get_app(const int app_id);
-
-
 void lisaui_app_manager_remove_instance_by_uuid(int uuid);
-
 
 #ifdef __cplusplus
 } /*extern "C"*/

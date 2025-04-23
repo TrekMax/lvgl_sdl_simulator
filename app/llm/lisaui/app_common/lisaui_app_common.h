@@ -136,6 +136,9 @@ lisaui_err_t _lisaui_set_style_container(lv_obj_t *obj, lv_color_t bg_color, lv_
 lisaui_err_t _lisaui_lv_obj_set_default_style(lv_obj_t *obj);
 lisaui_err_t _lisaui_lv_obj_set_btn_custom_style(lv_obj_t *obj);
 
+lisaui_err_t lisaui_app_common_switch_app_scr_with_lvgl(const int app_id);
+lisaui_err_t lisaui_app_common_pop_app_scr_with_lvgl(const int app_id);
+
 lisaui_err_t lisaui_popup_toast(const char *message);
 void lisaui_memory_monitor(void *param);
 

@@ -30,7 +30,7 @@ lv_obj_t *g_app_taskbar = NULL;
 static const char *TAG = "app_taskbar";
 static void private_lisaui_app_enter_handler_cb(void *data)
 {
-    struct lisaui_app_t *app = (struct lisaui_app_t *)data;
+    lisaui_app_t *app = (lisaui_app_t *)data;
     if (app == NULL) {
         LISAUI_LOGE(TAG, "app is NULL");
         return;
@@ -143,8 +143,8 @@ lisaui_err_t lisaui_get_taskbar_dbus(lisaui_dbus_t **dbus)
 
 lisaui_err_t app_taskbar_destroy(void)
 {
-    LISAUI_LOGI(TAG, "[%d:%s] destroy\n", __LINE__, __func__);
-    g_app_taskbar = NULL;
+    LISAUI_LOGI(TAG, "[%d:%s] destroy", __LINE__, __func__);
+    LVGL_OBJ_SAFE_DEL(g_app_taskbar);
     return LISAUI_ERR_OK;
 }
 
@@ -160,7 +160,7 @@ lisaui_err_t app_taskbar_exit(void)
     return LISAUI_ERR_OK;
 }
 
-void *app_taskbar_get_page(void)
+void *app_taskbar_get_view(void)
 {
     return g_app_taskbar;
 }
@@ -177,13 +177,13 @@ static struct app_icon_t app_icon_res = {
     .zoom = APP_ICON_ZOOM(0),
 };
 
-struct lisaui_app_t app_taskbar = {
+lisaui_app_t app_taskbar = {
     .create = app_taskbar_create,
     .destroy = app_taskbar_destroy,
     .enter = app_taskbar_enter,
     .exit = app_taskbar_exit,
 
-    .get_root_view = app_taskbar_get_page,
+    .get_app_view = app_taskbar_get_view,
     .info =
         {
             .name = "taskbar",

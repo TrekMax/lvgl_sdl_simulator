@@ -27,7 +27,7 @@ UI_RES_IMG_NAME(music_care_view_bg, APP_AUDIO_PLAYER_UI_RES_PERFIX_PATH("assets/
 lv_obj_t *lisaui_app_audio_player_create_song_view(lv_obj_t *parent, metadata_music_song_t *song);
 
 // 声明[模板]应用需要实现的接口
-LISAUI_DECLARE_APP_FUNC(audio_player, create, destroy, enter, exit, get_page);
+LISAUI_DECLARE_APP_FUNC(audio_player, create, destroy, enter, exit, get_view);
 // 定义[模板]应用
 LISAUI_DEFINE_APP(audio_player, UI_APP_ID_AUDIO_PLAYER, "播放器", "Audio_player", &ui_img_icon_composition_png, {});
 
@@ -77,7 +77,7 @@ lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, destroy, void, {
 });
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, enter, void, { return LISAUI_ERR_OK; });
 lisaui_err_t LISAUI_DEFINE_APP_FUNC(audio_player, exit, void, { return LISAUI_ERR_OK; });
-void *LISAUI_DEFINE_APP_FUNC(audio_player, get_page, void, { return g_app_audio_player; });
+void *LISAUI_DEFINE_APP_FUNC(audio_player, get_view, void, { return g_app_audio_player; });
 
 /**********************************************************************************************************************/
 

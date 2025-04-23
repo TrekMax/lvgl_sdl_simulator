@@ -91,7 +91,7 @@ lisaui_err_t app_wifi_exit(void)
     return LISAUI_ERR_OK;
 }
 
-void *app_wifi_get_page(void)
+void *app_wifi_get_view(void)
 {
     return g_app_wifi;
 }
@@ -104,13 +104,13 @@ static struct app_icon_t app_icon_res_wifi = {
     .zoom = APP_ICON_ZOOM(0),
 };
 
-struct lisaui_app_t app_wifi = {
+lisaui_app_t app_wifi = {
     .create = app_wifi_create,
     .destroy = app_wifi_destroy,
     .enter = app_wifi_enter,
     .exit = app_wifi_exit,
 
-    .get_root_view = app_wifi_get_page,
+    .get_app_view = app_wifi_get_view,
     .info =
         {
             .name = "Wifi",
