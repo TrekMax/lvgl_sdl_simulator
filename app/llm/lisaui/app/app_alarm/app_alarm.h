@@ -19,18 +19,19 @@ extern "C" {
 #include "../app_common.h"
 #include "lisaui_app_common.h"
 
-lisaui_err_t app_alarm_init(void);
-lisaui_err_t lisaui_app_alarm_op_alarm_add_view(const char *alarm_time_text, const char *alarm_date_text);
+
+#define LISAUI_ALARM_TIME_TEXT_MAX_LEN (16)
+#define LISAUI_ALARM_DATE_TEXT_MAX_LEN (16)
 
 typedef struct {
-    char *alarm_time_text;
-    char *alarm_date_text;
+    char time_text[LISAUI_ALARM_TIME_TEXT_MAX_LEN];
+    char date_text[LISAUI_ALARM_DATE_TEXT_MAX_LEN];
     uint64_t timestamp;
 } lisaui_alarm_clock_item_t;
 
 typedef struct {
-    lisaui_alarm_clock_item_t *list;
     int count;
+    lisaui_alarm_clock_item_t list[0];
 } lisaui_alarm_clock_list_t;
 
 typedef enum  {
@@ -43,20 +44,22 @@ typedef enum {
     LISAUI_ALARM_OP_SET,
 
     LISAUI_ALARM_OP_GET_LIST,
-    // LISAUI_ALARM_OP_SET_LIST,
-    // LISAUI_ALARM_OP_GET_LIST_COUNT,
+    LISAUI_ALARM_OP_SET_LIST,
+    LISAUI_ALARM_OP_GET_LIST_COUNT,
 
-    // LISAUI_ALARM_OP_ADD,
-    // LISAUI_ALARM_OP_MODIFY,
+    LISAUI_ALARM_OP_ADD,
+    LISAUI_ALARM_OP_MODIFY,
     LISAUI_ALARM_OP_DELETE,
-    // LISAUI_ALARM_OP_CLEAR,
+    LISAUI_ALARM_OP_CLEAR,
 
 } lisaui_alarm_op_t;
 
 typedef int (*lisaui_app_alarm_handler_t)(lisaui_alarm_item_t type, lisaui_alarm_op_t operation, void *param);
 lisaui_err_t lisaui_app_alarm_register_handler(lisaui_app_alarm_handler_t handler);
 
-lisaui_err_t lisaui_app_alarm_op_alarm_add(const char *time, const char *date);
+lisaui_err_t app_alarm_init(void);
+lisaui_err_t lisaui_app_alarm_show_skill_alarm_view(const char *alarm_time_text, const char *alarm_date_text);
+lisaui_err_t lisaui_app_alarm_close_skill_alarm_view(void);
 
 #ifdef __cplusplus
 }

@@ -445,7 +445,6 @@ lisaui_err_t lisaui_app_close(const int app_id)
         return LISAUI_ERR_APP_NOT_REGISTERED;
     }
     lisaui_app_exit(app_id);
-    lisaui_view_manager_deinit(&app->view_stack);
     if (app->destroy) {
         if (app->destroy()) {
             LISAUI_LOGE(TAG, "[ui] app destroy failed");

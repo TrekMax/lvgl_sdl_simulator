@@ -28,38 +28,13 @@ extern "C" {
 LV_FONT_DECLARE(lv_font_notosans_cs_medium_14);
 LV_FONT_DECLARE(lv_font_chinese_18);
 
-#define LISAUI_APP_WIFI_SSID_MAX_LEN 33
-#define LISAUI_APP_WIFI_PWD_MAX_LEN 65
-#define LISAUI_APP_WIFI_LIST_ITEM_MAX 10
-
-typedef enum {
-    WIFI_LIST_ITEM_STATUS_DISCONNECT = 0,
-    WIFI_LIST_ITEM_STATUS_CONNECTING,
-    WIFI_LIST_ITEM_STATUS_CONNECTED,
-} wifi_list_item_status_t;
-typedef enum {
-    WIFI_LIST_ITEM_SECURITY_NONE = 0,
-    WIFI_LIST_ITEM_SECURITY_WEP,
-    WIFI_LIST_ITEM_SECURITY_WPA,
-    WIFI_LIST_ITEM_SECURITY_WPA2,
-    WIFI_LIST_ITEM_SECURITY_WPA3,
-} wifi_list_item_security_t;
-
-typedef struct _wifi_item_t {
-    int id;
-    const char SSID[LISAUI_APP_WIFI_SSID_MAX_LEN];
-    const char PWD[LISAUI_APP_WIFI_PWD_MAX_LEN];
-    int rssi;
-    int security;
-    int status;
-    int is_connect;
-} wifi_item_t;
+#include "../wifi_type.h"
 
 lv_obj_t *ls_wifi_list_create(lv_obj_t *parent);
 lv_obj_t *ls_wifi_list_add_text(lv_obj_t *list, const char *txt);
 
-lv_obj_t *ls_wifi_list_add_btn(lv_obj_t *list, wifi_item_t wifi, lv_event_cb_t event_cb,
-                             void *user_data);
+lv_obj_t *ls_wifi_list_add_btn(lv_obj_t *list, wifi_metadata_t wifi, lv_event_cb_t event_cb,
+                             void *user_data) ;
 
 const char *ls_wifi_list_get_btn_text(lv_obj_t *list, lv_obj_t *btn);
 

@@ -151,12 +151,12 @@ lv_obj_t *app_weather_create_weather_view(lv_obj_t *parent, metadata_weather_t *
     lv_obj_set_style_text_color(description_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN);
     lv_obj_set_style_text_font(description_label, &lv_font_chinese_18, LV_PART_MAIN);
 
-    lv_obj_align_to(description_label, temp_range_label, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPX(10));
+    lv_obj_align_to(description_label, temp_range_label, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPX(0));
 
     return weather_view;
 }
 
-lisaui_err_t lisaui_app_weather_set_weather_view(metadata_weather_t *weather)
+lisaui_err_t lisaui_app_weather_skill_show_weather_view(metadata_weather_t *weather)
 {
     LVGL_UI_LOCK();
     if (g_app_weather == NULL) {
@@ -166,14 +166,14 @@ lisaui_err_t lisaui_app_weather_set_weather_view(metadata_weather_t *weather)
     }
 
     LVGL_OBJ_SAFE_DEL(temp_weather_view);
-    lisaui_app_enter(UI_APP_ID_WEATHER);
+    // lisaui_app_enter(UI_APP_ID_WEATHER);
     temp_weather_view = app_weather_create_weather_view(g_app_panel, weather);
 
     LVGL_UI_UNLOCK();
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_app_weather_del_weather_view(void)
+lisaui_err_t lisaui_app_weather_skill_close_weather_view(void)
 {
     LVGL_UI_LOCK();
     LVGL_OBJ_SAFE_DEL(temp_weather_view);

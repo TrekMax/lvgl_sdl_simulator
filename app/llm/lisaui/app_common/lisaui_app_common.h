@@ -71,11 +71,11 @@ extern "C" {
 #define LISAUI_STATUS_BAR_HEIGHT       48
 #define CONFIG_LISAUI_EXEC_HOOK_ENABLE 1
 
-#define LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(parent, target)                                                          \
+#define LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(parent, target, ret)                                                          \
     do {                                                                                                               \
         if (parent == NULL || target == NULL) {                                                                        \
             LISAUI_LOGE(TAG, "");                                                                                      \
-            return LISAUI_ERR_INVALID_PARAM;                                                                           \
+            return ret;                                                                           \
         }                                                                                                              \
         lv_obj_set_y(target, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));                                                        \
         lv_coord_t height = lv_obj_get_height(parent) - LV_DPX(LISAUI_STATUS_BAR_HEIGHT);                              \

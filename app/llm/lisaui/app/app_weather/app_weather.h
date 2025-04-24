@@ -51,8 +51,8 @@ typedef struct _metadata_weather_t {
 
 lisaui_err_t app_weather_init(void);
 
-lisaui_err_t lisaui_app_weather_set_weather_view(metadata_weather_t *weather);
-lisaui_err_t lisaui_app_weather_del_weather_view(void);
+lisaui_err_t lisaui_app_weather_skill_show_weather_view(metadata_weather_t *weather);
+lisaui_err_t lisaui_app_weather_skill_close_weather_view(void);
 
 lisaui_err_t lisaui_app_weather_json_parse(const char *json_str, metadata_weather_t *weather);
 

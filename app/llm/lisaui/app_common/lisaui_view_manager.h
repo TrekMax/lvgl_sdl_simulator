@@ -45,6 +45,8 @@ struct _lisaui_view_page_t {
 
     lisaui_view_page_t *next;
     // lisaui_view_page_t *prev;
+
+    lisaui_view_type_t type;
 };
 
 typedef struct _lisaui_view_stack_t {

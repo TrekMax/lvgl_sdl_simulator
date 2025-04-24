@@ -29,6 +29,7 @@ if (CONFIG_LISAUI_ENV_ARCS_SDK)
         utils
         app_common
         common_widget
+        app_alarm
     PUBLIC 
         listenai_interface)
     listenai_link_libraries(${LISAUI_APP_TARGET_NAME})

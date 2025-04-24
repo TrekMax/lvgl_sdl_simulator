@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "app_wifi.h"
+#include "app_wifi/wifi_type.h"
 #include "lisaui_app_common.h"
 #include "assets/assets_res.h"
 #include "widget/ls_wifi_list.h"
@@ -19,24 +20,40 @@ static lv_obj_t *g_app_wifi = NULL;
 static lv_obj_t *g_app_panel = NULL;
 lv_obj_t *g_obj_wifi_list = NULL;
 
+// typedef lisaui_err_t (*app_wifi_event_handler_t)(lisaui_wifi_op_t op,
+//     wifi_metadata_t *wifi_item);
+// lisaui_err_t lisaui_app_wifi_register_event_handler(app_wifi_event_handler_t handler);
+
+static app_wifi_event_handler_t g_app_wifi_event_handler = NULL;
+lisaui_err_t lisaui_app_wifi_register_event_handler(app_wifi_event_handler_t handler)
+{
+    if (handler == NULL) {
+        LISAUI_LOGE(TAG, "handler is NULL");
+        return LISAUI_ERR_FAIL;
+    }
+    g_app_wifi_event_handler = handler;
+    return LISAUI_ERR_OK;
+}
+
 static void event_handler(lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t *obj = lv_event_get_target(e);
     // setting_item_t *item = (setting_item_t *)lv_event_get_user_data(e);
     if (code == LV_EVENT_CLICKED) {
-        LISAUI_LOGI(TAG, "Clicked");
+        // LISAUI_LOGI(TAG, "Clicked");
         // g_delete_alarm_menu = app_alarm_delete_menu_create(lv_layer_sys());
+        if (g_app_wifi_event_handler) {
+            wifi_metadata_t *wifi_item = (wifi_metadata_t *)lv_event_get_user_data(e);
+            if (wifi_item == NULL) {
+                LISAUI_LOGE(TAG, "wifi_item is NULL");
+                return;
+            }
+            g_app_wifi_event_handler(LISAUI_WIFI_OP_CONNECT, wifi_item);
+        }
     }
 }
 
-static wifi_item_t test_wifi_item_list[] = {
-    {0, "SSID1 sadasdadas", "PWD1", -50, 0, 0, 0},
-    {3, "SSID4sdadasdasdasdssssd", "PWD4", -80, 3, 3, 0},
-    {1, "SSID2", "PWD2", -60, 1, 1, 0},
-    {2, "SSID3", "PWD3", -70, 2, 2, 0},
-    {3, "SSID4sdadasdasdasdssssd", "PWD4", -80, 3, 3, 0},
-};
 
 void app_wifi_create_wifi_list(lv_obj_t *parent)
 {
@@ -51,22 +68,40 @@ void app_wifi_create_wifi_list(lv_obj_t *parent)
     ls_wifi_list_add_btn(g_obj_wifi_list, test_wifi_item_list[4], event_handler, NULL);
 }
 
+lisaui_err_t lisaui_app_add_wifi_list_item(wifi_metadata_t *wifi_item)
+{
+    if (g_obj_wifi_list == NULL) {
+        LISAUI_LOGW(TAG, "wifi list is NULL");
+        // return LISAUI_ERR_FAIL;
+        g_obj_wifi_list = ls_wifi_list_create(g_app_panel);
+        lv_obj_set_size(g_obj_wifi_list, LV_PCT(100), LV_PCT(100));
+    }
+    ls_wifi_list_add_btn(g_obj_wifi_list, *wifi_item, event_handler, NULL);
+    return LISAUI_ERR_OK;
+}
+
+lv_obj_t *app_wifi_create_panel_wifi_list(lv_obj_t *parent)
+{
+
+    lv_obj_t *wifi_list_panel = lv_obj_create(parent);
+    _lisaui_set_style_container(wifi_list_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+    g_app_panel = lv_obj_create(wifi_list_panel);
+    _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
+
+    LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(wifi_list_panel, g_app_panel, NULL);
+
+    // app_wifi_create_wifi_list(g_app_panel);
+    // app_wifi_create_wifi_connect(g_app_panel);
+    return wifi_list_panel;
+}
 
 lisaui_err_t app_wifi_create(void *parent)
 {
+
     if (g_app_wifi != NULL) {
         return LISAUI_ERR_OK;
     }
-    g_app_wifi = lv_obj_create(parent);
-    _lisaui_set_style_container(g_app_wifi, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-    g_app_panel = lv_obj_create(g_app_wifi);
-    _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
-
-    LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(g_app_wifi, g_app_panel);
-
-    app_wifi_create_wifi_list(g_app_panel);
-    // app_wifi_create_wifi_connect(g_app_panel);
-
+    g_app_wifi = app_wifi_create_panel_wifi_list(parent);
     LISAUI_LOGI(TAG, "[%d:%s] create\n", __LINE__, __func__);
     return LISAUI_ERR_OK;
 }

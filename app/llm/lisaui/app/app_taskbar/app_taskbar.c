@@ -28,6 +28,7 @@
 lv_obj_t *g_app_taskbar = NULL;
 
 static const char *TAG = "app_taskbar";
+#if CONFIG_LISAUI_DBUS_ENABLE
 static void private_lisaui_app_enter_handler_cb(void *data)
 {
     lisaui_app_t *app = (lisaui_app_t *)data;
@@ -42,8 +43,10 @@ static void private_lisaui_app_enter_handler_cb(void *data)
     // lisaui_app_exit(app->info.id);
     // lisaui_app_enter(UI_APP_ID_TASKBAR);
 }
+#endif
 
-static void event_handler_app_panel(lv_event_t *e)
+#if CONFIG_LISAUI_APP_TASKBAR_TOOLKIT_ENABLE
+static void toolkit_panel_event_handler(lv_event_t *e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t *obj = lv_event_get_target(e);
@@ -66,6 +69,7 @@ static void event_handler_app_panel(lv_event_t *e)
         LISAUI_LOGI(TAG, "Released");
     }
 }
+#endif
 
 lisaui_err_t app_taskbar_create(void *parent)
 {
@@ -79,7 +83,7 @@ lisaui_err_t app_taskbar_create(void *parent)
         _lisaui_taskbar_create_date_label(g_app_taskbar);
     }
     _lisaui_taskbar_create_time_label(g_app_taskbar);
-    lv_obj_add_event_cb(g_app_taskbar, event_handler_app_panel, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(g_app_taskbar, toolkit_panel_event_handler, LV_EVENT_ALL, NULL);
 #else
     _lisaui_taskbar_create_operate_menu(g_app_taskbar);
     _lisaui_taskbar_create_battery(g_app_taskbar);
@@ -198,7 +202,7 @@ lisaui_app_t app_taskbar = {
 lisaui_err_t app_taskbar_init(void)
 {
     lisaui_app_register(&app_taskbar);
-    app_taskbar_create(lv_layer_top());
+    app_taskbar_create(lv_layer_sys());
     return LISAUI_ERR_OK;
 }
 

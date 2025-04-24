@@ -38,7 +38,7 @@ SemaphoreHandle_t lvgl_mutex;
 #include "app_setting.h"
 #include "app_taskbar.h"
 #include "common_widgets.h"
-
+#include "app_wifi.h"
 #if TEST_LISAUI_APP
 
 static int count = 0;
@@ -64,29 +64,28 @@ static metadata_music_song_t song = {
     .artist = "周杰伦",
 };
 
-static lisaui_alarm_clock_item_t alarm_clocks[] = {
-    {.alarm_time_text = "07:00", .alarm_date_text = "4月1日"},
-    {.alarm_time_text = "08:00", .alarm_date_text = "4月2日"},
-    {.alarm_time_text = "09:00", .alarm_date_text = "4月3日"},
-    {.alarm_time_text = "10:00", .alarm_date_text = "4月4日"},
-};
-static lisaui_alarm_clock_list_t alarm_clock_list = {
-    .list = alarm_clocks,
-    .count = sizeof(alarm_clocks) / sizeof(lisaui_alarm_clock_item_t),
-};
+// static lisaui_alarm_clock_list_t alarm_clock_list = {
+//     .list = {
+//         {.time_text = "07:00", .date_text = "4月1日"},
+//         {.time_text = "08:00", .date_text = "4月2日"},
+//         {.time_text = "09:00", .date_text = "4月3日"},
+//         {.time_text = "10:00", .date_text = "4月4日"},
+//     },
+//     .count = sizeof(alarm_clocks) / sizeof(lisaui_alarm_clock_item_t),
+// };
 
-int lisaui_app_alarm_handler(lisaui_alarm_item_t type, lisaui_alarm_op_t operation, void *param)
-{
-    LISAUI_LOGI(TAG, "[%s] type:%d operation:%d", __FUNCTION__, type, operation);
-    if (type == LISAUI_ALARM_ITEM_CLOCK_LIST) {
-        if (operation == LISAUI_ALARM_OP_GET_LIST) {
-            lisaui_alarm_clock_list_t *list = (lisaui_alarm_clock_list_t *)param;
-            list->list = alarm_clocks;
-            list->count = sizeof(alarm_clocks) / sizeof(lisaui_alarm_clock_item_t);
-        }
-    }
-    return 0;
-}
+// int lisaui_app_alarm_handler(lisaui_alarm_item_t type, lisaui_alarm_op_t operation, void *param)
+// {
+//     LISAUI_LOGI(TAG, "[%s] type:%d operation:%d", __FUNCTION__, type, operation);
+//     if (type == LISAUI_ALARM_ITEM_CLOCK_LIST) {
+//         if (operation == LISAUI_ALARM_OP_GET_LIST) {
+//             lisaui_alarm_clock_list_t *list = (lisaui_alarm_clock_list_t *)param;
+//             list->list = alarm_clocks;
+//             list->count = sizeof(alarm_clocks) / sizeof(lisaui_alarm_clock_item_t);
+//         }
+//     }
+//     return 0;
+// }
 
 void lisaui_taskbar_event_handler(lisaui_taskbar_event_t event, void *param)
 {
@@ -116,37 +115,37 @@ static void test_lisaui_app_timer_cb(lv_timer_t *timer)
 {
     LISAUI_LOGI(TAG, "[%s] test_lisaui_app_timer_cb index:%d", __FUNCTION__, test_index);
     switch (test_index) {
-    case 1:
-        lisaui_app_weather_del_weather_view();
-        lisaui_app_enter(UI_APP_ID_TEMPLATE);
-        break;
-    case 2:
-        lisaui_app_enter(UI_APP_ID_WEATHER);
-        lisaui_app_weather_set_weather_view(&weather);
-        break;
-    case 3:
-        lisaui_app_weather_del_weather_view();
-        lisaui_app_enter(UI_APP_ID_SETTING);
-        LISAUI_LOGI(TAG, "[%s] enter setting", __FUNCTION__);
-        break;
-    case 4:
-        lisaui_app_weather_del_weather_view();
-        metadata_weather_t weather2 = {
-            .weather = "晴",
-            .city = "潮州",
-            // .location = "深圳",
-            // .time = "2025-01-22 12:00",
-            // .week = "星期二",
-            .date = "04/20",
-            // .title = "天气",
-            .temperature = "31C",
-            // .temperature = "25°C",
-            // .temperature_range = "20°C - 30°C",
-            .temperature_range = "20C ~ 33C",
-            .description = "晴朗 天气优",
-        };
-        lisaui_app_weather_set_weather_view(&weather2);
-        break;
+    // case 1:
+    //     lisaui_app_weather_del_weather_view();
+    //     lisaui_app_enter(UI_APP_ID_TEMPLATE);
+    //     break;
+    // case 2:
+    //     lisaui_app_enter(UI_APP_ID_WEATHER);
+    //     lisaui_app_weather_set_weather_view(&weather);
+    //     break;
+    // case 3:
+    //     lisaui_app_weather_del_weather_view();
+    //     lisaui_app_enter(UI_APP_ID_SETTING);
+    //     LISAUI_LOGI(TAG, "[%s] enter setting", __FUNCTION__);
+    //     break;
+    // case 4:
+    //     lisaui_app_weather_del_weather_view();
+    //     metadata_weather_t weather2 = {
+    //         .weather = "晴",
+    //         .city = "潮州",
+    //         // .location = "深圳",
+    //         // .time = "2025-01-22 12:00",
+    //         // .week = "星期二",
+    //         .date = "04/20",
+    //         // .title = "天气",
+    //         .temperature = "31C",
+    //         // .temperature = "25°C",
+    //         // .temperature_range = "20°C - 30°C",
+    //         .temperature_range = "20C ~ 33C",
+    //         .description = "晴朗 天气优",
+    //     };
+    //     lisaui_app_weather_set_weather_view(&weather2);
+    //     break;
     case 5:
         lisaui_app_enter(UI_APP_ID_WEATHER);
         ls_llm_dialog_popup("Test");
@@ -224,7 +223,7 @@ void lisaui_ui_init(void)
     LISAUI_USE_APP(wifi);
 
 
-    lisaui_app_alarm_register_handler(lisaui_app_alarm_handler);
+    // lisaui_app_alarm_register_handler(lisaui_app_alarm_handler);
     lisaui_taskbar_register_event_handler(lisaui_taskbar_event_handler);
 #endif
     lisaui_app_manager_init();
@@ -232,7 +231,7 @@ void lisaui_ui_init(void)
 
     LISAUI_LOGI(TAG, "UI init done");
 
-    lisaui_app_enter(UI_APP_ID_LAUNCHER);
+    // lisaui_app_enter(UI_APP_ID_LAUNCHER);
 #if 0
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
     // lisaui_app_enter(UI_APP_ID_ALARM);
@@ -260,7 +259,13 @@ void lisaui_ui_init(void)
     lisaui_app_audio_player_set_song_view(&song, LISAUI_APP_AUDIO_PLAYER_STATE_PLAY);
 #endif
     // LISAUI_LOGI(TAG, "[%s] enter setting", __FUNCTION__);
-    // lisaui_app_enter(UI_APP_ID_WIFI);
+    lisaui_app_enter(UI_APP_ID_WIFI);
+    // lisaui_err_t lisaui_app_add_wifi_list_item(wifi_metadata_t *wifi_item);
+
+    // test_wifi_item_list
+    for (int i = 0; i < sizeof(test_wifi_item_list) / sizeof(wifi_metadata_t); i++) {
+        lisaui_app_add_wifi_list_item(&test_wifi_item_list[i]);
+    }
 #if TEST_LISAUI_APP
 
     // lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 500, NULL);

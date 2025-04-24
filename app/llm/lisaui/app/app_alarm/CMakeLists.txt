@@ -2,6 +2,7 @@
 set(LISAUI_APP_TARGET_NAME app_alarm)
 set(${LISAUI_APP_TARGET_NAME}_SOURCES
     app_alarm.c
+    app_alarm_skill_view_add_alarm.c
 )
 
 set(${LISAUI_APP_TARGET_NAME}_UI_RESOURCES

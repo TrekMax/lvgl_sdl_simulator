@@ -13,6 +13,8 @@
 #include "lisaui_app_common.h"
 #include "assets/assets_res.h"
 
+#include "app_alarm/app_alarm.h"
+
 static const char *TAG = "app_standby";
 static lv_obj_t *g_app_standby = NULL;
 static lv_obj_t *g_app_panel = NULL;
@@ -67,7 +69,7 @@ lisaui_err_t app_standby_create(void *parent)
     g_app_panel = lv_obj_create(g_app_standby);
     _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
-    LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(g_app_standby, g_app_panel);
+    LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(g_app_standby, g_app_panel, LISAUI_ERR_INVALID_PARAM);
 
     g_icon_emoji = lv_gif_create(g_app_panel);
     lv_obj_align(g_icon_emoji, LV_ALIGN_CENTER, 0, -(LV_DPX(30)));
@@ -97,6 +99,8 @@ lisaui_err_t app_standby_destroy(void)
 lisaui_err_t app_standby_enter(void)
 {
     LISAUI_LOGI(TAG, "[%d:%s] enter", __LINE__, __func__);
+    // extern lisaui_err_t lisaui_app_alarm_close_skill_alarm_view(void);
+    // lisaui_app_alarm_close_skill_alarm_view();
     return LISAUI_ERR_OK;
 }
 
@@ -131,7 +135,7 @@ lisaui_app_t app_standby = {
             .name = "Standby",
             .package_name = "com.listenai.lisaui.standby",
             .id = UI_APP_ID_STANDBY,
-            .type = LISAUI_APP_TYPE_USER,
+            .type = LISAUI_APP_TYPE_LAUNCHER,
         },
     .icon = &app_icon_res_standby,
 };

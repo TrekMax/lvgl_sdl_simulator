@@ -24,15 +24,12 @@ typedef enum {
     LISAUI_APP_SETTING_WAKEUP_MODE_VOICE_MULTI,
 } lisaui_app_setting_wakeup_mode_t;
 
-typedef lisaui_err_t (*lisaui_app_setting_set_wakeup_mode_cb_t)(lisaui_app_setting_wakeup_mode_t mode);
-typedef struct _lisaui_app_setting_wakeup_options_t {
-    const char *title;
-    const char *tips;
-    const int id;
-    const int mode;
-    lisaui_app_setting_set_wakeup_mode_cb_t event_cb;
-    void *user_data;
-} lisaui_app_setting_wakeup_options_t;
+typedef enum {
+    LISAUI_SETTING_WAKEUP_OP_GET = 0,
+    LISAUI_SETTING_WAKEUP_OP_SET,
+} lisaui_setting_wakeup_mode_op_t;
+
+typedef lisaui_err_t (*lisaui_app_setting_set_wakeup_mode_cb_t)(lisaui_setting_wakeup_mode_op_t operation, void *param);
 
 lisaui_err_t lisaui_app_setting_register_set_wakeup_mode_handler(lisaui_app_setting_set_wakeup_mode_cb_t handler);
 

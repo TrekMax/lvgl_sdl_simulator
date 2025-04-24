@@ -54,7 +54,7 @@ lv_obj_t *ls_wifi_list_add_text(lv_obj_t *list, const char *txt)
     return obj;
 }
 
-lv_obj_t *ls_wifi_list_add_btn(lv_obj_t *list, wifi_item_t wifi, lv_event_cb_t event_cb,
+lv_obj_t *ls_wifi_list_add_btn(lv_obj_t *list, wifi_metadata_t wifi, lv_event_cb_t event_cb,
     void *user_data)
 {
     LV_LOG_INFO("begin");
@@ -71,14 +71,6 @@ lv_obj_t *ls_wifi_list_add_btn(lv_obj_t *list, wifi_item_t wifi, lv_event_cb_t e
     lv_label_set_text(ssid_label, wifi.SSID);
     lv_label_set_long_mode(ssid_label, LV_LABEL_LONG_SCROLL_CIRCULAR);
 
-    // lv_obj_t *tip_text = lv_label_create(item);
-    // lv_obj_align_to(tip_text, ssid_label, LV_ALIGN_BOTTOM_LEFT, LV_DPX(4), LV_DPX(24));
-    // lv_obj_set_size(tip_text, LV_PCT(80), LV_SIZE_CONTENT);
-
-    // lv_label_set_text(tip_text, tips_text);
-    // lv_obj_set_style_text_font(tip_text, &lv_font_notosans_cs_medium_14, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_obj_set_style_text_color(tip_text, lv_color_hex(0xBCBCBC), LV_PART_MAIN | LV_STATE_DEFAULT);
-
     lv_obj_t *op_btn = lv_btn_create(item);
     lv_obj_set_size(op_btn, LV_PCT(20), LV_SIZE_CONTENT);
     lv_obj_align(op_btn, LV_ALIGN_RIGHT_MID, LV_DPX(0), 0);
@@ -93,7 +85,7 @@ lv_obj_t *ls_wifi_list_add_btn(lv_obj_t *list, wifi_item_t wifi, lv_event_cb_t e
     lv_obj_set_style_pad_all(op_btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_t *op_label = lv_label_create(op_btn);
-    lv_label_set_text(op_label, wifi.is_connect ? "已连接" : "连接");
+    lv_label_set_text(op_label, wifi.status ? "已连接" : "连接");
     lv_obj_set_height(op_label, LV_DPX(40));
     lv_obj_align(op_label, LV_ALIGN_CENTER, 0, 0);
     lv_obj_set_style_text_font(op_label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);

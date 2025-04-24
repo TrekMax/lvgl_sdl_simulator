@@ -19,6 +19,15 @@
 
 static const char *TAG = "app_setting_view_wakeup_config";
 
+typedef struct _lisaui_app_setting_wakeup_options_t {
+    const char *title;
+    const char *tips;
+    const int id;
+    const int mode;
+    lisaui_app_setting_set_wakeup_mode_cb_t event_cb;
+    void *user_data;
+} lisaui_app_setting_wakeup_options_t;
+
 static lisaui_app_setting_set_wakeup_mode_cb_t g_wakeup_mode_handler = NULL;
 
 lisaui_err_t lisaui_app_setting_register_set_wakeup_mode_handler(lisaui_app_setting_set_wakeup_mode_cb_t handler)
@@ -37,9 +46,9 @@ void lisaui_app_radio_select_handler(lv_event_t *event)
         uint16_t radio_id = *(uint16_t *)lv_event_get_user_data(event);
         LISAUI_LOGI(TAG, "radio_id = %d", radio_id);
         if (g_wakeup_mode_handler) {
-            lisaui_app_setting_wakeup_options_t *wakeup_option =
+            lisaui_app_setting_wakeup_options_t *p_wakeup_option =
                 (lisaui_app_setting_wakeup_options_t *)lv_event_get_user_data(event);
-            g_wakeup_mode_handler(wakeup_option->id);
+            g_wakeup_mode_handler(LISAUI_SETTING_WAKEUP_OP_SET, (void *)&p_wakeup_option->id);
         }
     }
 }
@@ -79,6 +88,10 @@ lv_obj_t *private_lisaui_app_view_create_wakeup_config(lv_obj_t *parent)
         //     active = i;
         // }
     }
-    lv_lv_radio_group_set_active_id(page, active);
+    if (g_wakeup_mode_handler) {
+        lisaui_app_setting_wakeup_options_t wakeup_option = {0};
+        g_wakeup_mode_handler(LISAUI_SETTING_WAKEUP_OP_GET, (void *)&wakeup_option.id);
+        lv_lv_radio_group_set_active_id(page, wakeup_option.id);
+    }
     return setting_home;
 }

@@ -75,10 +75,12 @@ static void event_handler(lv_event_t *e)
             // lisaui_app_enter(UI_APP_ID_WIFI);
             lisaui_app_common_switch_app_scr_with_lvgl(UI_APP_ID_WIFI);
             break;
-
+            
         case LISAUI_APP_SETTING_ITEM_ID_WEATHER:
             // lisaui_app_enter(UI_APP_ID_WEATHER);
             lisaui_app_common_switch_app_scr_with_lvgl(UI_APP_ID_WEATHER);
+            extern lisaui_err_t lisaui_app_weather_skill_close_weather_view(void);
+            lisaui_app_weather_skill_close_weather_view();
             break;
 
         case LISAUI_APP_SETTING_ITEM_ID_AUDIO_PLAYER:
@@ -157,7 +159,7 @@ lisaui_err_t _app_setting_create_view(lv_obj_t *parent)
     g_app_panel = lv_obj_create(g_app_setting);
     _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
-    LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(g_app_setting, g_app_panel);
+    LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(g_app_setting, g_app_panel, LISAUI_ERR_INVALID_PARAM);
 
     g_settings_panel = app_settings_create_item_page(g_app_panel);
     return LISAUI_ERR_OK;
@@ -180,6 +182,14 @@ lisaui_err_t app_setting_destroy(void)
 lisaui_err_t app_setting_enter(void)
 {
     LISAUI_LOGI(TAG, "[%d:%s] enter", __LINE__, __func__);
+    // lisaui_app_common_switch_app_scr_with_lvgl(UI_APP_ID_SETTING);
+
+    if (temp_setting_item_view != NULL) {
+        LVGL_OBJ_SAFE_DEL(temp_setting_item_view);
+        // LVGL_OBJ_SAFE_DEL(g_settings_panel);
+        g_settings_panel = app_settings_create_item_page(NULL);
+    }
+
     return LISAUI_ERR_OK;
 }
 

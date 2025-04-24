@@ -11,13 +11,15 @@
  */
 #include "lv_img_utils.h"
 
-// #include "log_print.h"
-// #define LOG_INF CLOG
-#define LOG_INF LV_LOG_USER
-// #include <stdio.h>
-// #define LOG_INF printf
+#if CONFIG_LISAUI_ENV_ARCS_SDK
+	// #include "log_print.h"
+	#include "lisa_log.h"
+	#define LOG_INF CLOG
+#else
+	// #define LOG_INF printf
+	#define LOG_INF LV_LOG_USER
+#endif
 
-// #define LOG_INF LV_LOG_USER
 
 int lv_img_png_src_init(lv_img_dsc_t *dsc, const void *data, uint32_t size)
 {

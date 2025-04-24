@@ -52,7 +52,7 @@ typedef void (*lisaui_taskbar_event_handler_t)(lisaui_taskbar_event_t event, voi
 lisaui_err_t lisaui_taskbar_register_event_handler(lisaui_taskbar_event_handler_t handler);
 lisaui_err_t lisaui_taskbar_unregister_event_handler(void);
 
-#define LISAUI_EVENT_HANDLER(handler, event, param) \
+#define LISAUI_TASKBAR_EVENT_HANDLER(handler, event, param) \
     do { \
         if (handler) { \
             handler(event, param); \
