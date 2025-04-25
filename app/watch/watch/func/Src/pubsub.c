@@ -4,14 +4,15 @@
 
 PubSub_Publisher_t SDL_KeyBoard_Publisher;
 
-
 // Initialize the publisher
-void Publisher_init(PubSub_Publisher_t *publisher) {
+void Publisher_init(PubSub_Publisher_t *publisher)
+{
     publisher->subscribers = NULL;
 }
 
 // Subscribe a new subscriber
-void Publisher_subscribe(PubSub_Publisher_t *publisher, Subscriber subscriber) {
+void Publisher_subscribe(PubSub_Publisher_t *publisher, Subscriber subscriber)
+{
     SubscriberNode *node = (SubscriberNode *)malloc(sizeof(SubscriberNode));
     if (node == NULL) {
         // Handle memory allocation failure
@@ -23,7 +24,8 @@ void Publisher_subscribe(PubSub_Publisher_t *publisher, Subscriber subscriber) {
 }
 
 // Unsubscribe an existing subscriber
-void Publisher_unsubscribe(PubSub_Publisher_t *publisher, Subscriber subscriber) {
+void Publisher_unsubscribe(PubSub_Publisher_t *publisher, Subscriber subscriber)
+{
     SubscriberNode **current = &publisher->subscribers;
     while (*current != NULL) {
         if ((*current)->subscriber == subscriber) {
@@ -37,7 +39,8 @@ void Publisher_unsubscribe(PubSub_Publisher_t *publisher, Subscriber subscriber)
 }
 
 // Publish a message to all subscribers
-void Publisher_publish(PubSub_Publisher_t *publisher, PubSub_Message_t message) {
+void Publisher_publish(PubSub_Publisher_t *publisher, PubSub_Message_t message)
+{
     SubscriberNode *node = publisher->subscribers;
     while (node != NULL) {
         node->subscriber(message);

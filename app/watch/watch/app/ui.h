@@ -1,6 +1,5 @@
 // LVGL VERSION: 8.2.0
 
-
 #ifndef _UI_H
 #define _UI_H
 

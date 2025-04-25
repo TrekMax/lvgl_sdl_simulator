@@ -4,29 +4,36 @@
 
 PageStack_t PageStack;
 
-static void page_stack_init(PageStack_t* stack) {
+static void page_stack_init(PageStack_t *stack)
+{
     stack->top = 0;
 }
 
-static uint8_t page_stack_push(PageStack_t* stack, Page_t* page) {
-    if (stack->top >= MAX_DEPTH)
-		return -1;
+static uint8_t page_stack_push(PageStack_t *stack, Page_t *page)
+{
+    if (stack->top >= MAX_DEPTH) {
+        return -1;
+    }
     stack->pages[stack->top++] = page;
-	return 0;
+    return 0;
 }
 
-static uint8_t page_stack_pop(PageStack_t* stack) {
-    if (stack->top <= 0)
-		return -1;
+static uint8_t page_stack_pop(PageStack_t *stack)
+{
+    if (stack->top <= 0) {
+        return -1;
+    }
     stack->pages[--stack->top]->deinit();
     return 0;
 }
 
-static uint8_t page_stack_is_empty(const PageStack_t* stack) {
+static uint8_t page_stack_is_empty(const PageStack_t *stack)
+{
     return stack->top == 0;
 }
 
-static Page_t* get_top_page(PageStack_t* stack) {
+static Page_t *get_top_page(PageStack_t *stack)
+{
     // 检查栈是否为空
     if (stack->top == 0) {
         return NULL; // 如果栈为空，返回NULL
@@ -36,17 +43,16 @@ static Page_t* get_top_page(PageStack_t* stack) {
     return stack->pages[stack->top - 1];
 }
 
-
 /**
  * 获取当前页面（栈顶页面）的指针。
  *
  * @param NULL
  * @return 返回当前页面的指针，如果栈为空则返回NULL。
  */
-Page_t* Page_Get_NowPage(void) {
+Page_t *Page_Get_NowPage(void)
+{
     return get_top_page(&PageStack);
 }
-
 
 /**
  * back to previous page
@@ -54,8 +60,9 @@ Page_t* Page_Get_NowPage(void) {
  * @param NULL
  * @return NULL
  */
-void Page_Back(void) {
-	if (page_stack_is_empty(&PageStack)) {
+void Page_Back(void)
+{
+    if (page_stack_is_empty(&PageStack)) {
         // 栈为空时，不应发生
         return;
     }
@@ -83,7 +90,8 @@ void Page_Back(void) {
  * @param NULL
  * @return NULL
  */
-void Page_Back_Bottom(void) {
+void Page_Back_Bottom(void)
+{
 
     if (page_stack_is_empty(&PageStack)) {
         // 栈为空时，不应发生
@@ -91,10 +99,12 @@ void Page_Back_Bottom(void) {
     }
 
     // 弹出除栈底的所有页面
-    while(PageStack.top > 1)
+    while (PageStack.top > 1) {
         page_stack_pop(&PageStack);
+    }
     PageStack.pages[PageStack.top - 1]->init(); // 初始化新页面
-    lv_scr_load_anim(*PageStack.pages[PageStack.top - 1]->page_obj, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 100, 0, true); // 加载并应用动画
+    lv_scr_load_anim(*PageStack.pages[PageStack.top - 1]->page_obj, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 100, 0,
+                     true); // 加载并应用动画
 }
 
 /**
@@ -103,8 +113,9 @@ void Page_Back_Bottom(void) {
  * @param newPage Page_t a new page
  * @return NULL
  */
-void Page_Load(Page_t *newPage) {
-	// 检查堆栈是否已满
+void Page_Load(Page_t *newPage)
+{
+    // 检查堆栈是否已满
     if (PageStack.top >= MAX_DEPTH - 1) {
         // 错误处理：堆栈满
         return;
@@ -117,7 +128,7 @@ void Page_Load(Page_t *newPage) {
 
     // 将新页面推入堆栈
     page_stack_push(&PageStack, newPage);
-    newPage->init(); // 初始化新页面
+    newPage->init();                                                                 // 初始化新页面
     lv_scr_load_anim(*newPage->page_obj, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 100, 0, true); // 加载并应用动画
 }
 
@@ -127,7 +138,8 @@ void Page_Load(Page_t *newPage) {
  * @param NULL
  * @return NULL
  */
-void Pages_init(void) {
+void Pages_init(void)
+{
     page_stack_init(&PageStack);
     page_stack_push(&PageStack, &Page_Home);
     Page_Home.init();
