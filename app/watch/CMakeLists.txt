@@ -6,6 +6,7 @@ add_executable(${target_name})
 file(GLOB_RECURSE SRC_FILES
     main.c
     # mouse_cursor_icon.c
+    ./watch/*.c
 )
 
 set(CONFIG_LVGL_ENV_SIMULATOR 1)
@@ -22,8 +23,9 @@ target_sources(${target_name} PRIVATE ${SRC_FILES})
 target_include_directories(${target_name} PUBLIC
     # ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/conf
+    ${CMAKE_CURRENT_SOURCE_DIR}/watch
 )
-# add_subdirectory(lisaui)
+# add_subdirectory(watch)
 
 target_link_libraries(
     ${target_name}
@@ -36,6 +38,7 @@ target_link_libraries(
     # lv_examples
     lv_drivers
     # lisaui
+    # watch
     # unity
 )
 
