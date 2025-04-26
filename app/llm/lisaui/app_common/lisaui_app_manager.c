@@ -25,12 +25,13 @@
 static const char *TAG = "app_manager";
 
 static struct lisaui_app_manager_t m_app_mgr = {
+    .initialized = false,
     .dbus = NULL,
     .apps_list = {NULL},
     .manager_view_stack =
         {
             .capacity = LISAUI_VIEW_MANAGER_MAX_CAPACITY,
-            .size = 0,
+            .depth = 0,
             .head = NULL,
             .tail = NULL,
         },
@@ -203,11 +204,13 @@ int lisaui_app_unregister(lisaui_app_t *app)
     return LISAUI_ERR_APP_OK;
 }
 
-static inline int hash_uuid(int uuid) {
+static inline int hash_uuid(int uuid)
+{
     return uuid % LISAUI_APP_HASH_SIZE;
 }
 
-void lisaui_app_manager_add_instance(lisaui_app_t *app) {
+void lisaui_app_manager_add_instance(lisaui_app_t *app)
+{
     int uuid = app->info.uuid;
 
     int h = hash_uuid(uuid);
@@ -217,7 +220,9 @@ void lisaui_app_manager_add_instance(lisaui_app_t *app) {
             return; // 已存在，跳过
         }
         h = (h + 1) % LISAUI_APP_HASH_SIZE;
-        if (h == start) break;
+        if (h == start) {
+            break;
+        }
     }
 
     // 队列满了，移除最旧的
@@ -245,7 +250,6 @@ void lisaui_app_manager_add_instance(lisaui_app_t *app) {
     m_app_mgr.app_hash[h].app = app;
 }
 
-
 void lisaui_app_manager_remove_instance_by_uuid(int uuid)
 {
     int h = hash_uuid(uuid);
@@ -256,12 +260,13 @@ void lisaui_app_manager_remove_instance_by_uuid(int uuid)
             break;
         }
         h = (h + 1) % LISAUI_APP_HASH_SIZE;
-        if (h == start) break;
+        if (h == start) {
+            break;
+        }
     }
 
     for (int i = 0; i < LISAUI_APP_MAX_RUNNING; i++) {
-        if (m_app_mgr.running_queue[i].valid &&
-            m_app_mgr.running_queue[i].app->info.uuid == uuid) {
+        if (m_app_mgr.running_queue[i].valid && m_app_mgr.running_queue[i].app->info.uuid == uuid) {
             m_app_mgr.running_queue[i].valid = 0;
             m_app_mgr.running_queue[i].app = NULL;
             break;
@@ -269,9 +274,10 @@ void lisaui_app_manager_remove_instance_by_uuid(int uuid)
     }
 }
 
-void lisaui_app_manager_debug_print_queue(void) {
-    LISAUI_LOGI(TAG, "App Queue [front=%d rear=%d count=%d]:\n", 
-           m_app_mgr.queue_front, m_app_mgr.queue_rear, m_app_mgr.running_count);
+void lisaui_app_manager_debug_print_queue(void)
+{
+    LISAUI_LOGI(TAG, "App Queue [front=%d rear=%d count=%d]:\n", m_app_mgr.queue_front, m_app_mgr.queue_rear,
+                m_app_mgr.running_count);
     for (int i = 0; i < LISAUI_APP_MAX_RUNNING; i++) {
         if (m_app_mgr.running_queue[i].valid) {
             lisaui_app_t *app = m_app_mgr.running_queue[i].app;
@@ -279,7 +285,6 @@ void lisaui_app_manager_debug_print_queue(void) {
         }
     }
 }
-
 
 lisaui_err_t lisaui_app_enter(const int app_id)
 {
@@ -513,9 +518,8 @@ lisaui_err_t lisaui_app_manager_init(void)
 {
 #ifdef __APPLE__
 #else
-    LISAUI_LOGD(TAG, "Initializing \r\n\tlisaui_apps[%p:%p (%ld)]",
-            __LISAUI_APP_LISTS_START, __LISAUI_APP_LISTS_END,
-            (__LISAUI_APP_LISTS_END - __LISAUI_APP_LISTS_START));
+    LISAUI_LOGD(TAG, "Initializing \r\n\tlisaui_apps[%p:%p (%ld)]", __LISAUI_APP_LISTS_START, __LISAUI_APP_LISTS_END,
+                (__LISAUI_APP_LISTS_END - __LISAUI_APP_LISTS_START));
 #endif
     m_app_mgr.current_appid = LISAUI_APP_ID_NONE;
     m_app_mgr.registered_count = 0;
@@ -570,6 +574,30 @@ lisaui_err_t lisaui_app_manager_init(void)
 #if CONFIG_LISAUI_DBUS_ENABLE
     lisaui_dbus_publish(m_app_mgr.dbus, LISAUI_DBUS_APP_UPDATE, NULL);
 #endif
+    m_app_mgr.initialized = true;
+    LISAUI_LOGI(TAG, "App manager initialized");
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_app_manager_deinit(void)
+{
+    if (m_app_mgr.initialized == false) {
+        LISAUI_LOGE(TAG, "App manager not initialized");
+        return LISAUI_ERR_FAIL;
+    }
+    m_app_mgr.initialized = false;
+    for (int i = 0; i < LISAUI_APP_MAX; i++) {
+        if (m_app_mgr.apps_list[i] != NULL) {
+            lisaui_app_unregister(m_app_mgr.apps_list[i]);
+        }
+    }
+    // if (m_app_mgr.dbus) {
+    //     lisaui_dbus_destroy(m_app_mgr.dbus);
+    //     lisaui_free(m_app_mgr.dbus);
+    //     m_app_mgr.dbus = NULL;
+    // }
+    lisaui_view_manager_deinit(&m_app_mgr.manager_view_stack);
+    LISAUI_LOGI(TAG, "App manager deinitialized");
     return LISAUI_ERR_OK;
 }
 
@@ -614,7 +642,7 @@ lisaui_err_t lisaui_app_manager_show_app_info(lisaui_app_t *app)
         return LISAUI_ERR_INVALID_PARAM;
     }
     LISAUI_PRINTK("\t\ticon %s %dx%d zoom:%d", app->icon->title, app->icon->icon_width, app->icon->icon_height,
-                app->icon->zoom);
+                  app->icon->zoom);
     LISAUI_PRINTK("\t\thidden_icon: %d", app->hidden_icon);
     return LISAUI_ERR_OK;
 }
@@ -671,9 +699,9 @@ lisaui_app_t *lisaui_app_manager_get_app(const int app_id)
     return m_app_mgr.apps_list[uuid];
 }
 
-lisaui_err_t lisaui_app_manager_get_view_stack(lisaui_view_stack_t **view_stask)
+lisaui_err_t lisaui_app_manager_get_view_stack(lisaui_view_stack_t **view_stack)
 {
-    *view_stask = &m_app_mgr.manager_view_stack;
+    *view_stack = &m_app_mgr.manager_view_stack;
     return LISAUI_ERR_OK;
 }
 

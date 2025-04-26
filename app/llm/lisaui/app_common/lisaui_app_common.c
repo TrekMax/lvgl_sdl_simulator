@@ -219,12 +219,20 @@ lisaui_err_t lisaui_popup_toast(const char *message)
     return LISAUI_ERR_OK;
 }
 
+#define CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE 1
+
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
 
 lisaui_err_t lisaui_app_enter_lvgl_hook(lisaui_app_t *app)
 {
-    lisaui_view_stack_t *view_stask;
-    lisaui_app_manager_get_view_stack(&view_stask);
+    lisaui_view_stack_t *view_stack;
+    lisaui_app_manager_get_view_stack(&view_stack);
+
+    if (view_stack == NULL) {
+        LISAUI_LOGE(TAG, "[ui] view stack is NULL");
+        return LISAUI_ERR_NO_MEMORY;
+    }
+
     lisaui_view_page_t *page = (lisaui_view_page_t *)lisaui_malloc(sizeof(lisaui_view_page_t));
     if (page == NULL) {
         LISAUI_LOGE(TAG, "TAG, [ui] malloc failed");
@@ -239,9 +247,13 @@ lisaui_err_t lisaui_app_enter_lvgl_hook(lisaui_app_t *app)
         return LISAUI_ERR_NO_MEMORY;
     }
 
-    // lisaui_view_manager_print_usage(view_stask);
-    lisaui_view_manager_push(view_stask, page);
-    // lisaui_view_manager_print_usage(view_stask);
+#if CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE
+    lisaui_view_manager_print_usage(view_stack);
+#endif
+    lisaui_view_manager_push(view_stack, page);
+#if CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE
+    lisaui_view_manager_print_usage(view_stack);
+#endif
     lv_disp_load_scr(page->root);
     // lisaui_memory_monitor(NULL);
     return LISAUI_ERR_OK;
@@ -249,19 +261,22 @@ lisaui_err_t lisaui_app_enter_lvgl_hook(lisaui_app_t *app)
 
 lisaui_err_t lisaui_app_exit_lvgl_hook(lisaui_app_t *app)
 {
-    lisaui_view_stack_t *view_stask;
-    lisaui_app_manager_get_view_stack(&view_stask);
-    // lisaui_view_manager_print_usage(view_stask);
+    lisaui_view_stack_t *view_stack;
+    lisaui_app_manager_get_view_stack(&view_stack);
+#if CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE
+    lisaui_view_manager_print_usage(view_stack);
+#endif
     lisaui_view_page_t *page = NULL;
-    if (lisaui_view_manager_pop(view_stask, &page) != LISAUI_ERR_OK) {
+    if (lisaui_view_manager_pop(view_stack, &page) != LISAUI_ERR_OK) {
         LISAUI_LOGE(TAG, "[ui] view page is NULL");
         return LISAUI_ERR_NO_MEMORY;
     }
     lisaui_free(page);
     page = NULL;
-    // lisaui_view_manager_print_usage(view_stask);
-
-    if (lisaui_view_manager_get_current(view_stask, &page) != LISAUI_ERR_OK) {
+#if CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE
+    lisaui_view_manager_print_usage(view_stack);
+#endif
+    if (lisaui_view_manager_get_current(view_stack, &page) != LISAUI_ERR_OK) {
         LISAUI_LOGE(TAG, "[ui] view page is NULL");
         return LISAUI_ERR_NO_MEMORY;
     }
@@ -334,10 +349,10 @@ lisaui_err_t lisaui_app_common_get_current_scr(lv_obj_t **view)
     if (view == NULL) {
         return LISAUI_ERR_INVALID_PARAM;
     }
-    // lisaui_view_stack_t *view_stask;
-    // lisaui_app_manager_get_view_stack(&view_stask);
+    // lisaui_view_stack_t *view_stack;
+    // lisaui_app_manager_get_view_stack(&view_stack);
     // lisaui_view_page_t *page = NULL;
-    // if (lisaui_view_manager_get_current(view_stask, &page) != LISAUI_ERR_OK) {
+    // if (lisaui_view_manager_get_current(view_stack, &page) != LISAUI_ERR_OK) {
     //     LISAUI_LOGE(TAG, "[ui] view page is NULL");
     //     return LISAUI_ERR_NO_MEMORY;
     // }
@@ -369,7 +384,7 @@ void lisaui_memory_monitor(void *param)
     LISAUI_PRINTK("\tFragmentation percentage: %d\n", mon.frag_pct);
     LISAUI_PRINTK("\n");
 
-    lisaui_view_stack_t *view_stask;
-    lisaui_app_manager_get_view_stack(&view_stask);
-    lisaui_view_manager_print_usage(view_stask);
+    lisaui_view_stack_t *view_stack;
+    lisaui_app_manager_get_view_stack(&view_stack);
+    lisaui_view_manager_print_usage(view_stack);
 }

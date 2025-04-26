@@ -17,11 +17,13 @@
 
 static const char *TAG = "lisaui_dbus";
 
+static void lisaui_dbus_task(void *param);
 
-static void lisaui_dbus_task(void* param);
-
-lisaui_err_t lisaui_dbus_create(lisaui_dbus_t *bus) {
-    if (!bus) return LISAUI_ERR_INVALID_PARAM;
+lisaui_err_t lisaui_dbus_create(lisaui_dbus_t *bus)
+{
+    if (!bus) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
     memset(bus, 0, sizeof(lisaui_dbus_t));
     bus->node = NULL;
 
@@ -37,8 +39,8 @@ lisaui_err_t lisaui_dbus_create(lisaui_dbus_t *bus) {
         return LISAUI_ERR_FAIL;
     }
 
-    if (xTaskCreate(lisaui_dbus_task, "lisaui_dbus_task", LISAUI_DBUS_TASK_STACK_SIZE, bus,
-                    LISAUI_DBUS_TASK_PRIORITY, &bus->task_handle) != pdPASS) {
+    if (xTaskCreate(lisaui_dbus_task, "lisaui_dbus_task", LISAUI_DBUS_TASK_STACK_SIZE, bus, LISAUI_DBUS_TASK_PRIORITY,
+                    &bus->task_handle) != pdPASS) {
         vQueueDelete(bus->event_queue);
         vSemaphoreDelete(bus->mutex);
         return LISAUI_ERR_FAIL;
@@ -48,8 +50,11 @@ lisaui_err_t lisaui_dbus_create(lisaui_dbus_t *bus) {
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_dbus_destroy(lisaui_dbus_t* bus) {
-    if (!bus) return LISAUI_ERR_INVALID_PARAM;
+lisaui_err_t lisaui_dbus_destroy(lisaui_dbus_t *bus)
+{
+    if (!bus) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
 
 #ifdef FREERTOS
     if (bus->task_handle) {
@@ -57,27 +62,36 @@ lisaui_err_t lisaui_dbus_destroy(lisaui_dbus_t* bus) {
     }
 #endif
 
-    lisaui_dbus_node_t* node = bus->node;
+    lisaui_dbus_node_t *node = bus->node;
     while (node) {
-        lisaui_dbus_node_t* next = node->next;
+        lisaui_dbus_node_t *next = node->next;
         lisaui_free(node);
         node = next;
     }
 
 #ifdef FREERTOS
-    if (bus->event_queue) vQueueDelete(bus->event_queue);
-    if (bus->mutex) vSemaphoreDelete(bus->mutex);
+    if (bus->event_queue) {
+        vQueueDelete(bus->event_queue);
+    }
+    if (bus->mutex) {
+        vSemaphoreDelete(bus->mutex);
+    }
 #endif
     lisaui_free(bus);
 
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_dbus_subscribe(lisaui_dbus_t* bus, const char* event, lisaui_dbus_handler_t handler) {
-    if (!bus || !event || !handler) return LISAUI_ERR_INVALID_PARAM;
+lisaui_err_t lisaui_dbus_subscribe(lisaui_dbus_t *bus, const char *event, lisaui_dbus_handler_t handler)
+{
+    if (!bus || !event || !handler) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
 
-    lisaui_dbus_node_t* node = (lisaui_dbus_node_t *)lisaui_malloc(sizeof(lisaui_dbus_node_t));
-    if (!node) return LISAUI_ERR_NO_MEMORY;
+    lisaui_dbus_node_t *node = (lisaui_dbus_node_t *)lisaui_malloc(sizeof(lisaui_dbus_node_t));
+    if (!node) {
+        return LISAUI_ERR_NO_MEMORY;
+    }
 
     node->event = event;
     node->handler = handler;
@@ -100,8 +114,11 @@ lisaui_err_t lisaui_dbus_subscribe(lisaui_dbus_t* bus, const char* event, lisaui
     return LISAUI_ERR_OK;
 }
 
-lisaui_err_t lisaui_dbus_unsubscribe(lisaui_dbus_t* bus, const char* event, lisaui_dbus_handler_t handler) {
-    if (!bus || !event || !handler) return LISAUI_ERR_INVALID_PARAM;
+lisaui_err_t lisaui_dbus_unsubscribe(lisaui_dbus_t *bus, const char *event, lisaui_dbus_handler_t handler)
+{
+    if (!bus || !event || !handler) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
 
 #ifdef FREERTOS
     xSemaphoreTake(bus->mutex, portMAX_DELAY);
@@ -109,8 +126,8 @@ lisaui_err_t lisaui_dbus_unsubscribe(lisaui_dbus_t* bus, const char* event, lisa
     pthread_mutex_lock(&bus->mutex);
 #endif
 
-    lisaui_dbus_node_t* prev = NULL;
-    lisaui_dbus_node_t* curr = bus->node;
+    lisaui_dbus_node_t *prev = NULL;
+    lisaui_dbus_node_t *curr = bus->node;
 
     while (curr) {
         if (strcmp(curr->event, event) == 0 && curr->handler == handler) {
@@ -140,13 +157,13 @@ lisaui_err_t lisaui_dbus_unsubscribe(lisaui_dbus_t* bus, const char* event, lisa
     return LISAUI_ERR_FAIL;
 }
 
-lisaui_err_t lisaui_dbus_publish(lisaui_dbus_t* bus, const char* event, void* data) {
-    if (!bus || !event) return LISAUI_ERR_INVALID_PARAM;
+lisaui_err_t lisaui_dbus_publish(lisaui_dbus_t *bus, const char *event, void *data)
+{
+    if (!bus || !event) {
+        return LISAUI_ERR_INVALID_PARAM;
+    }
 
-    lisaui_dbus_msg_t msg = {
-        .event = event,
-        .data = data
-    };
+    lisaui_dbus_msg_t msg = {.event = event, .data = data};
 
 #ifdef FREERTOS
     if (xQueueSend(bus->event_queue, &msg, 0) != pdPASS) {
@@ -159,8 +176,9 @@ lisaui_err_t lisaui_dbus_publish(lisaui_dbus_t* bus, const char* event, void* da
     return LISAUI_ERR_OK;
 }
 
-static void lisaui_dbus_task(void* param) {
-    lisaui_dbus_t* bus = (lisaui_dbus_t*)param;
+static void lisaui_dbus_task(void *param)
+{
+    lisaui_dbus_t *bus = (lisaui_dbus_t *)param;
     lisaui_dbus_msg_t msg;
 
     for (;;) {
@@ -170,13 +188,13 @@ static void lisaui_dbus_task(void* param) {
 
             xSemaphoreTake(bus->mutex, portMAX_DELAY);
 #else
-            if (pthread_mutex_lock(&bus->mutex) != 0) {
-                LISAUI_LOGE(TAG, "Failed to lock mutex");
+        if (pthread_mutex_lock(&bus->mutex) != 0) {
+            LISAUI_LOGE(TAG, "Failed to lock mutex");
             //     continue;
             // pthread_mutex_lock(&bus->mutex);
 #endif
 
-            lisaui_dbus_node_t* node = bus->node;
+            lisaui_dbus_node_t *node = bus->node;
             while (node) {
                 if (strcmp(node->event, msg.event) == 0) {
                     // 使用 LVGL 的异步 UI 安全回调
@@ -200,14 +218,14 @@ static void lisaui_dbus_task(void* param) {
 
 #ifdef LISAUI_DBUS_TEST
 
-void test_lisaui_dbus_example1_handler(void* data)
+void test_lisaui_dbus_example1_handler(void *data)
 {
-    LISAUI_LOGI(TAG, "Event handler called with data: %s", (char*)data);
+    LISAUI_LOGI(TAG, "Event handler called with data: %s", (char *)data);
 }
 
 void test_lisaui_dbus_example1(void)
 {
-    lisaui_dbus_t* bus = (lisaui_dbus_t *)lisaui_malloc(sizeof(lisaui_dbus_t));
+    lisaui_dbus_t *bus = (lisaui_dbus_t *)lisaui_malloc(sizeof(lisaui_dbus_t));
     if (!bus) {
         LISAUI_LOGE(TAG, "Failed to allocate memory for event bus");
         return;

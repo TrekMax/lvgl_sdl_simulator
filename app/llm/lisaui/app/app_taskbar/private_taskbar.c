@@ -115,6 +115,36 @@ lisaui_err_t lisaui_taskbar_unregister_event_handler(void)
     return LISAUI_ERR_OK;
 }
 
+#if CONFIG_LISAUI_APP_TASKBAR_TOOLKIT_ENABLE
+static void back_btn_event_click_handler(lv_event_t *e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if (event_code == LV_EVENT_CLICKED) {
+        int app_id = lisaui_app_manager_get_current_appid();
+        lisaui_app_t *app = NULL;
+        if (lisaui_app_manager_get_app_by_id(app_id, &app) != LISAUI_ERR_OK) {
+            LISAUI_LOGE(TAG, "Failed to get app by id: %d", app_id);
+            return;
+        }
+        if (app->info.type == LISAUI_APP_TYPE_LAUNCHER) {
+            lisaui_popup_toast("Can't exit or close launcher");
+            return;
+        }
+        if (lisaui_app_get_lock_state()) {
+            lisaui_popup_toast("App view is locked");
+            return;
+        }
+        if (target == g_taskbar_btn_back) {
+            lisaui_app_exit(app_id);
+        } else if (target == g_taskbar_btn_close) {
+            lisaui_app_close(app_id);
+        } else if (target == g_taskbar_btn_home) {
+            lisaui_app_enter(UI_APP_ID_LAUNCHER);
+        }
+    }
+}
+#else
 static void back_btn_event_click_handler(lv_event_t *event)
 {
     lv_event_code_t event_code = lv_event_get_code(event);
@@ -133,7 +163,7 @@ static void back_btn_event_click_handler(lv_event_t *event)
             return;
         }
         // 判断是否为 App 页面/技能页面
-        if(app->info.id == UI_APP_ID_SETTING){
+        if (app->info.id == UI_APP_ID_SETTING) {
             LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_STANDBY, NULL);
             // lisaui_app_close(app->info.id);
         } else {
@@ -142,6 +172,7 @@ static void back_btn_event_click_handler(lv_event_t *event)
         }
     }
 }
+#endif
 
 lv_obj_t *_lisaui_taskbar_create_back_btn(lv_obj_t *parent)
 {
@@ -287,10 +318,10 @@ lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
     lv_obj_set_size(LV_OBJ_ICON(icon_setting), LV_DPX(40), LV_DPX(LISAUI_STATUS_BAR_HEIGHT - 10));
     lv_obj_align(LV_OBJ_ICON(icon_setting), LV_ALIGN_LEFT_MID, LV_DPX(4), 0);
     // lv_img_set_zoom(LV_OBJ_ICON(icon_setting), 256*2);
-    
+
     lv_obj_add_flag(LV_OBJ_ICON(icon_setting), LV_OBJ_FLAG_CLICKABLE); /// Flags
     // lv_obj_add_event_cb(LV_OBJ_ICON(icon_setting), back_btn_event_click_handler, LV_EVENT_CLICKED, NULL);
-    
+
     lv_obj_set_style_radius(LV_OBJ_ICON(icon_setting), 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_color(LV_OBJ_ICON(icon_setting), lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_shadow_width(LV_OBJ_ICON(icon_setting), 0, 0);

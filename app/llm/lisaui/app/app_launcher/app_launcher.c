@@ -62,7 +62,7 @@ void lisaui_launcher_add_app_icon(lv_obj_t *icon_container, lisaui_app_t *app)
     }
     if (app->icon->icon == NULL) {
         app->icon->icon = &icon_img_app_default_png;
-        LISAUI_LOGI(TAG, "app icon is NULL, use default icon");
+        LISAUI_LOGV(TAG, "app icon is NULL, use default icon");
     }
 
     if (app->hidden_icon) {

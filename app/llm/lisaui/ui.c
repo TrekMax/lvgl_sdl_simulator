@@ -31,6 +31,59 @@ SemaphoreHandle_t lvgl_mutex;
 #endif
 
 #define TEST_LISAUI_APP 1
+
+#if TEST_LISAUI_APP
+void test_lisaui_example(void);
+#endif
+
+void lisaui_ui_init(void)
+{
+#if CONFIG_LVGL_ENV_SIMULATOR
+    if (pthread_mutex_init(&lvgl_mutex, NULL) != 0) {
+        LISAUI_LOGE(TAG, "[%s] Failed to create lvgl_mutex", __FUNCTION__);
+        return;
+    }
+#else
+    lvgl_mutex = xSemaphoreCreateMutex();
+    if (lvgl_mutex == NULL) {
+        LISAUI_LOGE(TAG, "[%s] Failed to create lvgl_mutex", __FUNCTION__);
+        return;
+    }
+#endif
+
+#if 0
+    lv_disp_t *dispp = lv_disp_get_default();
+
+    lv_theme_t *theme = LV_THEME_DEFAULT_INIT(
+        lv_theme_get_color_primary(), lv_theme_get_color_secondary(), LV_THEME_MATERIAL_FLAG_DARK,
+        lv_theme_get_font_small(), lv_theme_get_font_normal(), lv_theme_get_font_subtitle(), lv_theme_get_font_title());
+    lv_theme_set_act(theme);
+#endif
+
+#if CONFIG_LVGL_ENV_SIMULATOR
+    // LISAUI_USE_APP(standby);
+    LISAUI_USE_APP(launcher);
+    LISAUI_USE_APP(taskbar);
+    LISAUI_USE_APP(setting);
+
+    LISAUI_USE_APP(weather);
+    LISAUI_USE_APP(template);
+    LISAUI_USE_APP(alarm);
+    LISAUI_USE_APP(audio_player);
+    LISAUI_USE_APP(wifi);
+
+#endif
+    lisaui_app_manager_init();
+    // lisaui_app_manager_show_all_app_info();
+
+    LISAUI_LOGI(TAG, "UI init done");
+
+#if TEST_LISAUI_APP
+    test_lisaui_example();
+#endif
+}
+
+#if TEST_LISAUI_APP
 #include "app_standby.h"
 #include "app_weather.h"
 #include "app_audio_player.h"
@@ -39,7 +92,7 @@ SemaphoreHandle_t lvgl_mutex;
 #include "app_taskbar.h"
 #include "common_widgets.h"
 #include "app_wifi.h"
-#if TEST_LISAUI_APP
+
 
 static int count = 0;
 static int test_index = 0;
@@ -186,98 +239,25 @@ static void test_lisaui_app_timer_cb(lv_timer_t *timer)
 }
 #endif
 
-void lisaui_ui_init(void)
+#if TEST_LISAUI_APP
+void test_lisaui_example(void)
 {
-#if CONFIG_LVGL_ENV_SIMULATOR
-    if (pthread_mutex_init(&lvgl_mutex, NULL) != 0) {
-        LISAUI_LOGE(TAG, "[%s] Failed to create lvgl_mutex", __FUNCTION__);
-        return;
-    }
-#else
-    lvgl_mutex = xSemaphoreCreateMutex();
-    if (lvgl_mutex == NULL) {
-        LISAUI_LOGE(TAG, "[%s] Failed to create lvgl_mutex", __FUNCTION__);
-        return;
-    }
-#endif
-
-#if 0
-    lv_disp_t *dispp = lv_disp_get_default();
-
-    lv_theme_t *theme = LV_THEME_DEFAULT_INIT(
-        lv_theme_get_color_primary(), lv_theme_get_color_secondary(), LV_THEME_MATERIAL_FLAG_DARK,
-        lv_theme_get_font_small(), lv_theme_get_font_normal(), lv_theme_get_font_subtitle(), lv_theme_get_font_title());
-    lv_theme_set_act(theme);
-#endif
-
-#if CONFIG_LVGL_ENV_SIMULATOR
-    LISAUI_USE_APP(standby);
-    LISAUI_USE_APP(launcher);
-    LISAUI_USE_APP(taskbar);
-    LISAUI_USE_APP(setting);
-
-    LISAUI_USE_APP(weather);
-    LISAUI_USE_APP(template);
-    LISAUI_USE_APP(alarm);
-    LISAUI_USE_APP(audio_player);
-    LISAUI_USE_APP(wifi);
-
-
-    // lisaui_app_alarm_register_handler(lisaui_app_alarm_handler);
-    lisaui_taskbar_register_event_handler(lisaui_taskbar_event_handler);
-#endif
-    lisaui_app_manager_init();
-    // lisaui_app_manager_show_all_app_info();
-
-    LISAUI_LOGI(TAG, "UI init done");
-
+    LISAUI_LOGI(TAG, "[%s] test lisaui example", __FUNCTION__);
     // lisaui_app_enter(UI_APP_ID_LAUNCHER);
-#if 0
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
     // lisaui_app_enter(UI_APP_ID_ALARM);
     // lisaui_app_enter(UI_APP_ID_SETTING);
-    lisaui_app_enter(UI_APP_ID_WEATHER);
-    metadata_weather_t weather2 = {
-        .weather = "晴",
-        .city = "潮州",
-        // .location = "深圳",
-        // .time = "2025-01-22 12:00",
-        // .week = "星期二",
-        .date = "04月23日",
-        // .title = "天气",
-        .temperature = "28℃",
-        .temperature_range = "20℃ ~ 30℃",
-        .description = "晴朗 天气优",
-    };
-    lisaui_app_weather_set_weather_view(&weather2);
-    // ls_llm_dialog_popup("Test");
-    // ls_llm_dialog_popup("Test233123");
-    // ls_llm_dialog_popup("Test2114141");
-#endif
-#if 0
-    lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
-    lisaui_app_audio_player_set_song_view(&song, LISAUI_APP_AUDIO_PLAYER_STATE_PLAY);
-#endif
-    // LISAUI_LOGI(TAG, "[%s] enter setting", __FUNCTION__);
-    lisaui_app_enter(UI_APP_ID_WIFI);
-    // lisaui_err_t lisaui_app_add_wifi_list_item(wifi_metadata_t *wifi_item);
-
-    // test_wifi_item_list
-    for (int i = 0; i < sizeof(test_wifi_item_list) / sizeof(wifi_metadata_t); i++) {
-        lisaui_app_add_wifi_list_item(&test_wifi_item_list[i]);
-    }
-#if TEST_LISAUI_APP
-
-    // lv_timer_t *timer = lv_timer_create(test_lisaui_app_timer_cb, 500, NULL);
-    // if (timer == NULL) {
-    //     LISAUI_LOGE(TAG, "[%s] Failed to create timer", __FUNCTION__);
-    //     return;
-    // }
-
+    // lisaui_app_enter(UI_APP_ID_WEATHER);
     // lisaui_app_enter(UI_APP_ID_AUDIO_PLAYER);
-    // lisaui_app_audio_player_set_song_view(&song, LISAUI_APP_AUDIO_PLAYER_STATE_PLAY);
-    // lisaui_app_standby_set_emoji(LISAUI_APP_STANDBY_EMOJI_TYPE_LISTENING);
-
     // lisaui_app_enter(UI_APP_ID_WIFI);
-#endif
+
+    // lisaui_app_alarm_register_handler(lisaui_app_alarm_handler);
+    // lisaui_taskbar_register_event_handler(lisaui_taskbar_event_handler);
+
+    lisaui_app_enter(UI_APP_ID_LAUNCHER);
+    lisaui_app_enter(UI_APP_ID_SETTING);
+    lisaui_app_enter(UI_APP_ID_LAUNCHER);
+    lisaui_app_enter(UI_APP_ID_ALARM);
+
 }
+#endif
