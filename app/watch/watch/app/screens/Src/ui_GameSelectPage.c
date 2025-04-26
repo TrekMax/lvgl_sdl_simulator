@@ -1,9 +1,9 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_MenuPage.h"
-#include "../Inc/ui_GameSelectPage.h"
-#include "../Inc/ui_Game2048Page.h"
-#include "../Inc/ui_GameMemPage.h"
+#include "ui_MenuPage.h"
+#include "ui_GameSelectPage.h"
+#include "ui_Game2048Page.h"
+#include "ui_GameMemPage.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_GameSelect = {ui_GameSelectPage_screen_init, ui_GameSelectPage_screen_deinit, &ui_GameSelectPage};

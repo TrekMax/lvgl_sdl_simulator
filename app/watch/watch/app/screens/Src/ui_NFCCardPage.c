@@ -1,7 +1,7 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_Megboxes.h"
-#include "../Inc/ui_NFCCardPage.h"
+#include "ui_Megboxes.h"
+#include "ui_NFCCardPage.h"
 
 
 ///////////////////// Page Manager //////////////////

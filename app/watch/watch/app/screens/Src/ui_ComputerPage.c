@@ -1,8 +1,8 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_ComputerPage.h"
+#include "ui_ComputerPage.h"
 
-#include "../../../func/Inc/StrCalculate.h"
+#include "StrCalculate.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_Computer = {ui_ComputerPage_screen_init, ui_ComputerPage_screen_deinit, &ui_Computerpage};

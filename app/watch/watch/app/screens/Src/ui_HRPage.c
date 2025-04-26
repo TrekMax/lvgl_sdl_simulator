@@ -1,7 +1,7 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_HRPage.h"
-#include "../../../func/Inc/HWDataAccess.h"
+#include "ui_HRPage.h"
+#include "HWDataAccess.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_HR = {ui_HRPage_screen_init, ui_HRPage_screen_deinit, &ui_HRPage};

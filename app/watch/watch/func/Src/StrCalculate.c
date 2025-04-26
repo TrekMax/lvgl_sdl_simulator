@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../Inc/StrCalculate.h"
+#include "StrCalculate.h"
 
 uint8_t strput(StrStack_t *st, char strin)
 {
@@ -19,7 +19,7 @@ uint8_t strdel(StrStack_t *st)
         return -1;
     }
 
-    st->strque[--st->Top_Point] = NULL;
+    st->strque[--st->Top_Point] = '\0';
     return 0;
 }
 
@@ -127,13 +127,14 @@ uint8_t SymisHighPriority(char top, char present)
             return 0;
         }
     }
+    return 0;
 }
 
 void CalculateOne(NumStack_t *numstack, SymStack_t *symstack)
 {
     caldata_t temp;
     temp.datatype = NUMBER_TYPE;
-    temp.symbol = NULL;
+    temp.symbol = '\0';
     // 计算数字栈中的顶部两数,结果存到temp中
     if (symstack->data[symstack->Top_Point - 1] == '+') {
         temp.number = (numstack->data[numstack->Top_Point - 2]) + (numstack->data[numstack->Top_Point - 1]);
@@ -166,7 +167,7 @@ uint8_t NumSymSeparate(char *str, uint8_t strlen, NumStack_t *NumStack, SymStack
     char NumBehindPoint_Flag = 0; // 数字是否在小数点后,后多少位
     temp.datatype = NUMBER_TYPE;
     temp.number = 0;
-    temp.symbol = NULL;
+    temp.symbol = '\0';
     temp_pre = temp;
     temp_pre.datatype = SYMBOL_TYPE;
     if (str[0] > '9' || str[0] < '0') {
@@ -190,7 +191,7 @@ uint8_t NumSymSeparate(char *str, uint8_t strlen, NumStack_t *NumStack, SymStack
             // 读取当前的字符到temp中
             temp.datatype = NUMBER_TYPE;
             temp.number = (str[i] - '0');
-            temp.symbol = NULL;
+            temp.symbol = '\0';
             // 如果为连续数字,需要进行进位,将数字栈顶读出进位，再加上现在位，再入栈
             if (temp_pre.datatype == NUMBER_TYPE) {
                 if (!NumBehindPoint_Flag) {

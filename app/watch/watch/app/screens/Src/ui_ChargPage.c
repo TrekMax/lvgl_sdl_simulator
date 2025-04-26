@@ -1,7 +1,7 @@
 #include "../../ui.h"
-#include "../Inc/ui_ChargPage.h"
-#include "../Inc/ui_HomePage.h"
-#include "../../../func/Inc/HWDataAccess.h"
+#include "ui_ChargPage.h"
+#include "ui_HomePage.h"
+#include "HWDataAccess.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_Charg = {ui_ChargPage_screen_init, ui_ChargPage_screen_deinit, &ui_ChargPage};

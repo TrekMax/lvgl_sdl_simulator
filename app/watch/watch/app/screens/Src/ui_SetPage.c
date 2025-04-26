@@ -1,12 +1,12 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_HomePage.h"
-#include "../Inc/ui_MenuPage.h"
-#include "../Inc/ui_SetPage.h"
-#include "../Inc/ui_OffTimePage.h"
-#include "../Inc/ui_DateTimeSetPage.h"
+#include "ui_HomePage.h"
+#include "ui_MenuPage.h"
+#include "ui_SetPage.h"
+#include "ui_OffTimePage.h"
+#include "ui_DateTimeSetPage.h"
 
-#include "../../../func/Inc/HWDataAccess.h"
+#include "HWDataAccess.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_Set = {ui_SetPage_screen_init, ui_SetPage_screen_deinit, &ui_SetPage};

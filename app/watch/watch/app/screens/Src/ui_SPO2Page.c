@@ -1,7 +1,7 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_SPO2Page.h"
-#include "../../../func/Inc/HWDataAccess.h"
+#include "ui_SPO2Page.h"
+#include "HWDataAccess.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_SPO2 = {ui_SPO2Page_screen_init, ui_SPO2Page_screen_deinit, &ui_SPO2Page};

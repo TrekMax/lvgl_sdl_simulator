@@ -1,7 +1,7 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_EnvPage.h"
-#include "../../../func/Inc/HWDataAccess.h"
+#include "ui_EnvPage.h"
+#include "HWDataAccess.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_Env = {ui_EnvPage_screen_init, ui_EnvPage_screen_deinit, &ui_EnvPage};

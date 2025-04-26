@@ -5,7 +5,6 @@
 extern "C" {
 #endif
 
-
 /***************************
  * CURRENT VERSION OF OV-Watch
  ***************************/
@@ -18,16 +17,15 @@ extern "C" {
 #define VERSION_MAJOR 2
 #define VERSION_MINOR 4
 #define VERSION_PATCH 2
-#define VERSION_INFO ""
+#define VERSION_INFO  ""
 
 /**
  * No-Chicken的意思是no spring chicken, 不再年轻...
- * 
+ *
  */
-#define VERSION_AUTHOR_ENG_NAME    "No-Chicken"
-#define VERSION_AUTHOR_CN_NAME     "不吃油炸鸡"
-#define VERSION_PROJECT_LINK       "https://github.com/No-Chicken/OV-Watch"
-
+#define VERSION_AUTHOR_ENG_NAME "No-Chicken"
+#define VERSION_AUTHOR_CN_NAME  "不吃油炸鸡"
+#define VERSION_PROJECT_LINK    "https://github.com/No-Chicken/OV-Watch"
 
 /**
  * Wrapper functions for VERSION macros

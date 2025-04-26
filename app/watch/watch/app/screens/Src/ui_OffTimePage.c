@@ -1,8 +1,8 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_HomePage.h"
-#include "../Inc/ui_SetPage.h"
-#include "../Inc/ui_OffTimePage.h"
+#include "ui_HomePage.h"
+#include "ui_SetPage.h"
+#include "ui_OffTimePage.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_LOffTimeSet = {ui_LOffTimeSetPage_screen_init, ui_LOffTimeSetPage_screen_deinit, &ui_LOffTimeSetPage};

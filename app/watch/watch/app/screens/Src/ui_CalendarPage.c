@@ -1,7 +1,7 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_CalendarPage.h"
-#include "../../../func/Inc/HWDataAccess.h"
+#include "ui_CalendarPage.h"
+#include "HWDataAccess.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_Calender = {ui_CalendarPage_screen_init, ui_CalendarPage_screen_deinit, &ui_CalendarPage};

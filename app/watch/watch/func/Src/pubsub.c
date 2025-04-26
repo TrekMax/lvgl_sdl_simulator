@@ -1,4 +1,4 @@
-#include "../Inc/pubsub.h"
+#include "pubsub.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -11,9 +11,9 @@ void Publisher_init(PubSub_Publisher_t *publisher)
 }
 
 // Subscribe a new subscriber
-void Publisher_subscribe(PubSub_Publisher_t *publisher, Subscriber subscriber)
+void Publisher_subscribe(PubSub_Publisher_t *publisher, subscriber_t subscriber)
 {
-    SubscriberNode *node = (SubscriberNode *)malloc(sizeof(SubscriberNode));
+    subscriber_node_t *node = (subscriber_node_t *)malloc(sizeof(subscriber_node_t));
     if (node == NULL) {
         // Handle memory allocation failure
         return;
@@ -24,12 +24,12 @@ void Publisher_subscribe(PubSub_Publisher_t *publisher, Subscriber subscriber)
 }
 
 // Unsubscribe an existing subscriber
-void Publisher_unsubscribe(PubSub_Publisher_t *publisher, Subscriber subscriber)
+void Publisher_unsubscribe(PubSub_Publisher_t *publisher, subscriber_t subscriber)
 {
-    SubscriberNode **current = &publisher->subscribers;
+    subscriber_node_t **current = &publisher->subscribers;
     while (*current != NULL) {
         if ((*current)->subscriber == subscriber) {
-            SubscriberNode *to_delete = *current;
+            subscriber_node_t *to_delete = *current;
             *current = (*current)->next;
             free(to_delete);
             return;
@@ -41,7 +41,7 @@ void Publisher_unsubscribe(PubSub_Publisher_t *publisher, Subscriber subscriber)
 // Publish a message to all subscribers
 void Publisher_publish(PubSub_Publisher_t *publisher, PubSub_Message_t message)
 {
-    SubscriberNode *node = publisher->subscribers;
+    subscriber_node_t *node = publisher->subscribers;
     while (node != NULL) {
         node->subscriber(message);
         node = node->next;

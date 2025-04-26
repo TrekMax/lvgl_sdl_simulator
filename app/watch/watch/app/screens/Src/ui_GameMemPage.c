@@ -4,10 +4,10 @@
 
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_MenuPage.h"
-#include "../Inc/ui_GameMemPage.h"
+#include "ui_MenuPage.h"
+#include "ui_GameMemPage.h"
 
-#include "../../../func/Inc/HWDataAccess.h"
+#include "HWDataAccess.h"
 
 #define MATRIX_SIZE 4
 

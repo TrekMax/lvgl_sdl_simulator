@@ -1,12 +1,12 @@
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_MenuPage.h"
-#include "../Inc/ui_Game2048Page.h"
-#include "../../../func/Inc/HWDataAccess.h"
+#include "ui_MenuPage.h"
+#include "ui_Game2048Page.h"
+#include "HWDataAccess.h"
 
 #define STACK_DEPTH 5
 #define MATRIX_SIZE 4
@@ -92,8 +92,8 @@ static void ui_event_Game2048Page(lv_event_t *e)
                 addRandom(Game_2048.matrix);
                 update_btnm_map(Game_2048.btnm_map, Game_2048.matrix);
                 lv_btnmatrix_set_map(ui_Game2048BtnM, Game_2048.btnm_map);
-                uint8_t strbuf[10];
-                sprintf(strbuf, "Score:%d", Game_2048.score);
+                uint8_t strbuf[20];
+                snprintf(strbuf, sizeof(strbuf), "Score:%d", Game_2048.score);
                 lv_label_set_text(ui_Game2048ScLabel, strbuf);
             }
         }
@@ -134,8 +134,8 @@ static void ui_event_new_game_btn(lv_event_t *e)
     lv_event_code_t code = lv_event_get_code(e);
     if (code == LV_EVENT_LONG_PRESSED) {
         Game_2048_init();
-        uint8_t strbuf[10];
-        sprintf(strbuf, "Score:%d", Game_2048.score);
+        uint8_t strbuf[20];
+        snprintf(strbuf, sizeof(strbuf), "Score:%d", Game_2048.score);
         lv_label_set_text(ui_Game2048ScLabel, strbuf);
     }
 }
@@ -167,8 +167,8 @@ void ui_Game2048Page_screen_init(void)
     lv_obj_set_style_text_font(new_game_btn_label, &ui_font_Cuyuan20, 0);
 
     ui_Game2048ScLabel = lv_label_create(ui_Game2048Page);
-    uint8_t strbuf[10];
-    sprintf(strbuf, "Score:%d", Game_2048.score);
+    uint8_t strbuf[20];
+    snprintf(strbuf, sizeof(strbuf), "Score:%d", Game_2048.score);
     lv_label_set_text(ui_Game2048ScLabel, strbuf);
     lv_obj_align(ui_Game2048ScLabel, LV_ALIGN_TOP_RIGHT, -10, 15);
     lv_obj_set_style_text_font(ui_Game2048ScLabel, &ui_font_Cuyuan20, 0);
@@ -524,7 +524,7 @@ static uint8_t Stack_Pop(Stack_T *stack)
         return -1;
     }
 
-    stack->Data[stack->Top_Point--] = NULL;
+    stack->Data[stack->Top_Point--] = '\0';
     return 0;
 }
 

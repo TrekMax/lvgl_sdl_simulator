@@ -1,9 +1,9 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_HomePage.h"
-#include "../Inc/ui_SetPage.h"
-#include "../Inc/ui_DateTimeSetPage.h"
-#include "../../../func/Inc/HWDataAccess.h"
+#include "ui_HomePage.h"
+#include "ui_SetPage.h"
+#include "ui_DateTimeSetPage.h"
+#include "HWDataAccess.h"
 
 ///////////////////// Page Manager //////////////////
 Page_t Page_DateTimeSet = {ui_DateTimeSetPage_screen_init, ui_DateTimeSetPage_screen_deinit, &ui_DateTimeSetPage};

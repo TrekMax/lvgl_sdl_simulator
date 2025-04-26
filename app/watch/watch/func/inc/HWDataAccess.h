@@ -6,9 +6,9 @@
  *      @file       HWDataAccess.h
  *      @brief      middleware, for UI and APP Layer to get the hardware data
  *      @details    you can enable or disable in .h file.
- * 					        加这个文件就是为了方便UI移植, 比如你要把工程移植到PC仿真,
- *   				        直接把MidFunc中的文件和UI文件都复制过去,
- * 					        然后直接把.h文件中的HW_USE_HARDWARE变成0就行了.
+ * 					        加这个文件就是为了方便 UI 移植, 比如你要把工程移植到 PC 仿真,
+ *   				        直接把 MidFunc 中的文件和 UI 文件都复制过去,
+ * 					        然后直接把 .h 文件中的 HW_USE_HARDWARE 变成 0 就行了.
  */
 
 #ifndef HWDATAACCESS_H

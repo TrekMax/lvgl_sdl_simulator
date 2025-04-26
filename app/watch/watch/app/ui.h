@@ -11,7 +11,7 @@ extern "C" {
 
 #include "stdio.h"
 
-#include "../func/Inc/PageManager.h"
+#include "PageManager.h"
 
 LV_FONT_DECLARE(ui_font_Cuyuan18);
 LV_FONT_DECLARE(ui_font_Cuyuan20);

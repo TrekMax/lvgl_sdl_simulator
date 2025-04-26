@@ -1,7 +1,7 @@
 #ifndef PAGE_STACK_H
 #define PAGE_STACK_H
 
-#include "../../app/ui.h"
+#include "../ui.h"
 
 // 页面栈深度
 #define MAX_DEPTH 6

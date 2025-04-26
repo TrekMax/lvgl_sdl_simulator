@@ -11,7 +11,7 @@
  * 					然后直接把.h文件中的HW_USE_HARDWARE变成0就行了.
  */
 
-#include "../Inc/HWDataAccess.h"
+#include "HWDataAccess.h"
 
 /***************************
  *  RTC Fucntions

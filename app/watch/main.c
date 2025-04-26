@@ -96,6 +96,7 @@ int main(int argc, char **argv)
     /*Initialize the HAL (display, input devices, tick) for LVGL*/
     hal_init();
 
+    extern void ui_init(void);
     ui_init();
 
     while (1) {

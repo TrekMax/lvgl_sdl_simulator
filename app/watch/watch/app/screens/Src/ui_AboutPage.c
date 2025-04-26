@@ -1,6 +1,6 @@
 #include "../../ui.h"
 #include "../../ui_helpers.h"
-#include "../Inc/ui_AboutPage.h"
+#include "ui_AboutPage.h"
 #include "../../../version.h"
 
 ///////////////////// VARIABLES ////////////////////
