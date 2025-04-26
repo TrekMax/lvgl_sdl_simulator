@@ -26,34 +26,32 @@ extern "C" {
 #include <stdbool.h>
 #endif
 
-
-#define LISAUI_DBUS_MAX_QUEUE_SIZE 16
+#define LISAUI_DBUS_MAX_QUEUE_SIZE  16
 #define LISAUI_DBUS_TASK_STACK_SIZE 2048
-#define LISAUI_DBUS_TASK_PRIORITY 5
+#define LISAUI_DBUS_TASK_PRIORITY   5
 
 /**
  * @brief dbus_handler_t 总线事件处理函数
- * 
+ *
  * @param data 事件数据
- * 
+ *
  * @warning 不可以在事件处理函数中调用 lisaui_dbus_publish，否则会导致死锁
- * 
+ *
  */
-typedef void (*lisaui_dbus_handler_t)(void* data);
+typedef void (*lisaui_dbus_handler_t)(void *data);
 
 typedef struct _lisaui_dbus_node_t lisaui_dbus_node_t;
 
 typedef struct {
-    const char* event;
-    void* data;
+    const char *event;
+    void *data;
 } lisaui_dbus_msg_t;
 
 struct _lisaui_dbus_node_t {
-    const char* event;
+    const char *event;
     lisaui_dbus_handler_t handler;
-    lisaui_dbus_node_t* next;
+    lisaui_dbus_node_t *next;
 };
-
 
 typedef struct {
     lisaui_dbus_msg_t buffer[LISAUI_DBUS_MAX_QUEUE_SIZE];
@@ -67,7 +65,7 @@ typedef struct {
 } lisaui_dbus_queue_t;
 
 typedef struct _lisaui_dbus_t {
-    lisaui_dbus_node_t* node;
+    lisaui_dbus_node_t *node;
 #ifdef FREERTOS
     SemaphoreHandle_t mutex;
     QueueHandle_t event_queue;
@@ -82,16 +80,14 @@ typedef struct _lisaui_dbus_t {
 #endif
 } lisaui_dbus_t;
 
-lisaui_err_t lisaui_dbus_create(lisaui_dbus_t* bus);
-lisaui_err_t lisaui_dbus_destroy(lisaui_dbus_t* bus);
-lisaui_err_t lisaui_dbus_subscribe(lisaui_dbus_t* bus, const char* event, lisaui_dbus_handler_t handler);
-lisaui_err_t lisaui_dbus_unsubscribe(lisaui_dbus_t* bus, const char* event, lisaui_dbus_handler_t handler);
-lisaui_err_t lisaui_dbus_publish(lisaui_dbus_t* bus, const char* event, void* data);
-
+lisaui_err_t lisaui_dbus_create(lisaui_dbus_t *bus);
+lisaui_err_t lisaui_dbus_destroy(lisaui_dbus_t *bus);
+lisaui_err_t lisaui_dbus_subscribe(lisaui_dbus_t *bus, const char *event, lisaui_dbus_handler_t handler);
+lisaui_err_t lisaui_dbus_unsubscribe(lisaui_dbus_t *bus, const char *event, lisaui_dbus_handler_t handler);
+lisaui_err_t lisaui_dbus_publish(lisaui_dbus_t *bus, const char *event, void *data);
 
 #define LISAUI_DBUS_TEST (1)
 void test_lisaui_dbus_example1(void);
-
 
 #ifdef __cplusplus
 }

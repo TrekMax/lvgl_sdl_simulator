@@ -25,15 +25,16 @@ typedef enum _lisaui_view_type_e {
     LISAUI_VIEW_TYPE_DIALOG,
     LISAUI_VIEW_TYPE_MENU,
 
-    LISAUI_VIEW_TYPE_APP,   // App 视图
-    LISAUI_VIEW_TYPE_PAGE,  // Page 视图
-    LISAUI_VIEW_TYPE_CARD,  // Card 视图
+    LISAUI_VIEW_TYPE_APP,  // App 视图
+    LISAUI_VIEW_TYPE_PAGE, // Page 视图
+    LISAUI_VIEW_TYPE_CARD, // Card 视图
 } lisaui_view_type_t;
 
 struct _lisaui_view_page_t {
     int app_id; // 页面栈归属的 app id, 用于在不同 app 之间 view 切换
     int page_id;
     lisaui_view_t *root;
+    lisaui_view_type_t type;
 
     // 页面栈生命周期
     // lisaui_err_t (*on_create)(void *parent);
@@ -44,17 +45,13 @@ struct _lisaui_view_page_t {
     // lisaui_err_t (*on_resume)(void);
 
     lisaui_view_page_t *next;
-    // lisaui_view_page_t *prev;
-
-    lisaui_view_type_t type;
+    lisaui_view_page_t *prev;
 };
 
 typedef struct _lisaui_view_stack_t {
     int capacity;
-    int size;
+    int depth;
 
-    // lisaui_view_page_t *pages;
-    // lisaui_view_page_t *current;
     lisaui_view_page_t *head;
     lisaui_view_page_t *tail;
 } lisaui_view_stack_t;
@@ -63,9 +60,10 @@ lisaui_err_t lisaui_view_manager_init(lisaui_view_stack_t *view_stack);
 lisaui_err_t lisaui_view_manager_clean(lisaui_view_stack_t *view_stack);
 lisaui_err_t lisaui_view_manager_deinit(lisaui_view_stack_t *view_stack);
 
-lisaui_err_t lisaui_view_manager_get_current(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page);
 lisaui_err_t lisaui_view_manager_pop(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page);
 lisaui_err_t lisaui_view_manager_push(lisaui_view_stack_t *view_stack, lisaui_view_page_t *page);
+lisaui_err_t lisaui_view_manager_get_current(lisaui_view_stack_t *view_stack, lisaui_view_page_t **page);
+
 lisaui_err_t lisaui_view_manager_print_usage(lisaui_view_stack_t *view_stack);
 lisaui_err_t lisaui_view_manager_get_depth(lisaui_view_stack_t *view_stack, int *depth);
 lisaui_err_t lisaui_view_manager_get_capacity(lisaui_view_stack_t *view_stack, int *capacity);

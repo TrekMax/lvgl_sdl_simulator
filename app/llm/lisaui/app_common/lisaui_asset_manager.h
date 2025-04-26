@@ -1,12 +1,12 @@
 /**
  * @file lisaui_asset_manager.h
  * @author Tianshuang Ke (dske@listenai.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2025-03-06
- * 
+ *
  * @copyright Copyright (c) 2021 - 2025 shenzhen listenai co., ltd.
- * 
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
 #ifndef __LISAUI_ASSET_MANAGER_H__
@@ -53,25 +53,24 @@ typedef struct _lisaui_resource_item_t {
     bool is_loaded;
 } lisaui_resource_item_t;
 
-#define LISAUI_ASSET_SAFE_FREE(item) \
-    do { \
-        if (item != NULL) { \
-            lisaui_asset_manager_free_asset(item); \
-        } \
+#define LISAUI_ASSET_SAFE_FREE(item)                                                                                   \
+    do {                                                                                                               \
+        if (item != NULL) {                                                                                            \
+            lisaui_asset_manager_free_asset(item);                                                                     \
+        }                                                                                                              \
     } while (0)
 
 /**
- * @brief 
- * 
- * @return lisaui_err_t 
+ * @brief
+ *
+ * @return lisaui_err_t
  */
 lisaui_err_t lisaui_asset_manager_init(void);
 // lisaui_err_t lisaui_asset_manager_deinit(void);
-void* lisaui_asset_manager_get_asset(const char *path);
+void *lisaui_asset_manager_get_asset(const char *path);
 lisaui_err_t lisaui_asset_manager_get_asset_by_path(const char *path, lisaui_resource_item_t *item);
 lisaui_err_t lisaui_asset_manager_get_asset_by_emmc_path(const char *path, lisaui_resource_item_t *item);
 lisaui_err_t lisaui_asset_manager_free_asset(lisaui_resource_item_t *item);
-
 
 #ifdef __cplusplus
 }

@@ -114,6 +114,9 @@ static lv_coord_t llm_asr_result_label_height = 0;
 lv_anim_t a1;
 lv_anim_t a2;
 #define TOAST_DURATION 1200
+#define TOAST_WIDTH    300 // LV_PCT(80)
+#define TOAST_HEIGHT   50  // LV_DPX(50)
+
 static void set_width(void *var, int32_t v)
 {
     lv_obj_set_width((lv_obj_t *)var, v);
@@ -133,7 +136,7 @@ static void anim_timeline_create(lv_obj_t *target, int32_t width, int32_t height
     lv_anim_set_early_apply(&a1, false);
     lv_anim_set_exec_cb(&a1, (lv_anim_exec_xcb_t)set_width);
     lv_anim_set_path_cb(&a1, lv_anim_path_overshoot);
-    lv_anim_set_time(&a1, 300);
+    lv_anim_set_time(&a1, TOAST_WIDTH);
 
     lv_anim_init(&a2);
     lv_anim_set_var(&a2, target);
@@ -141,7 +144,7 @@ static void anim_timeline_create(lv_obj_t *target, int32_t width, int32_t height
     lv_anim_set_early_apply(&a2, false);
     lv_anim_set_exec_cb(&a2, (lv_anim_exec_xcb_t)set_height);
     lv_anim_set_path_cb(&a2, lv_anim_path_ease_out);
-    lv_anim_set_time(&a2, 300);
+    lv_anim_set_time(&a2, TOAST_WIDTH);
 
     if (anim_timeline) {
         lv_anim_timeline_del(anim_timeline);
@@ -209,7 +212,7 @@ lisaui_err_t lisaui_popup_toast(const char *message)
         lv_anim_timeline_del(anim_timeline);
         anim_timeline = NULL;
     }
-    anim_timeline_create(sys_toast, 300, 48); // width: 320 * 0.8 = 256, height: 240 * 0.2 = 48;
+    anim_timeline_create(sys_toast, TOAST_WIDTH, TOAST_HEIGHT);
     lv_anim_timeline_start(anim_timeline);
     if (pop_toast_timer) {
         lv_timer_del(pop_toast_timer);
@@ -219,12 +222,20 @@ lisaui_err_t lisaui_popup_toast(const char *message)
     return LISAUI_ERR_OK;
 }
 
+#define CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE 1
+
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
 
 lisaui_err_t lisaui_app_enter_lvgl_hook(lisaui_app_t *app)
 {
-    lisaui_view_stack_t *view_stask;
-    lisaui_app_manager_get_view_stack(&view_stask);
+    lisaui_view_stack_t *view_stack;
+    lisaui_app_manager_get_view_stack(&view_stack);
+
+    if (view_stack == NULL) {
+        LISAUI_LOGE(TAG, "[ui] view stack is NULL");
+        return LISAUI_ERR_NO_MEMORY;
+    }
+
     lisaui_view_page_t *page = (lisaui_view_page_t *)lisaui_malloc(sizeof(lisaui_view_page_t));
     if (page == NULL) {
         LISAUI_LOGE(TAG, "TAG, [ui] malloc failed");
@@ -239,9 +250,13 @@ lisaui_err_t lisaui_app_enter_lvgl_hook(lisaui_app_t *app)
         return LISAUI_ERR_NO_MEMORY;
     }
 
-    // lisaui_view_manager_print_usage(view_stask);
-    lisaui_view_manager_push(view_stask, page);
-    // lisaui_view_manager_print_usage(view_stask);
+#if CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE
+    lisaui_view_manager_print_usage(view_stack);
+#endif
+    lisaui_view_manager_push(view_stack, page);
+#if CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE
+    lisaui_view_manager_print_usage(view_stack);
+#endif
     lv_disp_load_scr(page->root);
     // lisaui_memory_monitor(NULL);
     return LISAUI_ERR_OK;
@@ -249,19 +264,22 @@ lisaui_err_t lisaui_app_enter_lvgl_hook(lisaui_app_t *app)
 
 lisaui_err_t lisaui_app_exit_lvgl_hook(lisaui_app_t *app)
 {
-    lisaui_view_stack_t *view_stask;
-    lisaui_app_manager_get_view_stack(&view_stask);
-    // lisaui_view_manager_print_usage(view_stask);
+    lisaui_view_stack_t *view_stack;
+    lisaui_app_manager_get_view_stack(&view_stack);
+#if CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE
+    lisaui_view_manager_print_usage(view_stack);
+#endif
     lisaui_view_page_t *page = NULL;
-    if (lisaui_view_manager_pop(view_stask, &page) != LISAUI_ERR_OK) {
+    if (lisaui_view_manager_pop(view_stack, &page) != LISAUI_ERR_OK) {
         LISAUI_LOGE(TAG, "[ui] view page is NULL");
         return LISAUI_ERR_NO_MEMORY;
     }
     lisaui_free(page);
     page = NULL;
-    // lisaui_view_manager_print_usage(view_stask);
-
-    if (lisaui_view_manager_get_current(view_stask, &page) != LISAUI_ERR_OK) {
+#if CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE
+    lisaui_view_manager_print_usage(view_stack);
+#endif
+    if (lisaui_view_manager_get_current(view_stack, &page) != LISAUI_ERR_OK) {
         LISAUI_LOGE(TAG, "[ui] view page is NULL");
         return LISAUI_ERR_NO_MEMORY;
     }
@@ -334,10 +352,10 @@ lisaui_err_t lisaui_app_common_get_current_scr(lv_obj_t **view)
     if (view == NULL) {
         return LISAUI_ERR_INVALID_PARAM;
     }
-    // lisaui_view_stack_t *view_stask;
-    // lisaui_app_manager_get_view_stack(&view_stask);
+    // lisaui_view_stack_t *view_stack;
+    // lisaui_app_manager_get_view_stack(&view_stack);
     // lisaui_view_page_t *page = NULL;
-    // if (lisaui_view_manager_get_current(view_stask, &page) != LISAUI_ERR_OK) {
+    // if (lisaui_view_manager_get_current(view_stack, &page) != LISAUI_ERR_OK) {
     //     LISAUI_LOGE(TAG, "[ui] view page is NULL");
     //     return LISAUI_ERR_NO_MEMORY;
     // }
@@ -369,7 +387,7 @@ void lisaui_memory_monitor(void *param)
     LISAUI_PRINTK("\tFragmentation percentage: %d\n", mon.frag_pct);
     LISAUI_PRINTK("\n");
 
-    lisaui_view_stack_t *view_stask;
-    lisaui_app_manager_get_view_stack(&view_stask);
-    lisaui_view_manager_print_usage(view_stask);
+    lisaui_view_stack_t *view_stack;
+    lisaui_app_manager_get_view_stack(&view_stack);
+    lisaui_view_manager_print_usage(view_stack);
 }

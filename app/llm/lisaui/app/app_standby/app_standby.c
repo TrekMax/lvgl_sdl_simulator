@@ -143,7 +143,7 @@ lisaui_app_t app_standby = {
 lisaui_err_t app_standby_init(void)
 {
     lisaui_app_register(&app_standby);
-    lisaui_app_enter(UI_APP_ID_STANDBY);
+    // lisaui_app_enter(UI_APP_ID_STANDBY);
     return LISAUI_ERR_OK;
 }
 

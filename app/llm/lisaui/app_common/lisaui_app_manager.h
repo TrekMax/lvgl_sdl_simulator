@@ -101,6 +101,7 @@ typedef struct _app_hash_slot_t {
 } app_hash_slot_t;
 
 struct lisaui_app_manager_t {
+    bool initialized;
     lisaui_app_t *apps_list[LISAUI_APP_MAX]; // 已注册的 App 列表
     lisaui_dbus_t *dbus;
     lisaui_view_stack_t manager_view_stack;
@@ -167,7 +168,7 @@ struct lisaui_app_manager_t {
         .destroy = app_##app##_destroy,                                                                                \
         .enter = app_##app##_enter,                                                                                    \
         .exit = app_##app##_exit,                                                                                      \
-        .get_app_view = app_##app##_get_view,                                                                         \
+        .get_app_view = app_##app##_get_view,                                                                          \
         .info =                                                                                                        \
             {                                                                                                          \
                 .name = name_en,                                                                                       \
@@ -178,7 +179,7 @@ struct lisaui_app_manager_t {
         .view_stack =                                                                                                  \
             {                                                                                                          \
                 .capacity = CONFIG_LISAUI_APP_DEFAULT_VIEW_DEPTH,                                                      \
-                .size = 0,                                                                                             \
+                .depth = 0,                                                                                            \
                 .head = NULL,                                                                                          \
                 .tail = NULL,                                                                                          \
             },                                                                                                         \
@@ -202,7 +203,7 @@ struct lisaui_app_manager_t {
             LISAUI_LOGE(TAG, "[%s] %s not init", __func__, app->info.name);                                            \
             return err;                                                                                                \
         }                                                                                                              \
-        obj = app->get_app_view();                                                                                    \
+        obj = app->get_app_view();                                                                                     \
         if (obj == NULL) {                                                                                             \
             return err;                                                                                                \
         }                                                                                                              \
@@ -251,8 +252,9 @@ lisaui_err_t lisaui_app_unlock(void);
 bool lisaui_app_get_lock_state(void);
 
 lisaui_err_t lisaui_app_manager_init(void);
+lisaui_err_t lisaui_app_manager_deinit(void);
 lisaui_err_t lisaui_app_manager_get_bus(lisaui_dbus_t **dbus);
-lisaui_err_t lisaui_app_manager_get_view_stack(lisaui_view_stack_t **view_stask);
+lisaui_err_t lisaui_app_manager_get_view_stack(lisaui_view_stack_t **view_stack);
 
 lisaui_err_t lisaui_app_manager_show_app_info(lisaui_app_t *app);
 lisaui_err_t lisaui_app_manager_show_all_app_info(void);
