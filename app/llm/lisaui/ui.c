@@ -44,7 +44,7 @@ void lisaui_ui_init(void)
         return;
     }
 #else
-    lvgl_mutex = xSemaphoreCreateMutex();
+    lvgl_mutex = xSemaphoreCreateRecursiveMutex();
     if (lvgl_mutex == NULL) {
         LISAUI_LOGE(TAG, "[%s] Failed to create lvgl_mutex", __FUNCTION__);
         return;
@@ -239,11 +239,20 @@ static void test_lisaui_app_timer_cb(lv_timer_t *timer)
 }
 #endif
 
-#if TEST_LISAUI_APP
+static wifi_metadata_t test_wifi_item_list[] = {
+    {0, "SSID1 sadasdadas", "", "PWD1", -50, 0, LISAUI_WIFI_STATUS_CONNECTED},
+    {3, "SSID4sdadasdasdasdssssd", "", "PWD4", -80, 3, LISAUI_WIFI_STATUS_CONNECTING},
+    {1, "SSID2", "", "PWD2", 60, 1, LISAUI_WIFI_STATUS_CONNECTED},
+    {2, "SSID3", "", "PWD3", -70, 2, LISAUI_WIFI_STATUS_DISCONNECT},
+    {3, "SSID3", "", "PWD3", -70, 2, LISAUI_WIFI_STATUS_DISCONNECT},
+    {4, "SSID4sdadasdasdasdssssd", "", "PWD4", -80, 3, LISAUI_WIFI_STATUS_DISCONNECT},
+};
+
 void test_lisaui_example(void)
 {
-    LISAUI_LOGI(TAG, "[%s] test lisaui example", __FUNCTION__);
-    // lisaui_app_enter(UI_APP_ID_LAUNCHER);
+
+    lisaui_app_enter(UI_APP_ID_STANDBY);
+#if 0
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
     // lisaui_app_enter(UI_APP_ID_ALARM);
     // lisaui_app_enter(UI_APP_ID_SETTING);
@@ -253,11 +262,8 @@ void test_lisaui_example(void)
 
     // lisaui_app_alarm_register_handler(lisaui_app_alarm_handler);
     // lisaui_taskbar_register_event_handler(lisaui_taskbar_event_handler);
+#endif
 
-    lisaui_app_enter(UI_APP_ID_LAUNCHER);
-    lisaui_app_enter(UI_APP_ID_SETTING);
-    lisaui_app_enter(UI_APP_ID_LAUNCHER);
-    lisaui_app_enter(UI_APP_ID_ALARM);
+
 
 }
-#endif

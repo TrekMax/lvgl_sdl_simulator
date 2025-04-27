@@ -33,7 +33,7 @@ LV_FONT_DECLARE(lv_font_chinese_18);
 lv_obj_t *ls_wifi_list_create(lv_obj_t *parent);
 lv_obj_t *ls_wifi_list_add_text(lv_obj_t *list, const char *txt);
 
-lv_obj_t *ls_wifi_list_add_btn(lv_obj_t *list, wifi_metadata_t wifi, lv_event_cb_t event_cb,
+lv_obj_t *ls_wifi_list_add_btn(lv_obj_t *list, wifi_metadata_t *wifi, lv_event_cb_t event_cb,
                              void *user_data) ;
 
 const char *ls_wifi_list_get_btn_text(lv_obj_t *list, lv_obj_t *btn);

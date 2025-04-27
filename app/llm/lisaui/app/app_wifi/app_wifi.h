@@ -20,20 +20,22 @@ extern "C" {
 #include "lisaui_app_common.h"
 #include "wifi_type.h"
 
+typedef enum{
+    LISAUI_WIFI_STATE_AP_SCAN_FINISH = 0,
+    LISAUI_WIFI_STATE_STA_CONNECT_SUCCESS,
+    LISAUI_WIFI_STATE_STA_CONNECT_FAILED
+
+}LISAUI_WIFI_STATE_e;
+
 lisaui_err_t app_wifi_init(void);
+
+lisaui_err_t lisaui_app_update_state(LISAUI_WIFI_STATE_e state,void* params);
+typedef lisaui_err_t (*app_wifi_event_handler_t)(lisaui_wifi_item_t type, lisaui_wifi_op_t op,
+    void *params);
+    lisaui_err_t lisaui_app_wifi_register_event_handler(app_wifi_event_handler_t handler);
+
+
 lisaui_err_t lisaui_app_add_wifi_list_item(wifi_metadata_t *wifi_item);
-
-typedef lisaui_err_t (*app_wifi_event_handler_t)(lisaui_wifi_op_t op,
-                                                 wifi_metadata_t *wifi_item);
-lisaui_err_t lisaui_app_wifi_register_event_handler(app_wifi_event_handler_t handler);
-
-static wifi_metadata_t test_wifi_item_list[] = {
-    {0, "SSID1 sadasdadas", "PWD1", -50, 0, LISAUI_WIFI_STATUS_CONNECTED},
-    {3, "SSID4sdadasdasdasdssssd", "PWD4", -80, 3, LISAUI_WIFI_STATUS_CONNECTING},
-    {1, "SSID2", "PWD2", -60, 1, LISAUI_WIFI_STATUS_DISCONNECT},
-    {2, "SSID3", "PWD3", -70, 2, LISAUI_WIFI_STATUS_DISCONNECT},
-    {3, "SSID4sdadasdasdasdssssd", "PWD4", -80, 3, LISAUI_WIFI_STATUS_DISCONNECT},
-};
 
 #ifdef __cplusplus
 }

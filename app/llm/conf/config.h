@@ -20,7 +20,7 @@ extern "C" {
 #define CONFIG_LOG_LEVEL 5
 #endif
 
-#if 0
+#if 1
 #define SDL_HOR_RES (360) // 320
 #define SDL_VER_RES (360) // 240
 #else

@@ -59,8 +59,13 @@ extern "C" {
 #define LISAUI_LV_COLOR_GRAY_GREEN lv_color_hex(0x003000)
 #define LISAUI_LV_COLOR_GRAY_BLUE  lv_color_hex(0x0000C0)
 
-#define lisaui_malloc malloc
-#define lisaui_free   free
+#if CONFIG_LISAUI_ENV_ARCS_SDK
+    #define lisaui_malloc exram_malloc
+    #define lisaui_free   exram_free
+#else
+    #define lisaui_malloc malloc
+    #define lisaui_free   free
+#endif
 
 #define LISAUI_DBUS_APP_UPDATE   "app_update"
 #define LISAUI_DBUS_APP_LAUNCHER "app_launcher"

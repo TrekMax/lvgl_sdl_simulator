@@ -159,13 +159,23 @@ static void back_btn_event_click_handler(lv_event_t *event)
         LISAUI_LOGI(TAG, "app_id: %d, app_name: %s", app->info.id, app->info.name);
 
         if (app->info.type == LISAUI_APP_TYPE_LAUNCHER) {
-            LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_SETTING, NULL);
+            #if CONFIG_LVGL_ENV_SIMULATOR
+                lisaui_app_enter(UI_APP_ID_SETTING);
+            #else
+                LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_SETTING, NULL);
+            #endif
             return;
         }
         // 判断是否为 App 页面/技能页面
         if (app->info.id == UI_APP_ID_SETTING) {
-            LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_STANDBY, NULL);
-            // lisaui_app_close(app->info.id);
+            // lisaui_app_exit(app->info.id);
+            #if CONFIG_LVGL_ENV_SIMULATOR
+                if (lisaui_app_enter(UI_APP_ID_SETTING) == LISAUI_ERR_APP_ALREADY_IN) {
+                    LISAUI_LOGI(TAG, "app already in");
+                }
+            #else
+                LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_STANDBY, NULL);
+            #endif
         } else {
             // 技能页面
             LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_STANDBY, NULL);
@@ -282,7 +292,7 @@ lv_obj_t *_lisaui_taskbar_create_battery(lv_obj_t *parent)
 lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
 {
     lv_obj_t *menu_panel = lv_obj_create(parent);
-    lv_obj_set_size(menu_panel, LV_DPX(160), LV_PCT(100));
+    lv_obj_set_size(menu_panel, LV_DPX(100), LV_PCT(100));
     lv_obj_set_style_bg_color(menu_panel, lv_color_hex(0x0000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(menu_panel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -320,8 +330,8 @@ lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
     // lv_img_set_zoom(LV_OBJ_ICON(icon_setting), 256*2);
 
     lv_obj_add_flag(LV_OBJ_ICON(icon_setting), LV_OBJ_FLAG_CLICKABLE); /// Flags
-    // lv_obj_add_event_cb(LV_OBJ_ICON(icon_setting), back_btn_event_click_handler, LV_EVENT_CLICKED, NULL);
-
+    lv_obj_add_event_cb(LV_OBJ_ICON(icon_setting), back_btn_event_click_handler, LV_EVENT_CLICKED, NULL);
+    
     lv_obj_set_style_radius(LV_OBJ_ICON(icon_setting), 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_color(LV_OBJ_ICON(icon_setting), lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_shadow_width(LV_OBJ_ICON(icon_setting), 0, 0);

@@ -18,6 +18,7 @@ extern "C" {
 #endif
 
 #define LISAUI_APP_WIFI_SSID_MAX_LEN  33
+#define LISAUI_APP_WIFI_BSSID_MAX_LEN 32
 #define LISAUI_APP_WIFI_PWD_MAX_LEN   65
 #define LISAUI_APP_WIFI_LIST_ITEM_MAX 10
 
@@ -35,10 +36,17 @@ typedef enum {
     LISAUI_WIFI_SECURITY_WPA3,
 } lisaui_wifi_security_t;
 
+typedef enum  {
+    LISAUI_WIFI_ITEM_NONE = 0,
+    LISAUI_WIFI_ITEM_AP,
+    LISAUI_WIFI_ITEM_AP_LIST,
+} lisaui_wifi_item_t;
+
 typedef struct {
     int id;
-    const char SSID[LISAUI_APP_WIFI_SSID_MAX_LEN];
-    const char PWD[LISAUI_APP_WIFI_PWD_MAX_LEN];
+    char SSID[LISAUI_APP_WIFI_SSID_MAX_LEN];
+    char BSSID[LISAUI_APP_WIFI_BSSID_MAX_LEN];
+    char PWD[LISAUI_APP_WIFI_PWD_MAX_LEN];
     int rssi;
     lisaui_wifi_security_t security;
     lisaui_wifi_status_t status;
@@ -60,6 +68,13 @@ typedef enum {
     LISAUI_WIFI_OP_RECONNECT,
 
 } lisaui_wifi_op_t;
+
+#define LISAUI_APP_WIFI_LIST_ITEM_MAX 10
+typedef struct {
+    int count;
+    // wifi_metadata_t wifi_list[LISAUI_APP_WIFI_LIST_ITEM_MAX];
+    wifi_metadata_t list[0];
+} lisaui_wifi_list_t;
 
 #ifdef __cplusplus
 }

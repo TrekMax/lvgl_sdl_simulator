@@ -560,7 +560,7 @@ lisaui_err_t lisaui_app_manager_init(void)
     }
 #endif
     if (m_app_mgr_hook) {
-        LISAUI_LOGD(TAG, "app manager hook");
+        LISAUI_LOGV(TAG, "app manager hook");
         m_app_mgr_hook(&m_app_mgr);
     }
 

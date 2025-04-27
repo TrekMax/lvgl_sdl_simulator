@@ -18,7 +18,7 @@ extern "C" {
 
 #include "lisaui_app_common.h"
 
-#define CONFIG_LISAUI_APP_TASKBAR_TOOLKIT_ENABLE 1
+#define CONFIG_LISAUI_APP_TASKBAR_TOOLKIT_ENABLE 0
 
 lisaui_err_t app_taskbar_init(void);
 

@@ -514,6 +514,13 @@ lisaui_err_t lisaui_app_manager_init_app(const app_entry_t *app, int app_count)
     return LISAUI_ERR_OK;
 }
 
+bool lisaui_view_match_op(lisaui_view_stack_t *view_stack, lisaui_view_page_t *page)
+{
+    // 
+
+    return false;
+}
+
 lisaui_err_t lisaui_app_manager_init(void)
 {
 #ifdef __APPLE__
@@ -544,7 +551,7 @@ lisaui_err_t lisaui_app_manager_init(void)
 #endif
     // view_manager 必须在 app_init 之前初始化
     lisaui_view_manager_init(&m_app_mgr.manager_view_stack);
-
+    
 #ifdef __APPLE__
     // 获取当前可执行文件的 Mach-O 头
     // const struct mach_header *header = _dyld_get_image_header(0);
@@ -567,7 +574,7 @@ lisaui_err_t lisaui_app_manager_init(void)
     }
 #endif
     if (m_app_mgr_hook) {
-        LISAUI_LOGD(TAG, "app manager hook");
+        LISAUI_LOGV(TAG, "app manager hook");
         m_app_mgr_hook(&m_app_mgr);
     }
 

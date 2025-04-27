@@ -174,6 +174,7 @@ lv_obj_t *ls_lv_llm_toast_create(lv_obj_t *parent)
     lv_obj_set_style_border_width(llm_asr_result_label, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_clear_state(llm_asr_result_label, LV_STATE_FOCUSED);
     lv_obj_set_style_text_color(llm_asr_result_label, lv_color_hex(0x9d6531), 0);
+    lv_obj_set_style_text_font(llm_asr_result_label, &lv_font_chinese_18, 0);
     lv_obj_set_style_bg_opa(llm_asr_result_label, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_width(llm_asr_result_label, lv_pct(100));
     return toast;
@@ -219,7 +220,7 @@ lisaui_err_t lisaui_popup_toast(const char *message)
     return LISAUI_ERR_OK;
 }
 
-#define CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE 1
+#define CONFIG_LISAUI_VIEW_MANAGER_DEBUG_ENABLE 0
 
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
 

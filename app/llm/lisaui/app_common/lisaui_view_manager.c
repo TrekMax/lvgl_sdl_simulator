@@ -16,6 +16,17 @@
 
 static const char *TAG = "app_view_manager";
 
+
+lisaui_err_t lisaui_view_register_match(lisaui_view_stack_t *view_stack, lisaui_view_match_func_t match)
+{
+    if (view_stack == NULL || match == NULL) {
+        LISAUI_LOGW(TAG, "Invalid view stack or match function");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    view_stack->match = match;
+    return LISAUI_ERR_OK;
+}
+
 lisaui_err_t lisaui_view_manager_init(lisaui_view_stack_t *view_stack)
 {
     // view_stack->capacity = LISAUI_VIEW_MANAGER_MAX_CAPACITY;
@@ -24,6 +35,15 @@ lisaui_err_t lisaui_view_manager_init(lisaui_view_stack_t *view_stack)
     view_stack->head = NULL;
     view_stack->tail = NULL;
     // view_stack->current = NULL;
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_view_manager_deinit(lisaui_view_stack_t *view_stack)
+{
+    lisaui_view_manager_clean(view_stack);
+    view_stack->depth = 0;
+    view_stack->head = NULL;
+    view_stack->tail = NULL;
     return LISAUI_ERR_OK;
 }
 
@@ -82,7 +102,7 @@ lisaui_err_t lisaui_view_manager_get_current(lisaui_view_stack_t *view_stack, li
         LISAUI_LOGW(TAG, "get_current view stack is empty");
         return LISAUI_ERR_NO_MEMORY;
     }
-    *page = view_stack->tail;
+    *page = view_stack->current;
     return LISAUI_ERR_OK;
 }
 
@@ -114,15 +134,6 @@ lisaui_err_t lisaui_view_manager_clean(lisaui_view_stack_t *view_stack)
         lisaui_free(page);
         page = NULL;
     }
-    return LISAUI_ERR_OK;
-}
-
-lisaui_err_t lisaui_view_manager_deinit(lisaui_view_stack_t *view_stack)
-{
-    lisaui_view_manager_clean(view_stack);
-    view_stack->depth = 0;
-    view_stack->head = NULL;
-    view_stack->tail = NULL;
     return LISAUI_ERR_OK;
 }
 
