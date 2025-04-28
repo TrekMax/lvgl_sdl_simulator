@@ -21,12 +21,11 @@ extern "C" {
 #endif
 
 #if 1
-// #define SDL_HOR_RES (360) // 320
-// #define SDL_VER_RES (360) // 240
-
-#define SDL_HOR_RES (320) // 320
-#define SDL_VER_RES (240) // 240
+#define SDL_HOR_RES (360) // 320
+#define SDL_VER_RES (360) // 240
 #else
+// #define SDL_HOR_RES (320*2) // 320
+// #define SDL_VER_RES (240*2) // 240
 #define SDL_HOR_RES (600)
 #define SDL_VER_RES (400)
 #endif

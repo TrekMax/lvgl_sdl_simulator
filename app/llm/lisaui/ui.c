@@ -93,7 +93,6 @@ void lisaui_ui_init(void)
 #include "common_widgets.h"
 #include "app_wifi.h"
 
-
 static int count = 0;
 static int test_index = 0;
 
@@ -241,17 +240,38 @@ static void test_lisaui_app_timer_cb(lv_timer_t *timer)
 
 static wifi_metadata_t test_wifi_item_list[] = {
     {0, "SSID1 sadasdadas", "", "PWD1", -50, 0, LISAUI_WIFI_STATUS_CONNECTED},
-    {3, "SSID4sdadasdasdasdssssd", "", "PWD4", -80, 3, LISAUI_WIFI_STATUS_CONNECTING},
-    {1, "SSID2", "", "PWD2", 60, 1, LISAUI_WIFI_STATUS_CONNECTED},
-    {2, "SSID3", "", "PWD3", -70, 2, LISAUI_WIFI_STATUS_DISCONNECT},
+    {1, "SSID4sdadasdasdasdssssd", "", "PWD4", -80, 3, LISAUI_WIFI_STATUS_CONNECTING},
+    {2, "SSID2", "", "PWD2", 60, 1, LISAUI_WIFI_STATUS_CONNECTED},
     {3, "SSID3", "", "PWD3", -70, 2, LISAUI_WIFI_STATUS_DISCONNECT},
-    {4, "SSID4sdadasdasdasdssssd", "", "PWD4", -80, 3, LISAUI_WIFI_STATUS_DISCONNECT},
+    {4, "SSID3", "", "PWD3", -70, 2, LISAUI_WIFI_STATUS_DISCONNECT},
+    {5, "SSID4sdadasdasdasdssssd", "", "PWD4", -80, 3, LISAUI_WIFI_STATUS_DISCONNECT},
 };
+// typedef lisaui_err_t (*app_wifi_event_handler_t)(lisaui_wifi_item_t type, lisaui_wifi_op_t op, void *params);
+// lisaui_err_t lisaui_app_wifi_register_event_handler(app_wifi_event_handler_t handler);
+
+lisaui_err_t wifi_event_handler(lisaui_wifi_item_t type, lisaui_wifi_op_t op, void *params)
+{
+    LISAUI_LOGI(TAG, "[%s] type:%d operation:%d", __FUNCTION__, type, op);
+    if (type == LISAUI_WIFI_ITEM_AP_LIST) {
+        if (op == LISAUI_WIFI_OP_GET_AP_LIST) {
+            if (params == NULL) {
+                LISAUI_LOGI(TAG, "[%s] get ap list", __FUNCTION__);
+                return LISAUI_ERR_INVALID_PARAM;
+            }
+            lisaui_wifi_list_t *list = (lisaui_wifi_list_t *)params;
+            list->count = sizeof(test_wifi_item_list) / sizeof(wifi_metadata_t);
+            LISAUI_LOGI(TAG, "[%s] get ap list count:%d", __FUNCTION__, list->count);
+            memcpy(list->list, test_wifi_item_list, sizeof(test_wifi_item_list));
+        }
+    }
+    return 0;
+}
 
 void test_lisaui_example(void)
 {
-
     lisaui_app_enter(UI_APP_ID_STANDBY);
+    lisaui_app_wifi_register_event_handler(wifi_event_handler);
+    // lisaui_app_enter(UI_APP_ID_WIFI);
 #if 0
     // lisaui_app_enter(UI_APP_ID_TEMPLATE);
     // lisaui_app_enter(UI_APP_ID_ALARM);
@@ -263,7 +283,4 @@ void test_lisaui_example(void)
     // lisaui_app_alarm_register_handler(lisaui_app_alarm_handler);
     // lisaui_taskbar_register_event_handler(lisaui_taskbar_event_handler);
 #endif
-
-
-
 }

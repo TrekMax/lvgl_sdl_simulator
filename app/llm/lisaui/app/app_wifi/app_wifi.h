@@ -20,22 +20,21 @@ extern "C" {
 #include "lisaui_app_common.h"
 #include "wifi_type.h"
 
-typedef enum{
+typedef enum {
     LISAUI_WIFI_STATE_AP_SCAN_FINISH = 0,
     LISAUI_WIFI_STATE_STA_CONNECT_SUCCESS,
     LISAUI_WIFI_STATE_STA_CONNECT_FAILED
 
-}LISAUI_WIFI_STATE_e;
+} LISAUI_WIFI_STATE_e;
 
-lisaui_err_t app_wifi_init(void);
-
-lisaui_err_t lisaui_app_update_state(LISAUI_WIFI_STATE_e state,void* params);
-typedef lisaui_err_t (*app_wifi_event_handler_t)(lisaui_wifi_item_t type, lisaui_wifi_op_t op,
-    void *params);
-    lisaui_err_t lisaui_app_wifi_register_event_handler(app_wifi_event_handler_t handler);
-
+lisaui_err_t lisaui_app_update_state(LISAUI_WIFI_STATE_e state, lisaui_wifi_list_t *hotspot_list);
 
 lisaui_err_t lisaui_app_add_wifi_list_item(wifi_metadata_t *wifi_item);
+lisaui_err_t app_wifi_init(void);
+
+typedef lisaui_err_t (*app_wifi_event_handler_t)(lisaui_wifi_item_t type, lisaui_wifi_op_t op, void *params);
+lisaui_err_t lisaui_app_wifi_register_event_handler(app_wifi_event_handler_t handler);
+
 
 #ifdef __cplusplus
 }

@@ -31,7 +31,7 @@ static lv_obj_t *private_lisaui_app_alarm_create_alarm_view(lv_obj_t *parent, co
 
     lv_obj_t *tip_label = lv_label_create(alarm_page);
     lv_label_set_text(tip_label, "闹钟设置成功");
-    lv_obj_align(tip_label, LV_ALIGN_TOP_MID, 0, LV_DPX(0));
+    lv_obj_align(tip_label, LV_ALIGN_TOP_MID, 0, LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
     lv_obj_set_style_text_color(tip_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(tip_label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_align(tip_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);

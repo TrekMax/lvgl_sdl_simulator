@@ -26,6 +26,7 @@ lv_obj_t *_lisaui_taskbar_create_time_label(lv_obj_t *parent);
 lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent);
 
 void _lisaui_taskbar_battery_update_cb(lv_timer_t *timer);
+lisaui_err_t lisaui_app_common_app_enter_common_handler(lisaui_app_t *app);
 
 #ifdef __cplusplus
 }

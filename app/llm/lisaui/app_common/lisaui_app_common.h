@@ -60,8 +60,9 @@ extern "C" {
 #define LISAUI_LV_COLOR_GRAY_BLUE  lv_color_hex(0x0000C0)
 
 #if CONFIG_LISAUI_ENV_ARCS_SDK
-    #define lisaui_malloc exram_malloc
-    #define lisaui_free   exram_free
+    #include "sysheap.h"
+    #define lisaui_malloc(x) exram_malloc(4, x)
+    #define lisaui_free(x)   exram_free(x)
 #else
     #define lisaui_malloc malloc
     #define lisaui_free   free
@@ -146,6 +147,8 @@ lisaui_err_t lisaui_app_common_pop_app_scr_with_lvgl(const int app_id);
 
 lisaui_err_t lisaui_popup_toast(const char *message);
 void lisaui_memory_monitor(void *param);
+
+lisaui_err_t lisaui_app_common_set_enter_app_hook(lisaui_app_manager_app_hook_t hook);
 
 #ifdef __cplusplus
 }

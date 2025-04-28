@@ -12,9 +12,9 @@
 #include "lv_img_utils.h"
 
 #if CONFIG_LISAUI_ENV_ARCS_SDK
-	// #include "log_print.h"
 	#include "lisa_log.h"
-	#define LOG_INF CLOG
+	// #define LOG_INF CLOG
+	#define LOG_INF
 #else
 	// #define LOG_INF printf
 	#define LOG_INF LV_LOG_USER

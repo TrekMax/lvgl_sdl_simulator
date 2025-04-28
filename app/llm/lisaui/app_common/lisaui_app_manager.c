@@ -306,6 +306,10 @@ lisaui_err_t lisaui_app_enter(const int app_id)
         LVGL_UI_UNLOCK();
         return LISAUI_ERR_APP_ALREADY_IN;
     }
+    lisaui_app_t *old_app = NULL;
+    if (lisaui_app_manager_get_app_by_id(app_id, &old_app) == LISAUI_ERR_OK) {
+        lisaui_app_exit(old_app->info.id);
+    }
 
     lisaui_app_t *app = m_app_mgr.apps_list[uuid];
     // lisaui_app_manager_add_instance(app);
@@ -390,7 +394,7 @@ lisaui_err_t lisaui_app_exit(const int app_id)
     LISAUI_EXEC_HOOK(m_app_exit_hook, app, ret);
     if (ret != LISAUI_ERR_OK) {
         LVGL_UI_UNLOCK();
-        LISAUI_LOGE(TAG, "TAG, [ui] app exit hook failed");
+        // LISAUI_LOGE(TAG, "TAG, [ui] app exit hook failed");
         return ret;
     }
 #else

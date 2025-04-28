@@ -17,7 +17,7 @@ extern "C" {
 #endif
 
 #include "version.h"
-#include "config.h"
+#include "../conf/config.h"
 #include "utils_log.h"
 #include "lvgl/lvgl.h"
 

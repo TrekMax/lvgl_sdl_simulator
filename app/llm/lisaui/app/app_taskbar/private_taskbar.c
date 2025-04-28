@@ -14,6 +14,7 @@
 #include "lisaui_app_common.h"
 #include "assets/assets_res.h"
 #include "private_taskbar.h"
+#include "lisaui_app_manager.h"
 #include "lisaui_log.h"
 #include "lv_img_utils.h"
 
@@ -25,6 +26,7 @@
 
 // UI_RES_IMG_NAME(back_btn, LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH("assets/png/icon_back.png"))
 UI_RES_IMG_NAME(icon_setting, LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH("assets/png/ic_launch_setting.png"))
+UI_RES_IMG_NAME(ic_nav_back, LISAUI_APP_TASKBAR_UI_RES_PERFIX_PATH("assets/png/ic_nav_back.png"))
 
 static const char *TAG = "pri_app_taskbar";
 
@@ -166,12 +168,16 @@ static void back_btn_event_click_handler(lv_event_t *event)
             #endif
             return;
         }
+        
         // 判断是否为 App 页面/技能页面
         if (app->info.id == UI_APP_ID_SETTING) {
             // lisaui_app_exit(app->info.id);
             #if CONFIG_LVGL_ENV_SIMULATOR
                 if (lisaui_app_enter(UI_APP_ID_SETTING) == LISAUI_ERR_APP_ALREADY_IN) {
                     LISAUI_LOGI(TAG, "app already in");
+                    // 判断退出还是关闭 具体的设置菜单
+                    // lisaui_app_exit(app->info.id);
+                    lisaui_app_enter(UI_APP_ID_STANDBY);
                 }
             #else
                 LISAUI_TASKBAR_EVENT_HANDLER(g_taskbar_event_handler, LISAUI_TASKBAR_EVENT_ENTER_STANDBY, NULL);
@@ -288,7 +294,7 @@ lv_obj_t *_lisaui_taskbar_create_battery(lv_obj_t *parent)
 
     return battery_icon;
 }
-
+ 
 lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
 {
     lv_obj_t *menu_panel = lv_obj_create(parent);
@@ -323,6 +329,7 @@ lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
     // lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
     LV_OBJ_ICON(icon_setting) = lv_img_create(menu_panel);
     lv_img_png_src_init(UI_RES_IMG_PNG(icon_setting));
+    lv_img_png_src_init(UI_RES_IMG_PNG(ic_nav_back));
 
     lv_img_set_src(LV_OBJ_ICON(icon_setting), &LV_IMG_DSC(icon_setting));
     lv_obj_set_size(LV_OBJ_ICON(icon_setting), LV_DPX(40), LV_DPX(LISAUI_STATUS_BAR_HEIGHT - 10));
@@ -348,4 +355,22 @@ lv_obj_t *_lisaui_taskbar_create_operate_menu(lv_obj_t *parent)
     lv_obj_set_style_text_color(label2, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
 
     return menu_panel;
+}
+
+
+lisaui_err_t lisaui_app_common_app_enter_common_handler(lisaui_app_t *app)
+{
+    if (app == NULL) {
+        LISAUI_LOGE(TAG, "app is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    LISAUI_LOGI(TAG, "[%d:%s] app: %s", __LINE__, __func__, app->icon->title);
+    if (app->info.id == UI_APP_ID_SETTING) {
+        lv_img_set_src(LV_OBJ_ICON(icon_setting), &LV_IMG_DSC(ic_nav_back));
+    }
+    if (app->info.type == LISAUI_APP_TYPE_LAUNCHER) {
+        lv_img_set_src(LV_OBJ_ICON(icon_setting), &LV_IMG_DSC(icon_setting));
+        app_setting_del_item_page();
+    }
+    return LISAUI_ERR_OK;
 }

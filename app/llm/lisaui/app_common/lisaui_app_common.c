@@ -224,6 +224,17 @@ lisaui_err_t lisaui_popup_toast(const char *message)
 
 #if CONFIG_LISAUI_EXEC_HOOK_ENABLE
 
+static lisaui_app_manager_app_hook_t m_app_common_enter_hook = NULL;
+lisaui_err_t lisaui_app_common_set_enter_app_hook(lisaui_app_manager_app_hook_t hook)
+{
+    if (hook == NULL) {
+        LISAUI_LOGE(TAG, "[ui] hook is NULL");
+        return LISAUI_ERR_INVALID_PARAM;
+    }
+    m_app_common_enter_hook = hook;
+    return LISAUI_ERR_OK;
+}
+
 lisaui_err_t lisaui_app_enter_lvgl_hook(lisaui_app_t *app)
 {
     lisaui_view_stack_t *view_stack;
@@ -257,6 +268,12 @@ lisaui_err_t lisaui_app_enter_lvgl_hook(lisaui_app_t *app)
 #endif
     lv_disp_load_scr(page->root);
     // lisaui_memory_monitor(NULL);
+    if (m_app_common_enter_hook != NULL) {
+        if (m_app_common_enter_hook(app) != LISAUI_ERR_OK) {
+            LISAUI_LOGE(TAG, "[ui] app enter hook failed");
+            return LISAUI_ERR_APP_ENTER_FAILED;
+        }
+    }
     return LISAUI_ERR_OK;
 }
 
@@ -278,7 +295,7 @@ lisaui_err_t lisaui_app_exit_lvgl_hook(lisaui_app_t *app)
     lisaui_view_manager_print_usage(view_stack);
 #endif
     if (lisaui_view_manager_get_current(view_stack, &page) != LISAUI_ERR_OK) {
-        LISAUI_LOGE(TAG, "[ui] view page is NULL");
+        // LISAUI_LOGE(TAG, "[ui] view page is NULL");
         return LISAUI_ERR_NO_MEMORY;
     }
     if (page == NULL) {

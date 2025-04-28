@@ -28,11 +28,14 @@ static lv_img_dsc_t img_gif_anim_circle;
 #if CONFIG_LVGL_ENV_SIMULATOR
 #define LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH(path) "app/llm/lisaui/app/app_wifi/" path
 #else
-#define LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/widgets/" path
+#define LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH(path) "src/ui/lisaui/app/app_wifi/" path
 // app/llm/lisaui/app/app_wifi/assets/gif/anim_circle.gif
 #endif
 
 UI_RES_IMG_NAME(anim_circle, LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH("assets/gif/anim_circle_24x24.gif"))
+UI_RES_IMG_NAME(wifi_refresh_icon, LISAUI_APP_LS_LLM_DIALOG_UI_RES_PERFIX_PATH("assets/png/ic_refresh.png"))
+lv_obj_t *LV_OBJ_ICON(refresh_static);
+lv_obj_t *refresh_icon = NULL;
 
 static app_wifi_event_handler_t g_app_wifi_event_handler = NULL;
 lisaui_err_t lisaui_app_wifi_register_event_handler(app_wifi_event_handler_t handler)
@@ -88,7 +91,6 @@ static void msgbox_event_handler(lv_event_t *event)
             app_wifi_destroy_connect_ap_view(g_wifi_connect_msgbox);
         }
         if (g_cancel_btn && g_cancel_btn == obj) {
-            LISAUI_LOGI(TAG, "button cancel clicked");
             app_wifi_destroy_connect_ap_view(g_wifi_connect_msgbox);
         }
     }
@@ -151,6 +153,8 @@ static lv_obj_t *app_wifi_create_connect_ap_view(lv_obj_t *parent, wifi_metadata
     lv_textarea_set_password_mode(password, true);
     lv_textarea_set_placeholder_text(password, "Min. 8 chars.");
     lv_obj_add_event_cb(password, ta_event_cb, LV_EVENT_ALL, kb);
+    lv_textarea_set_text(password, wifi_item->PWD);
+    LISAUI_LOGI(TAG, "password:%s", wifi_item->PWD);
 
     lv_obj_t *password_show_btn = lv_btn_create(menu);
     lv_obj_set_size(password_show_btn, LV_DPX(40), LV_DPX(40));
@@ -203,15 +207,17 @@ static lv_obj_t *app_wifi_create_connect_ap_view(lv_obj_t *parent, wifi_metadata
     return menu;
 }
 
-static void event_handler(lv_event_t *e)
+static void wifi_item_event_handler(lv_event_t *event)
 {
-    lv_event_code_t code = lv_event_get_code(e);
-    lv_obj_t *obj = lv_event_get_target(e);
-    // setting_item_t *item = (setting_item_t *)lv_event_get_user_data(e);
+    lv_event_code_t code = lv_event_get_code(event);
+    lv_obj_t *obj = lv_event_get_target(event);
     if (code == LV_EVENT_CLICKED) {
-        LISAUI_LOGI(TAG, "button clicked");
-        g_wifi_connect_msgbox =
-            app_wifi_create_connect_ap_view(lv_layer_top(), (wifi_metadata_t *)lv_event_get_user_data(e));
+        wifi_metadata_t *wifi_item = (wifi_metadata_t *)lv_event_get_user_data(event);
+        if (wifi_item == NULL) {
+            LISAUI_LOGE(TAG, "item is NULL");
+            return;
+        }
+        g_wifi_connect_msgbox = app_wifi_create_connect_ap_view(lv_layer_top(), wifi_item);
     }
 }
 
@@ -221,8 +227,33 @@ lisaui_err_t lisaui_app_add_wifi_list_item(wifi_metadata_t *wifi_item)
         g_obj_wifi_list = ls_wifi_list_create(g_app_panel);
         lv_obj_set_size(g_obj_wifi_list, LV_PCT(100), LV_PCT(100));
     }
-    ls_wifi_list_add_btn(g_obj_wifi_list, wifi_item, event_handler, (void *)wifi_item);
+    ls_wifi_list_add_btn(g_obj_wifi_list, wifi_item, wifi_item_event_handler, (void *)wifi_item);
     return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_app_del_wifi_list(void)
+{
+    if (g_obj_wifi_list == NULL) {
+        return LISAUI_ERR_OK;
+    }
+
+    // FIXME：销毁旧的列表
+    return LISAUI_ERR_OK;
+}
+
+
+static void btn_refresh_event_handler(lv_event_t *event)
+{
+    lv_event_code_t code = lv_event_get_code(event);
+    lv_obj_t *obj = lv_event_get_target(event);
+    if (code == LV_EVENT_CLICKED) {
+        LISAUI_LOGI(TAG, "button refresh clicked");
+        if (g_app_wifi_event_handler) {
+            g_app_wifi_event_handler(LISAUI_WIFI_ITEM_NONE, LISAUI_WIFI_OP_SCAN, NULL);
+            lv_obj_add_flag(LV_OBJ_ICON(refresh_static), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_clear_flag(refresh_icon, LV_OBJ_FLAG_HIDDEN);
+        }
+    }
 }
 
 lv_obj_t *app_wifi_create_panel_wifi_list(lv_obj_t *parent)
@@ -238,13 +269,14 @@ lv_obj_t *app_wifi_create_panel_wifi_list(lv_obj_t *parent)
     // lv_obj_add_event_cb(refresh_btn, msgbox_event_handler, LV_EVENT_CLICKED, (void *)wifi_item);
     // lv_obj_set_size(refresh_btn, LV_DPX(100), LV_SIZE_CONTENT);
     lv_obj_align(refresh_btn, LV_ALIGN_TOP_LEFT, LV_DPX(20), LV_DPX(LISAUI_STATUS_BAR_HEIGHT));
-    // lv_obj_set_style_bg_color(refresh_btn, lv_color_hex(0x5078D0), 0);
-    lv_obj_set_style_bg_color(refresh_btn, lv_color_hex(0x24242d), 0);
-    // lv_obj_set_style_bg_color(refresh_btn, lv_color_hex(0x000000), 0);
+    // lv_obj_set_style_bg_color(refresh_btn, lv_color_hex(0x24242d), 0);
+    lv_obj_set_style_bg_color(refresh_btn, lv_color_hex(0xff0000), 0);
     lv_obj_set_style_radius(refresh_btn, 8, 0);
     lv_obj_set_style_shadow_width(refresh_btn, 0, 0);
     lv_obj_set_style_border_width(refresh_btn, 0, 0);
     lv_obj_set_style_outline_width(refresh_btn, 0, 0);
+    lv_obj_set_style_pad_all(refresh_btn, 4, 0);
+    lv_obj_add_event_cb(refresh_btn, btn_refresh_event_handler, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t *label;
     label = lv_label_create(refresh_btn);
@@ -253,19 +285,102 @@ lv_obj_t *app_wifi_create_panel_wifi_list(lv_obj_t *parent)
     lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(label, &lv_font_chinese_18, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_t *refresh_icon = lv_gif_create(refresh_btn);
+    refresh_icon = lv_gif_create(refresh_btn);
     lv_img_gif_src_init(&img_gif_anim_circle, gfile_anim_circleData, gfile_anim_circleSize);
     lv_gif_set_src(refresh_icon, &img_gif_anim_circle);
     lv_obj_align_to(refresh_icon, label, LV_ALIGN_RIGHT_MID, LV_DPX(0), 0);
+    lv_obj_add_flag(refresh_icon, LV_OBJ_FLAG_HIDDEN);
+
+    // lv_obj_t *refresh_icon_static
+    LV_OBJ_ICON(refresh_static) = lv_img_create(refresh_btn);
+    lv_img_png_src_init(UI_RES_IMG_PNG(wifi_refresh_icon));
+    lv_img_set_src(LV_OBJ_ICON(refresh_static), &LV_IMG_DSC(wifi_refresh_icon));
+    lv_obj_align_to(LV_OBJ_ICON(refresh_static), label, LV_ALIGN_RIGHT_MID, LV_DPX(0), 0);
+    // lv_obj_add_flag(refresh_icon, LV_OBJ_FLAG_HIDDEN);
 
     g_app_panel = lv_obj_create(wifi_list_panel);
     _lisaui_set_style_container(g_app_panel, lv_color_hex(0x000000), 255, lv_color_hex(0x000000), 0, 0);
 
     // LISAUI_COMMON_SET_APP_VIEW_PANEL_SIZE(wifi_list_panel, g_app_panel, NULL);
-    lv_obj_set_y(g_app_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT + 60));
-    lv_coord_t height = lv_obj_get_height(wifi_list_panel) - LV_DPX(LISAUI_STATUS_BAR_HEIGHT + 60);
+    lv_coord_t offset_y = 40;
+    lv_obj_set_y(g_app_panel, LV_DPX(LISAUI_STATUS_BAR_HEIGHT + offset_y));
+    lv_coord_t height = lv_obj_get_height(wifi_list_panel) - LV_DPX(LISAUI_STATUS_BAR_HEIGHT + offset_y);
     lv_obj_set_size(g_app_panel, LV_PCT(100), height);
     return wifi_list_panel;
+}
+
+
+lisaui_err_t lisaui_app_wifi_update_wifi_list(lisaui_wifi_list_t *wifi_list)
+{
+    lv_obj_clear_flag(LV_OBJ_ICON(refresh_static), LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(refresh_icon, LV_OBJ_FLAG_HIDDEN);
+
+    for (int i = 0; i < wifi_list->count; i++) {
+        // FIXME: 检测是否重复，这里通过遍历进行过滤 O(n), 需使用 hash 表等数据结构进行优化
+        bool is_duplicate = false;
+        for (int j = 0; j < i; j++) {
+            if (strncmp(wifi_list->list[i].SSID, wifi_list->list[j].SSID, LISAUI_APP_WIFI_SSID_MAX_LEN) == 0) {
+                is_duplicate = true;
+                break;
+            }
+        }
+        if (is_duplicate) {
+            continue;
+        }
+        wifi_metadata_t *ap = (wifi_metadata_t *)lisaui_malloc(sizeof(wifi_metadata_t));
+        if (ap == NULL) {
+            LISAUI_LOGE(TAG, "malloc failed");
+            return LISAUI_ERR_NO_MEMORY;
+        }
+        // LISAUI_LOGI(TAG, "Add wifi ap %d: %s, %s, %s", i, wifi_list->list[i].SSID, wifi_list->list[i].BSSID,
+        //             wifi_list->list[i].PWD);
+
+        strncpy(ap->SSID, wifi_list->list[i].SSID, LISAUI_APP_WIFI_SSID_MAX_LEN);
+        strncpy(ap->BSSID, wifi_list->list[i].BSSID, LISAUI_APP_WIFI_BSSID_MAX_LEN);
+        strncpy(ap->PWD, wifi_list->list[i].PWD, LISAUI_APP_WIFI_PWD_MAX_LEN);
+        ap->security = wifi_list->list[i].security;
+        ap->status = wifi_list->list[i].status;
+        ap->id = wifi_list->list[i].id;
+        ap->rssi = wifi_list->list[i].rssi;
+        lisaui_app_add_wifi_list_item(ap);
+    }
+    return LISAUI_ERR_OK;
+}
+
+lisaui_err_t lisaui_app_update_state(LISAUI_WIFI_STATE_e state, lisaui_wifi_list_t *hotspot_list)
+{
+    lisaui_app_del_wifi_list();
+
+    LISAUI_LOGI(TAG, "[%s %d]Update wifi list:%p, state:%d,count:%d", __FUNCTION__, __LINE__, hotspot_list, state,
+                hotspot_list->count);
+    lisaui_wifi_list_t *wifi_list =
+        lisaui_malloc(sizeof(lisaui_wifi_list_t) + sizeof(wifi_metadata_t) * LISAUI_APP_WIFI_LIST_ITEM_MAX);
+    if (wifi_list == NULL) {
+        LISAUI_LOGE(TAG, "[%s %d]no memory!", __FUNCTION__, __LINE__);
+        return LISAUI_ERR_NO_MEMORY;
+    }
+    memset(wifi_list, 0, sizeof(lisaui_wifi_list_t) + sizeof(wifi_metadata_t) * LISAUI_APP_WIFI_LIST_ITEM_MAX);
+    wifi_list->count =
+        hotspot_list->count > LISAUI_APP_WIFI_LIST_ITEM_MAX ? LISAUI_APP_WIFI_LIST_ITEM_MAX : hotspot_list->count;
+
+    for (int i = 0; i < wifi_list->count; i++) {
+        LISAUI_LOGI(TAG, "Wifi[%d],bssid:%20s, pwd:%12s,rssi:%5d, status:%d,ssid:%20s", i, hotspot_list->list[i].BSSID,
+                    hotspot_list->list[i].PWD, hotspot_list->list[i].rssi, hotspot_list->list[i].status,
+                    hotspot_list->list[i].SSID);
+
+        if (strlen(hotspot_list->list[i].SSID) == 0) {
+            // LISAUI_LOGV(TAG, "SSID is empty");
+            continue;
+        }
+        strncpy(wifi_list->list[i].SSID, hotspot_list->list[i].SSID, LISAUI_APP_WIFI_SSID_MAX_LEN);
+        strncpy(wifi_list->list[i].BSSID, hotspot_list->list[i].BSSID, LISAUI_APP_WIFI_BSSID_MAX_LEN);
+        strncpy(wifi_list->list[i].PWD, hotspot_list->list[i].PWD, LISAUI_APP_WIFI_PWD_MAX_LEN);
+        wifi_list->list[i].rssi = hotspot_list->list[i].rssi;
+        wifi_list->list[i].status = hotspot_list->list[i].status;
+    }
+    lisaui_app_wifi_update_wifi_list(wifi_list);
+    lisaui_free(wifi_list);
+    return 0;
 }
 
 lisaui_err_t app_wifi_create(void *parent)
@@ -279,10 +394,11 @@ lisaui_err_t app_wifi_create(void *parent)
 
     if (g_app_wifi_event_handler) {
         g_app_wifi_event_handler(LISAUI_WIFI_ITEM_NONE, LISAUI_WIFI_OP_SCAN, NULL);
+        lv_obj_add_flag(LV_OBJ_ICON(refresh_static), LV_OBJ_FLAG_HIDDEN);
+        lv_obj_clear_flag(refresh_icon, LV_OBJ_FLAG_HIDDEN);
     }
     return LISAUI_ERR_OK;
 }
-
 lisaui_err_t app_wifi_destroy(void)
 {
     LVGL_OBJ_SAFE_DEL(g_app_wifi);
@@ -296,28 +412,16 @@ lisaui_err_t app_wifi_enter(void)
     LISAUI_LOGI(TAG, "[%d:%s] enter\n", __LINE__, __func__);
 
     if (g_app_wifi_event_handler) {
-
         lisaui_wifi_list_t *wifi_list =
             lisaui_malloc(sizeof(lisaui_wifi_list_t) + sizeof(wifi_metadata_t) * LISAUI_APP_WIFI_LIST_ITEM_MAX);
         if (wifi_list == NULL) {
             LISAUI_LOGE(TAG, "[%s %d]no memory!", __FUNCTION__, __LINE__);
             return LISAUI_ERR_NO_MEMORY;
         }
+        memset(wifi_list, 0, sizeof(lisaui_wifi_list_t) + sizeof(wifi_metadata_t) * LISAUI_APP_WIFI_LIST_ITEM_MAX);
         wifi_list->count = LISAUI_APP_WIFI_LIST_ITEM_MAX;
-        g_app_wifi_event_handler(LISAUI_WIFI_ITEM_AP_LIST, LISAUI_WIFI_OP_GET_AP_LIST, (void *)&wifi_list);
-        for (int i = 0; i < wifi_list->count; i++) {
-            wifi_metadata_t *ap = (wifi_metadata_t *)lisaui_malloc(sizeof(wifi_metadata_t));
-            if (ap == NULL) {
-                LISAUI_LOGE(TAG, "malloc failed");
-                return LISAUI_ERR_NO_MEMORY;
-            }
-            LISAUI_LOGI(TAG, "Add wifi ap %d: %s", i, wifi_list->list[i].SSID);
-            strncpy(ap->SSID, wifi_list->list[i].SSID, LISAUI_APP_WIFI_SSID_MAX_LEN);
-            ap->rssi = wifi_list->list[i].rssi;
-            // ls_lv_list_add_btn(g_obj_alarm_list, wifi_list->list[i].time_text,
-            //     wifi_list->list[i].date_text, event_handler, (void *)ap);
-            ls_wifi_list_add_btn(g_obj_wifi_list, ap, event_handler, NULL);
-        }
+        g_app_wifi_event_handler(LISAUI_WIFI_ITEM_AP_LIST, LISAUI_WIFI_OP_GET_AP_LIST, (void *)wifi_list);
+        lisaui_app_wifi_update_wifi_list(wifi_list);
         lisaui_free(wifi_list);
     }
     return LISAUI_ERR_OK;

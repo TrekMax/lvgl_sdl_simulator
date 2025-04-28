@@ -40,5 +40,6 @@ else()
         utils
         common_widget
         app_common
+        app_alarm
         )
 endif()

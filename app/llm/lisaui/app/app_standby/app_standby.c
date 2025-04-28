@@ -99,8 +99,8 @@ lisaui_err_t app_standby_destroy(void)
 lisaui_err_t app_standby_enter(void)
 {
     LISAUI_LOGI(TAG, "[%d:%s] enter", __LINE__, __func__);
-    // extern lisaui_err_t lisaui_app_alarm_close_skill_alarm_view(void);
-    // lisaui_app_alarm_close_skill_alarm_view();
+    extern lisaui_err_t lisaui_app_alarm_close_skill_alarm_view(void);
+    lisaui_app_alarm_close_skill_alarm_view();
     return LISAUI_ERR_OK;
 }
 
@@ -143,7 +143,7 @@ lisaui_app_t app_standby = {
 lisaui_err_t app_standby_init(void)
 {
     lisaui_app_register(&app_standby);
-    // lisaui_app_enter(UI_APP_ID_STANDBY);
+    lisaui_app_enter(UI_APP_ID_STANDBY);
     return LISAUI_ERR_OK;
 }
 

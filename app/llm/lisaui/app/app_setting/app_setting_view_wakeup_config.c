@@ -23,7 +23,7 @@ typedef struct _lisaui_app_setting_wakeup_options_t {
     const char *title;
     const char *tips;
     const int id;
-    const int mode;
+    int mode;
     lisaui_app_setting_set_wakeup_mode_cb_t event_cb;
     void *user_data;
 } lisaui_app_setting_wakeup_options_t;
@@ -48,7 +48,8 @@ void lisaui_app_radio_select_handler(lv_event_t *event)
         if (g_wakeup_mode_handler) {
             lisaui_app_setting_wakeup_options_t *p_wakeup_option =
                 (lisaui_app_setting_wakeup_options_t *)lv_event_get_user_data(event);
-            g_wakeup_mode_handler(LISAUI_SETTING_WAKEUP_OP_SET, (void *)&p_wakeup_option->id);
+            p_wakeup_option->mode = radio_id;
+            g_wakeup_mode_handler(LISAUI_SETTING_WAKEUP_OP_SET, (void *)&p_wakeup_option->mode);
         }
     }
 }

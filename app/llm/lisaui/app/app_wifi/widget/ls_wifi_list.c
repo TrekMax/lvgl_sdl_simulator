@@ -10,7 +10,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "ls_wifi_list.h"
-#include <src/core/lv_obj.h>
 #include <src/widgets/lv_label.h>
 #include "lv_img_utils.h"
 #include "incbin.h"

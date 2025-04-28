@@ -177,7 +177,7 @@ static struct app_icon_t app_icon_res = {
 #endif
     // .icon_width = LV_SIZE_CONTENT,
     // .icon_height = LV_SIZE_CONTENT,
-    .icon = NULL,//&ui_img_icon_taskbar_png,
+    .icon = NULL, //&ui_img_icon_taskbar_png,
     .zoom = APP_ICON_ZOOM(0),
 };
 
@@ -203,6 +203,7 @@ lisaui_err_t app_taskbar_init(void)
 {
     lisaui_app_register(&app_taskbar);
     app_taskbar_create(lv_layer_sys());
+    lisaui_app_common_set_enter_app_hook(lisaui_app_common_app_enter_common_handler);
     return LISAUI_ERR_OK;
 }
 

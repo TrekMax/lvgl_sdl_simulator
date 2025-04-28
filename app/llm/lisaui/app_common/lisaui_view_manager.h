@@ -31,11 +31,6 @@ typedef enum _lisaui_view_type_e {
 } lisaui_view_type_t;
 
 struct _lisaui_view_page_t {
-    int app_id; // 页面栈归属的 app id, 用于在不同 app 之间 view 切换
-    int page_id;
-    lisaui_view_type_t type;
-    lisaui_view_t *root;
-
     // 页面栈生命周期
     // lisaui_err_t (*on_create)(void *parent);
     // lisaui_err_t (*on_destroy)(void);
@@ -43,6 +38,10 @@ struct _lisaui_view_page_t {
     // lisaui_err_t (*on_exit)(void);
     // lisaui_err_t (*on_pause)(void);
     // lisaui_err_t (*on_resume)(void);
+    int app_id; // 页面栈归属的 app id, 用于在不同 app 之间 view 切换
+    int page_id;
+    lisaui_view_type_t type;
+    lisaui_view_t *root;
 
     lisaui_view_page_t *next;
     lisaui_view_page_t *prev;
